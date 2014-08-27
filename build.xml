@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<project default="all">
+   
+   <property name="src.dir" location="src" />
+   <property name="build.dir" location="build" />
+   <property name="docs.dir" location="docs" />
+   <property name="lib.dir" value="lib" />
+   <property name="resources.dir" value="resources" />
+   <property name="blockimages.dir" value="blockImages" />
+   <property name="ant.project.name" value="edu.vanderbilt.ant" />
+   
+   <path id="application" location="${build.dir}/${ant.project.name}.jar" />
+   <path id="classpath">
+      <fileset dir="${lib.dir}" includes="**/*.jar" />
+   </path>
+   
+   <!-- delete old build files -->
+   <target name="clean">
+      <delete dir="${build.dir}" />
+      <delete dir="${docs.dir}" />
+   </target>
+   
+   <!-- make directories for new build files -->
+   <target name="mkdir" depends="clean">
+      <mkdir dir="${build.dir}" />
+   </target>
+   
+   <!-- compile the code -->
+   <target name="compile" depends="clean, mkdir">
+      <!-- compile all code from source dir into build dir. don't include Ant files in the compiled code -->
+      <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath" includeantruntime="false" fork="true">
+         <compilerarg value="-XDignore.symbol.file=true" />
+      </javac>
+   </target>
+   
+   <!-- produce a jar -->
+   <target name="jar" depends="compile">
+      <jar destfile="${build.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+         <manifest>
+            <attribute name="Main-Class" value="edu.vanderbilt.driverandlayout.ViMAP" />
+         </manifest>
+                     
+      	 <!-- include all jar files from the library -->
+         <zipgroupfileset dir="${lib.dir}" excludes="iText-2.0.8.jar"/>
+         
+      	 <!-- include all resources files -->
+         <fileset dir="${resources.dir}" includes="**"/>
+         <fileset dir="." includes="${blockimages.dir}/**"/>
+      </jar>
+   </target>
+   
+   <!-- run JUnit tests on the jar -->
+   <target name="junit" depends="jar">
+      <junit printsummary="yes">
+         <classpath>
+            <path refid="classpath" />
+            <path refid="application" />
+         </classpath>
+            
+         <batchtest fork="yes">
+            <!-- run all classes ending "Test" from the src/test directory -->
+            <fileset dir="${src.dir}/test" includes="**/*Test.java" />
+         </batchtest>
+         
+         <formatter type="plain" usefile="false" />
+      </junit>
+   </target>
+   
+   <target name="all" depends="jar, junit">
+   </target>
+   
+</project>
+   
