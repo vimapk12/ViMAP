@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> 
+		ViMAP, a programming language designed for K-12
+	</title> 
+	<link type = "text/css" rel = "stylesheet" href = "style.css" media = "all"/>
+</head>
+
+
+<body>  
+<h1 class="vimap"><img src = "logo.jpg"/>Dictionary</h1> 
+<div id = "bar">
+<table>
+    <tr> 
+        <th class = "border-fade"><a href = "download.html">Download</a></th>
+        <th class = "already-on">Dictionary</th>
+        <th class = "border-fade"><a href = "videos.html">Videos</a></th>
+        <th class = "border-fade"><a href = "about.html">About</a></th>
+        <th class = "border-fade"><a href = "contact.html">Contact</a></th>
+    </tr>    
+</table></div>
+
+<div id = "main">
+
+<a href = "manual.html">Show All</a><br /><b>Categories:</b> <a href = "manual_Control.html">Control</a> <a href = "manual_Groups.html">Groups</a> <a href = "manual_Measure.html">Measure</a> <a href = "manual_Movement.html">Movement</a> <b>Pen</b> <a href = "manual_Secret Number.html">Secret Number</a> <a href = "manual_Sensors.html">Sensors</a> <a href = "manual_Turtles.html">Turtles</a> <br /><b>Special Units:</b> <a href = "manual_Ants.html">Ants</a> <br />
+
+    <h3 class = "speech"><a id="pen-down">pen down</a></h3>
+    <p><img src = "../blockImages/pen-down.png " />
+    <br />
+        Leaves a pen-trail wherever the turtle travels in the world.
+    </p>
+
+    <h3 class = "speech"><a id="pen-up">pen up</a></h3>
+    <p><img src = "../blockImages/pen-up.png " />
+    <br />
+        The turtle will no longer leave a pen-trail but pen marks that were made before this command executes will still be visible.
+    </p>
+
+    <h3 class = "speech"><a id="set-pen-thickness">pen width </a></h3>
+    <p><img src = "../blockImages/set-pen-thickness.png " />
+    <br />
+        The turtles will set their pen-width to the number you enter in the field. The default pen width is 1. This command must be used along with <a href="#pen-down"><img src = "../blockImages/pen-down.png" class = "intext" /></a>
+    </p>
+
+    <h3 class = "speech"><a id="set">set by sensor and math</a></h3>
+    <p><img src = "../blockImages/set.png " />
+    <br />
+        Sets an attribute of a turtle to another value based on measurements in your model.  <br/> Use the the first drop down menu to select <i>size</i>, <i>pen-width</i>, or <i>color</i>. From the second drop down menu, choose <i>odometer</i>, <i>step-size</i>, or <i>change in step-size</i>. In the third drop down, choose <i>times</i> or <i>divided by</i>. Enter a numeric value into the field. For example, if you wish for the size of your turtle to co-vary with it&apos;s speed, you could <i> Set size step-size times 1 </i>.
+    </p>
+
+    <h3 class = "speech"><a id="change">set color </a></h3>
+    <p><img src = "../blockImages/change.png " />
+    <br />
+        The turtles will set their color to the NetLogo color number you enter in the field. Use the dropdowns to select <b><i>color</i></b> and <b><i>equal to</i></b> a number that is entered into the field. <br /> <a href="#NetLogo-Color-Chart"><img src = "../blockImages/NetLogo-Color-Chart.png" class = "intext" /></a> <br /><i>"NetLogo Color Chart", Source:</i> <a href = "http://ccl.northwestern.edu/netlogo/" target = "_blank">http://ccl.northwestern.edu/netlogo/</a><br /><br />Base colors are any color that ends in 5. Note that the color of the agent is also the color that will be left by using <a href="#pen-down"><img src = "../blockImages/pen-down.png" class = "intext" /></a> 
+    </p>
+
+    <h3 class = "speech"><a id="stamp">stamp</a></h3>
+    <p><img src = "../blockImages/stamp.png" />
+    <br />
+        Stamp an outline of the turtle onto the background.
+    </p>
+
+
+</div>
+
+
+
+
+
+
+	
+
+
+<div id = "footer"><i>(c) Mind, Matter, &amp; Media Lab, Vanderbilt University<br/>
+Our research is supported by several grants from the National Science Foundation and Vanderbilt University.</i></div>
+
+
+</body>
+
+</html>

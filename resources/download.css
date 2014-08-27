@@ -1,0 +1,164 @@
+body
+{
+    background: #ffffff;
+    font-family: Optima;
+    max-width: 900px;
+}
+
+
+
+
+
+.vimap
+{
+    font-size: 2em;
+    font-family: Trebuchet MS, sans-serif;
+}
+
+
+.vimap > img
+{
+    vertical-align: middle;
+    margin-bottom: -15px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: -10px;
+}
+
+
+
+
+
+.intext 
+{
+	display:inline-block;
+	vertical-align:middle;
+  margin-bottom: 2px;
+}
+
+
+#bar 
+{
+    background-color: #dddddd;
+    border-radius: 7px;
+
+}
+
+
+table
+{
+    border-spacing: 25px 10px;
+    font-family: Trebuchet MS, sans-serif;
+}
+
+
+
+th
+{
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: #3330ff;
+    font-size: 1.2em;
+    font-weight: lighter;
+}
+
+
+
+th:hover
+{
+	/*background-color: #dddddd; */
+	cursor: pointer;
+	cursor: hand;
+}
+ 
+
+th > a 
+{
+    color: #3330ff;
+    text-decoration: none;
+}
+
+
+/*  TRANSITIONS */
+/* Border Fade */
+.border-fade 
+{
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: box-shadow;
+  transition-property: box-shadow;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: inset 0px -9px 0px -6px #dddddd, 0 0 1px rgba(0, 0, 0, 0);
+  /* Hack to improve aliasing on mobile/tablet devices */
+} 
+ 
+.border-fade:hover, .border-fade:focus, .border-fade:active 
+{
+  box-shadow: inset 0px -9px 0px -6px #3350ff, 0 0 1px rgba(0, 0, 0, 0);
+  /* Hack to improve aliasing on mobile/tablet devices */
+}
+
+
+.already-on
+{
+  font-weight: bolder;
+}
+
+
+#main  
+{
+  padding-top: 12px;
+  margin-left: 8px; 
+  line-height: 2em;
+} 
+
+
+#code
+{
+  font-family: Andale Mono;
+}
+
+
+
+#main > p
+{
+  margin-left: 3.2%;
+  margin-bottom: 30px;
+  margin-top: 5px;
+  font-family: sans-serif;
+}
+
+
+#about
+{
+  font-family: Trebuchet MS, sans-serif;
+}
+
+
+#footer 
+{
+    text-align: left;
+    font-size: 0.7em; 
+    line-height: 1.2em;
+    font-weight: lighter;
+    color: gray;
+}
+
+
+a
+{
+   color: #7c0000;
+}
+
+
+
+/*span 
+{
+    background-color: #cccccc;
+    border-radius: 4px;
+    padding: 3px;
+} */
+

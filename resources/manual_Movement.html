@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> 
+		ViMAP, a programming language designed for K-12
+	</title> 
+	<link type = "text/css" rel = "stylesheet" href = "style.css" media = "all"/>
+</head>
+
+
+<body>  
+<h1 class="vimap"><img src = "logo.jpg"/>Dictionary</h1> 
+<div id = "bar">
+<table>
+    <tr> 
+        <th class = "border-fade"><a href = "download.html">Download</a></th>
+        <th class = "already-on">Dictionary</th>
+        <th class = "border-fade"><a href = "videos.html">Videos</a></th>
+        <th class = "border-fade"><a href = "about.html">About</a></th>
+        <th class = "border-fade"><a href = "contact.html">Contact</a></th>
+    </tr>    
+</table></div>
+
+<div id = "main">
+
+<a href = "manual.html">Show All</a><br /><b>Categories:</b> <a href = "manual_Control.html">Control</a> <a href = "manual_Groups.html">Groups</a> <a href = "manual_Measure.html">Measure</a> <b>Movement</b> <a href = "manual_Pen.html">Pen</a> <a href = "manual_Secret Number.html">Secret Number</a> <a href = "manual_Sensors.html">Sensors</a> <a href = "manual_Turtles.html">Turtles</a> <br /><b>Special Units:</b> <a href = "manual_Ants.html">Ants</a> <br />
+
+    <h3 class = "speech"><a id="face">face</a></h3>
+    <p><img src = "../blockImages/face.png" />
+    <br />
+        The turtle, or turtles in the group, will change their heading to face (or point towards) the xy coordinates. Enter the x-coordinate in the first field and the y-coordinate in the second field. 
+    </p>
+
+    <h3 class = "speech"><a id="go-backward">go backward</a></h3>
+    <p><img src = "../blockImages/go-backward.png" />
+    <br />
+        Moves the turtle in the direction that is opposite the direction that it is pointing, but does not change the heading. <br/> You must set the <b><i>step-size</i></b> with <a href="#set-step-size"><img src = "../blockImages/set-step-size.png" class = "intext" /></a> or the turtle will not move.
+    </p>
+
+    <h3 class = "speech"><a id="go-forward">go forward</a></h3>
+    <p><img src = "../blockImages/go-forward.png" />
+    <br />
+        Turtles in the group will move in the direction of their heading. You must set the step-size with <a href="#set-step-size"><img src = "../blockImages/set-step-size.png" class = "intext" /></a> or the turtle will not move.
+    </p>
+
+    <h3 class = "speech"><a id="forward-sum">go forward sum</a></h3>
+    <p><img src = "../blockImages/forward-sum.png" />
+    <br />
+        Compute the sum of the two numbers and the go forward the computed distance.
+    </p>
+
+    <h3 class = "speech"><a id="left">left turn</a></h3>
+    <p><img src = "../blockImages/left.png" />
+    <br />
+         Turns the turtle or turtles left by the <b><i>number</i></b> of degrees you put in the field. For example, if the heading is 100 and you turn left 60, the new heading will be 40. It is the opposite command to <a href="#right"><img src = "../blockImages/right.png" class = "intext" /></a> <!-- Movement -->
+    </p>
+
+    <h3 class = "speech"><a id="random-turn">random turn </a></h3>
+    <p><img src = "../blockImages/random-turn.png" />
+    <br />
+        First, the turtle chooses a random number between 1 and <b><i>number</i></b>. Next the turtle turns either right or left from where it is pointed by that number of degrees.
+    </p>
+
+    <h3 class = "speech"><a id="reset-forward-values">reset forward values</a></h3>
+    <p><img src = "../blockImages/reset-forward-values.png" />
+    <br />
+        Resets the step-size of the turtle, or, of all turtles in the group, to zero.
+    </p>
+
+    <h3 class = "speech"><a id="right">right turn </a></h3>
+    <p><img src = "../blockImages/right.png" />
+    <br />
+        Turns the turtle or turtles right by the <b><i>number</i></b> of degrees you put in the field. For example, if the heading is 100 and you turn right 60, the new heading will be 160. It is the opposite command to <a href="#left"><img src = "../blockImages/left.png" class = "intext" /></a>
+    </p>
+
+    <h3 class = "speech"><a id="set-heading">set heading </a></h3>
+    <p><img src = "../blockImages/set-heading.png" />
+    <br />
+        Enter a number in the field. The turtle or turtles will set their direction of travel to that polar coordinate. In ViMAP, a heading of 0 makes the turtle point in the direction of the top-center of the world, 90 is to the right, 180 is toward the bottom-center of the world, and 270 is to the left.
+    </p>
+
+    <h3 class = "speech"><a id="set-random-heading">set random heading</a></h3>
+    <p><img src = "../blockImages/set-random-heading.png" />
+    <br />
+        Set the turtle&apos;s <b><i>heading</i></b>, to a <b><i>random</i></b> number.<br /> Enter any two angles to set the limits.  The random angle will be greater than or equal to <b><i>field1</i></b> but less than or equal to <b><i>field2</i></b>.  <!-- Secret Number -->
+    </p>
+
+    <h3 class = "speech"><a id="set-step-size">set step-size </a></h3>
+    <p><img src = "../blockImages/set-step-size.png" />
+    <br />
+         Sets the step-size of the turtle or turtles to the <b><i>number</i></b> you put in the field. For example, a step-size of 50 is five times as large as a step-size of 10. This command is always used with a <a href="#go-forward"><img src = "../blockImages/go-forward.png" class = "intext" /></a>
+    </p>
+
+    <h3 class = "speech"><a id="set-step_size-minus">set step-size minus</a></h3>
+    <p><img src = "../blockImages/set-step_size-minus.png" />
+    <br />
+        Set step-size for the turtle, equal to the current step-size minus a number you enter. For example, if the step-size was 10, and you <b><i>set step-size minus 2 </i></b>, the updated step-size will be 8. Does not allow step-sizes less than 0.
+    </p>
+
+    <h3 class = "speech"><a id="set-step_size-plus">set step-size plus</a></h3>
+    <p><img src = "../blockImages/set-step_size-plus.png" />
+    <br />
+        Set step-size for the turtle, equal to the current step-size plus a number you enter. For example, if the step-size was 10, and you <b><i>set step-size plus 2</i></b>, the updated step-size will be 12.
+    </p>
+
+    <h3 class = "speech"><a id="set-xy">set xy</a></h3>
+    <p><img src = "../blockImages/set-xy.png" />
+    <br />
+        Sets the position of the turtle or turtles to the x and y coordinates you specify. To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position. Enter the x-coordinate in the first field, and the y-coordinate in the second.  <!-- Groups -->
+    </p>
+
+
+</div>
+
+
+
+
+
+
+	
+
+
+<div id = "footer"><i>(c) Mind, Matter, &amp; Media Lab, Vanderbilt University<br/>
+Our research is supported by several grants from the National Science Foundation and Vanderbilt University.</i></div>
+
+
+</body>
+
+</html>

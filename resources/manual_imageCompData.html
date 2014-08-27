@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> 
+		ViMAP, a programming language designed for K-12
+	</title> 
+	<link type = "text/css" rel = "stylesheet" href = "style.css" media = "all"/>
+</head>
+
+
+<body>  
+<h1 class="vimap">ViMAP Manual</h1> 
+<div id = "bar">
+<table>
+    <tr> 
+        <th class = "border-fade"><a href = "download.html">Download</a></th>
+        <th class = "already-on">Manual</th>
+        <th class = "border-fade"><a href = "videos.html">Videos</a></th>
+        <th class = "border-fade"><a href = "about.html">About</a></th>
+        <th class = "border-fade"><a href = "contact.html">Contact</a></th>
+    </tr>    
+</table></div>
+
+<div id = "main">
+
+<a href = "manual.html">Show All</a><br /><b>Category:</b> <a href = "manual_Movement.html">Movement</a> <a href = "manual_Agents and Pen.html">Agents and Pen</a> <a href = "manual_Measure.html">Measure</a> <br /><b>Unit:</b> <a href = "manual_imageComp.html">imageComp</a> <b>imageCompData</b> <a href = "manual_imageCompDataArd.html">imageCompDataArd</a> <br />
+
+    <h3 class = "speech"><a id="face">face</a></h3>
+    <p><img src = "../blockImages/face.png" />
+    <br />
+        Aim the turtle to face a x-y coordinate.  Enter numbers for the coordinates.  
+    </p>
+
+    <h3 class = "speech"><a id="go-forward">go forward</a></h3>
+    <p><img src = "../blockImages/go-forward.png" />
+    <br />
+        Move the turle in the direction that it is pointing. <br/> You must set the <b>step size</b> with <a href="#set-step-size"><img src = "../blockImages/set-step-size.png" class = "intext" /></a> or the turtle will not move.
+    </p>
+
+    <h3 class = "speech"><a id="go-invisible">go invisible</a></h3>
+    <p><img src = "../blockImages/go-invisible.png" />
+    <br />
+        This commmands makes the turtle disappear from the world.  Though you cannot see the turtle, it is still executing the commands.
+    </p>
+
+    <h3 class = "speech"><a id="go-visible">go visible</a></h3>
+    <p><img src = "../blockImages/go-visible.png" />
+    <br />
+        This commands makes the turtle visible in the world. 
+    </p>
+
+    <h3 class = "speech"><a id="left">left [<i>number</i>]</a></h3>
+    <p><img src = "../blockImages/left.png" />
+    <br />
+        Turns the turtle <b><i>number</i></b> degrees to the left of the current heading.
+    </p>
+
+    <h3 class = "speech"><a id="my-place-measure-point">place measure point</a></h3>
+    <p><img src = "../blockImages/my-place-measure-point.png" />
+    <br />
+        Puts a mark on the world of where the turtle currently is located.  <br/> The measure points can be read by the graphing tools in ViMaP.  This command can be undone by <a href="#clear-measure-points"><img src = "../blockImages/clear-measure-points.png" class = "intext" /></a>. 
+    </p>
+
+    <h3 class = "speech"><a id="pen-down">pen down</a></h3>
+    <p><img src = "../blockImages/pen-down.png " />
+    <br />
+        Leaves a pen-trail wherever the turtle travels in the world. 
+    </p>
+
+    <h3 class = "speech"><a id="pen-up">pen up</a></h3>
+    <p><img src = "../blockImages/pen-up.png" />
+    <br />
+        The turtle will no longer leave a pen-trail.  But previous pen marks will persist in the world.  
+    </p>
+
+    <h3 class = "speech"><a id="reset-forward-values">reset forward values</a></h3>
+    <p><img src = "../blockImages/reset-forward-values.png" />
+    <br />
+        ??????
+    </p>
+
+    <h3 class = "speech"><a id="right">right [<i>number</i>]</a></h3>
+    <p><img src = "../blockImages/right.png" />
+    <br />
+        Turns the turtle <b><i>number</i></b> degrees to the right of the current heading.  It is the opposite command to <a href="#left"><img src = "../blockImages/left.png" class = "intext" /></a>
+    </p>
+
+    <h3 class = "speech"><a id="set-heading">set heading [<i>number</i>]</a></h3>
+    <p><img src = "../blockImages/set-heading.png" />
+    <br />
+        Enter a number in the textbox.  The turtle will read that <b><i>number</i></b> as degrees and turn and face in that direction. <br/> In ViMaP heading 0 is north, heading 90 is east, heading 180 is south, and heading 270 is west.    
+    </p>
+
+    <h3 class = "speech"><a id="set-random-heading-0-to">set random heading</a></h3>
+    <p><img src = "../blockImages/set-random-heading-0-to.png" />
+    <br />
+        Set the turtle's <b>heading</b>, to a <b>random</b> number.<br />The new heading will be between 0 and the number you choose.
+    </p>
+
+    <h3 class = "speech"><a id="set-shape">set shape</a></h3>
+    <p><img src = "../blockImages/set-shape.png" />
+    <br />
+        Set the shape of the turtle, to the shape in the dropdown menu.
+    </p>
+
+    <h3 class = "speech"><a id="stamp">stamp</a></h3>
+    <p><img src = "../blockImages/stamp.png" />
+    <br />
+        Stamp an outline of the turtle onto the background.
+    </p>
+
+    <h3 class = "speech"><a id="step-size-minus">step size minus</a></h3>
+    <p><img src = "../blockImages/step-size-minus.png" />
+    <br />
+        Set <b>step size</b> for the turtle, equal to the current <b>step size</b> minus a number you enter.
+    </p>
+
+    <h3 class = "speech"><a id="step-size-plus">step size plus</a></h3>
+    <p><img src = "../blockImages/step-size-plus.png" />
+    <br />
+        Set <b>step size</b> for the turtle, equal to the current <b>step size</b> plus a number you enter.
+    </p>
+
+
+</div>
+
+
+
+
+
+
+	
+
+
+<div id = "footer"><i>(c) Mind, Matter, &amp; Media Lab, Vanderbilt University<br/>
+Our research is supported by several grants from the National Science Foundation and Vanderbilt University.</i></div>
+
+
+</body>
+
+</html>

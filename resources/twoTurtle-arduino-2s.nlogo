@@ -1,3 +1,5 @@
+extensions [arduino]
+
 breed [wabbits wabbit]
 breed [blocks block]
 breed [sensors sensor]
@@ -31,8 +33,8 @@ wabbits-own
 	; if and only if it was down before.
 	pen-was-down 
                   
-     
-     agent-kind-string ;;  string which designates the wabbit as wabbit-one or wabbit-two
+     ; "yellow-ball", "blue-ball", or "red-ball"
+     agent-kind-string 
      
      ; counts the number of flags/markers that have been dropped so far in the run
      flag-counter 
@@ -45,7 +47,7 @@ wabbits-own
 
      ; how much faster than initial speed a wabbit is moving.
      ; can be negative, but starts at 0
-     bonus-speed  ; step-size
+     bonus-speed 
      initial-x
      initial-y
      previous-x
@@ -72,11 +74,9 @@ blocks-own
   arg-list
   is-observer
   is-basic
-  is-set-update
-  
+  label-after-arg
   display-name
-  return-type
-  label-after-arg 
+  
   ; the name of the block's category, from categories-list (if any)
   category
 ]
@@ -109,7 +109,7 @@ globals
     ; list of sensors for Java construction-world
     sensors-list 
     
-    ; list of agent-kinds in the model (breeds)
+    ; list of agent-kind in the model (breeds)
     agent-kind-list 
     predicate-list
     comp-int-left-vars
@@ -125,9 +125,8 @@ globals
     measure-option-string-lists
     measure-option-command-list
     
+    called-set-name ;; maybe be 0 or "" (empty string) if no called set.
     var-name-list
-    
-    called-set-name
     
     can-highlight-agents
     last-cycle
@@ -139,14 +138,6 @@ globals
 
 ; sets up the screen
 to setup 
-  ;; (for this model to work with NetLogo's new plotting features,
-  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
-  ;; the beginning of your setup procedure and reset-ticks at the end
-  ;; of the procedure.)
-  ;; (for this model to work with NetLogo's new plotting features,
-  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
-  ;; the beginning of your setup procedure and reset-ticks at the end
-  ;; of the procedure.)
   clear-all
   set-defaults
   color-background-patches
@@ -164,8 +155,29 @@ to setup
   create-measure-option-string-lists
   create-measure-option-command-list
   create-var-name-list
+  setup-arduino
   
   reset-ticks    ;; creates ticks and initializes them to 0
+end
+
+to setup-arduino
+  if arduino:is-open? = false
+  [
+    let ports arduino:ports 
+    ifelse (length ports > 0)
+    [arduino:open user-one-of "Select a Port:" ports]
+    [user-message "No available ports:  Check your connections."]
+  ]
+end
+
+to-report arduino-distance-1
+  let real-dist arduino:get "dx"
+  report precision real-dist 2
+end
+
+to-report arduino-distance-2
+  let real-dist arduino:get "dy"
+  report precision real-dist 2
 end
 
 to setup-cycle
@@ -310,6 +322,7 @@ to create-categories-list
   [
     "Control"
     "Movement"
+    "Sensors"
     "Pen"
     "Secret Number"   ;;;SECRET NUMBER
   ]
@@ -371,7 +384,7 @@ to cycle-ended
 end
 
 to create-predicate-list
-  set predicate-list ["step-size-above-5" "heading-upward"]
+  set predicate-list ["step_size-above-5" "heading-upward"]
 end
 
 ; similar to create-predicate-list
@@ -389,7 +402,7 @@ end
 to-report java-color [aWho]
   let result 0
   ask turtle aWho
-  [ set result color ]
+  [ set result heading ]
   report result
 end
 
@@ -401,12 +414,14 @@ to-report java-heading [aWho]
   report result
 end
 
+
 to-report java-step-size [aWho]
   let result 0
   ask turtle aWho
   [set result bonus-speed]
   report result
 end
+
 
 to-report java-heading-upward [aWho]
   let result false
@@ -418,7 +433,7 @@ to-report java-heading-upward [aWho]
   report result
 end
 
-to-report java-step-size-above-5 [aWho]
+to-report java-step_size-above-5 [aWho]
   let result false
   ask turtle aWho
   [
@@ -450,6 +465,248 @@ end
 to create-blocks-list
   set blocks-list []
   
+  create-blocks 1
+  [
+    set block-name "set-step_size-plus-sensor"
+    set is-observer false
+     set arg-list []
+     hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["1" "2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Sensors"
+    set is-basic true
+    ; other variables not applicable
+  ]
+    set blocks-list lput max-one-of blocks [who] blocks-list
+    
+    create-blocks 1
+  [
+    set block-name "set-step_size-minus-sensor"
+    set is-observer false
+     set arg-list []
+     hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["1" "2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Sensors"
+    set is-basic true
+    ; other variables not applicable
+  ]
+    set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  create-blocks 1
+  [
+    set block-name "set"
+    set category "Sensors"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["pen-width" "color" "heading" "step_size"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+        hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["sensor-1" "sensor-2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["plus" "minus" "times" "divide"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+  hatch-args 1
+  [
+     set arg-type "int"
+     set default-value 1
+     set max-value 50
+     set min-value 0
+  ]
+  set arg-list lput max-one-of args [who] arg-list
+  set is-observer false
+  set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+       create-blocks 1
+     [
+       set block-name "x-plus-sensor"
+       set category "Sensors"
+       set arg-list []
+           hatch-args 1
+      [
+        set arg-type "enum"
+        set enum-list ["1" "2"]
+      ]
+      set arg-list lput max-one-of args [who] arg-list
+       set is-observer false
+       set is-basic false
+       ; other variables not applicable
+     ]
+   set blocks-list lput max-one-of blocks [who] blocks-list
+   
+   create-blocks 1
+     [
+       set block-name "x-minus-sensor"
+       set category "Sensors"
+       set arg-list []
+           hatch-args 1
+      [
+        set arg-type "enum"
+        set enum-list ["1" "2"]
+      ]
+      set arg-list lput max-one-of args [who] arg-list
+       set is-observer false
+       set is-basic false
+       ; other variables not applicable
+     ]
+   set blocks-list lput max-one-of blocks [who] blocks-list
+   
+   create-blocks 1
+     [
+       set block-name "y-plus-sensor"
+       set category "Sensors"
+       set arg-list []
+           hatch-args 1
+      [
+        set arg-type "enum"
+        set enum-list ["1" "2"]
+      ]
+      set arg-list lput max-one-of args [who] arg-list
+       set is-observer false
+       set is-basic false
+       ; other variables not applicable
+     ]
+   set blocks-list lput max-one-of blocks [who] blocks-list
+   
+   create-blocks 1
+     [
+       set block-name "y-minus-sensor"
+       set category "Sensors"
+       set arg-list []
+           hatch-args 1
+      [
+        set arg-type "enum"
+        set enum-list ["1" "2"]
+      ]
+      set arg-list lput max-one-of args [who] arg-list
+       set is-observer false
+       set is-basic false
+       ; other variables not applicable
+     ]
+   set blocks-list lput max-one-of blocks [who] blocks-list
+   
+        create-blocks 1
+      [
+        set block-name "set-xy"
+            set category "Movement"
+        set arg-list []
+        hatch-args 1
+        [
+          set arg-type "int"
+          set default-value 0
+          set max-value max-pxcor
+          set min-value min-pxcor
+        ]
+        set arg-list lput max-one-of args [who] arg-list
+            hatch-args 1
+        [
+          set arg-type "int"
+          set default-value 0
+          set max-value max-pycor
+          set min-value min-pycor
+        ]
+        set arg-list lput max-one-of args [who] arg-list
+        set is-observer false
+        set is-basic true
+        ; other variables not applicable
+      ]
+        set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "right-turn-sensor"
+    set category "Sensors"
+    set arg-list []
+    hatch-args 1
+      [
+      set arg-type "enum"
+      set enum-list ["1" "2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "left-turn-sensor"
+    set category "Sensors"
+    set arg-list []
+    hatch-args 1
+      [
+      set arg-type "enum"
+      set enum-list ["1" "2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "set-color-by"
+    set category "Sensors"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["sensor" "four-times-sensor" "ten-times-sensor"]
+    ]    
+      set arg-list lput max-one-of args [who] arg-list
+      hatch-args 1
+      [
+      set arg-type "enum"
+      set enum-list ["1" "2"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+      set is-observer false
+      set is-basic false
+  ]
+    set blocks-list lput max-one-of blocks [who] blocks-list
+    
+ create-blocks 1
+  [
+    set block-name "light-on"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+
+  create-blocks 1
+  [
+    set block-name "light-off"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+  
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
   create-blocks 1
   [
@@ -458,7 +715,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width"] ;"repeat-number"]
+      set enum-list ["step_size" "heading" "color" "secret-number" "pen-width"] ;"repeat-number"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -487,7 +744,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
+      set enum-list ["step_size" "heading" "color" "secret-number" "pen-width" "none"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
@@ -510,10 +767,9 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-  
   create-blocks 1
   [
-    set block-name "set-step-size"
+    set block-name "set-step_size"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -540,37 +796,10 @@ to create-blocks-list
     ; other variables not applicable
   ]
    set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   create-blocks 1
-  [
-    set block-name "set-xy"
-    set category "Movement"
-    set arg-list []
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value max-pxcor
-      set min-value min-pxcor
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value max-pycor
-      set min-value min-pycor
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
       
     create-blocks 1
   [
-    set block-name "step-size-plus"
+    set block-name "set-step_size-plus"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -589,7 +818,7 @@ to create-blocks-list
     
     create-blocks 1
   [
-    set block-name "step-size-minus"
+    set block-name "set-step_size-minus"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -605,6 +834,17 @@ to create-blocks-list
     ; other variables not applicable
   ]
     set blocks-list lput max-one-of blocks [who] blocks-list
+    
+    create-blocks 1
+  [
+    set block-name "start-measuring"
+    ;set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
     
 
     ;;NEEDED FOR MEASURE LINKING
@@ -618,18 +858,6 @@ to create-blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-      
-                    create-blocks 1
-  [
-    set block-name "start-measuring"
-    ;set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
                   create-blocks 1
   [
     set block-name "clear-measure-points"
@@ -668,7 +896,7 @@ to create-blocks-list
       
       create-blocks 1
   [
-    set block-name "set-step-size-to-secret-number"
+    set block-name "set-step_size-to-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
@@ -680,7 +908,7 @@ to create-blocks-list
       
       create-blocks 1
   [
-    set block-name "step-size-plus-secret-number"
+    set block-name "set-step_size-plus-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
@@ -692,7 +920,7 @@ to create-blocks-list
       
      create-blocks 1
   [
-    set block-name "step-size-minus-secret-number"
+    set block-name "set-step_size-minus-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
@@ -725,38 +953,6 @@ to create-blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-   
-  create-blocks 1
-  [
-    set block-name "set-random-heading"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 360
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    
-    set label-after-arg " to " 
-    set is-observer false
-    set is-basic false
-    set is-set-update true
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-    
-      
       
     create-blocks 1
   [
@@ -862,18 +1058,6 @@ to create-blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      create-blocks 1
-  [
-    set block-name "stamp"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
         create-blocks 1
   [
     set block-name "plant-flag"
@@ -902,40 +1086,51 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
+    set primitives-list lput "light-on" primitives-list
+    set primitives-list lput "light-off" primitives-list
+    set primitives-list lput "right-turn-sensor" primitives-list 
+    set primitives-list lput "left-turn-sensor" primitives-list
+    set primitives-list lput "set-color-by" primitives-list
     set primitives-list lput "change" primitives-list
 	set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
+    set primitives-list lput "start-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
 
-    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "set-step_size" primitives-list
     set primitives-list lput "go-forward" primitives-list
-    set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "step-size-plus" primitives-list
-    set primitives-list lput "step-size-minus" primitives-list
+    set primitives-list lput "set-step_size-plus" primitives-list
+    set primitives-list lput "set-step_size-minus" primitives-list
+    set primitives-list lput "set-step_size-plus-sensor" primitives-list
+    set primitives-list lput "set-step_size-minus-sensor" primitives-list
   
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
-    set primitives-list lput "stamp" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
    ; set primitives-list lput "plant-flag" primitives-list
+    
+    set primitives-list lput "set-xy" primitives-list
+    set primitives-list lput "x-plus-sensor" primitives-list
+    set primitives-list lput "x-minus-sensor" primitives-list
+    set primitives-list lput "y-plus-sensor" primitives-list
+    set primitives-list lput "y-minus-sensor" primitives-list
+    set primitives-list lput "set" primitives-list
     
     ;;SECRET NUMBER
     set primitives-list lput "set-color-to-secret-number" primitives-list
     set primitives-list lput "set-heading-to-secret-number" primitives-list
     
-    set primitives-list lput "set-step-size-to-secret-number" primitives-list    
-    set primitives-list lput "step-size-plus-secret-number" primitives-list
-    set primitives-list lput "step-size-minus-secret-number" primitives-list
+    set primitives-list lput "set-step_size-to-secret-number" primitives-list    
+    set primitives-list lput "set-step_size-plus-secret-number" primitives-list
+    set primitives-list lput "set-step_size-minus-secret-number" primitives-list
     
     set primitives-list lput "turn-right-by-secret-number" primitives-list
     set primitives-list lput "turn-left-by-secret-number" primitives-list    
     set primitives-list lput "pick-a-secret-number-less-than" primitives-list
     set primitives-list lput "pick-secret-number-range" primitives-list
-    set primitives-list lput "set-random-heading" primitives-list
    ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
@@ -949,48 +1144,66 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
+    set primitives-list lput "light-on" primitives-list
+    set primitives-list lput "light-off" primitives-list
+    set primitives-list lput "right-turn-sensor" primitives-list 
+    set primitives-list lput "left-turn-sensor" primitives-list
+    set primitives-list lput "set-color-by" primitives-list
     set primitives-list lput "change" primitives-list
     set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
+    set primitives-list lput "start-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
 
-    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "set-step_size" primitives-list
     set primitives-list lput "go-forward" primitives-list
-    set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "step-size-plus" primitives-list
-    set primitives-list lput "step-size-minus" primitives-list
+    set primitives-list lput "set-step_size-plus" primitives-list
+    set primitives-list lput "set-step_size-minus" primitives-list
+    set primitives-list lput "set-step_size-plus-sensor" primitives-list
+    set primitives-list lput "set-step_size-minus-sensor" primitives-list
   
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
-    set primitives-list lput "stamp" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
    ; set primitives-list lput "plant-flag" primitives-list
+    
+    set primitives-list lput "set-xy" primitives-list
+    set primitives-list lput "x-plus-sensor" primitives-list
+    set primitives-list lput "x-minus-sensor" primitives-list
+    set primitives-list lput "y-plus-sensor" primitives-list
+    set primitives-list lput "y-minus-sensor" primitives-list
+    set primitives-list lput "set" primitives-list
     
     ;;SECRET NUMBER
     set primitives-list lput "set-color-to-secret-number" primitives-list
     set primitives-list lput "set-heading-to-secret-number" primitives-list
     
-    set primitives-list lput "set-step-size-to-secret-number" primitives-list    
-    set primitives-list lput "step-size-plus-secret-number" primitives-list
-    set primitives-list lput "step-size-minus-secret-number" primitives-list
+    set primitives-list lput "set-step_size-to-secret-number" primitives-list    
+    set primitives-list lput "set-step_size-plus-secret-number" primitives-list
+    set primitives-list lput "set-step_size-minus-secret-number" primitives-list
     
     set primitives-list lput "turn-right-by-secret-number" primitives-list
     set primitives-list lput "turn-left-by-secret-number" primitives-list    
     set primitives-list lput "pick-a-secret-number-less-than" primitives-list
     set primitives-list lput "pick-secret-number-range" primitives-list
-    set primitives-list lput "set-random-heading" primitives-list
    ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
 end
 
+to-report wallaby
+  report 5
+end
+
+to-report dingo
+  report 15
+end
 
 to create-wabbits-list
-  set wabbits-list sort [who] of wabbits  ;; sort: reports a sorted list of numbers.  
+  set wabbits-list sort [who] of wabbits
 end
 
 to create-wabbit-kind-list
@@ -1003,13 +1216,183 @@ to create-wabbit-kind-list
   ]
 end
 
+to java-x-plus-sensor [a-sensor]
+    let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  setxy xcor + my-dist ycor
+  set odometer odometer + my-dist
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + my-dist
+  ]
+end
+
+to java-x-minus-sensor [a-sensor]
+    let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  setxy xcor - my-dist ycor
+  set odometer odometer + my-dist
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + my-dist
+  ]
+end
+
+to java-y-plus-sensor [a-sensor]
+    let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  setxy xcor ycor + my-dist
+  set odometer odometer + my-dist
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + my-dist
+  ]
+end
+
+to java-y-minus-sensor [a-sensor]
+    let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  setxy xcor ycor - my-dist
+  set odometer odometer + my-dist
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + my-dist
+  ]
+end
+
+to java-set-xy [my-x my-y]
+  let dist-traveled distancexy my-x my-y
+  setxy my-x my-y
+  set odometer odometer + dist-traveled
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + dist-traveled
+  ]
+end
+
+to java-light-on
+  arduino:write-byte 49
+end
+
+to java-light-off
+  arduino:write-byte 48
+end
+
+to java-right-turn-sensor [a-sensor]
+  let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  rt my-dist
+end
+
+to java-left-turn-sensor  [a-sensor]
+  let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  lt my-dist
+end
+
+to java-set-color-by [amount-number a-sensor]
+  let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  
+  if amount-number = "sensor" 
+  [set color my-dist]
+  if amount-number = "four-times-sensor" 
+  [set color my-dist * 4]
+  if amount-number = "ten-times-sensor"
+  [set color my-dist * 10]
+end
+
+to java-set [a-value a-sensor a-operator a-amount]
+  let my-dist 0
+  if a-sensor = "sensor-1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "sensor-2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  
+  if a-value = "step_size"
+  [
+    if a-operator = "plus"
+    [set bonus-speed my-dist + a-amount]
+    if a-operator = "minus"
+    [set bonus-speed my-dist - a-amount]
+    if a-operator = "times"
+    [set bonus-speed my-dist * a-amount]
+    if a-operator = "divide" and a-amount != 0
+    [set bonus-speed my-dist / a-amount]
+  ]
+  if a-value = "pen-width"
+  [
+    if a-operator = "plus"
+    [set pen-size my-dist + a-amount]
+    if a-operator = "minus"
+    [set pen-size my-dist - a-amount]
+    if a-operator = "times"
+    [set pen-size my-dist * a-amount]
+    if a-operator = "divide" and a-amount != 0
+    [set pen-size my-dist / a-amount]
+  ]
+  if a-value = "color"
+  [
+    if a-operator = "plus"
+    [set color my-dist + a-amount]
+    if a-operator = "minus"
+    [set color my-dist - a-amount]
+    if a-operator = "times"
+    [set color my-dist * a-amount]
+    if a-operator = "divide" and a-amount != 0
+    [set color my-dist / a-amount]
+  ]
+  if a-value = "heading"
+  [
+    if a-operator = "plus"
+    [set heading my-dist + a-amount]
+    if a-operator = "minus"
+    [set heading my-dist - a-amount]
+    if a-operator = "times"
+    [set heading my-dist * a-amount]
+    if a-operator = "divide" and a-amount != 0
+    [set heading my-dist / a-amount]
+  ]
+end
+
 to java-change-shape-to [ shapename ]
   set shape shapename
 end
 
 to java-set-label [variable-name]
   set label-color black
-  if variable-name = "step-size"
+  if variable-name = "step_size"
   [set label bonus-speed]
   if variable-name = "color"
   [set label color]
@@ -1024,7 +1407,7 @@ to java-set-label [variable-name]
 end
 
 to java-change [variable-name operator-name change-value]
-  if variable-name = "step-size"
+  if variable-name = "step_size"
   [
     if operator-name = "plus"
     [set bonus-speed bonus-speed + change-value]
@@ -1104,19 +1487,19 @@ to java-set-heading-to-secret-number
   set heading secret-number
 end
 
-to java-set-step-size-to-secret-number
+to java-set-step_size-to-secret-number
   ifelse ( secret-number > 0 )
   [ set bonus-speed secret-number ]
   [ set bonus-speed 0 ]
 end
 
-to java-step-size-plus-secret-number
+to java-set-step_size-plus-secret-number
   set bonus-speed bonus-speed + secret-number
   if ( bonus-speed < 0 )
   [ set bonus-speed 0 ]
 end
 
-to java-step-size-minus-secret-number
+to java-set-step_size-minus-secret-number
   set bonus-speed bonus-speed - secret-number
   if ( bonus-speed < 0 )
   [ set bonus-speed 0 ]
@@ -1132,33 +1515,6 @@ to java-turn-left-by-secret-number
   left secret-number
 end
 
-
-to java-set-random-heading [angle1 angle2]
-  let fin_angle 0
-  ifelse (angle2 - angle1) >= 360 or (angle2 - angle1) <= -360 ; if user enters angle greater than 360
-  [ set fin_angle random 360 ]
-  [
-    let ang1 (angle1 mod 360) ;; convert all angles to (0, 359) form to reduce confusion
-    let ang2 (angle2 mod 360)
-    
-    ifelse ang2 = ang1
-    [ set fin_angle ang1]
-    [
-      ifelse ang2 > ang1
-      [
-        let temp ang2 - ang1
-        set temp random temp
-        set fin_angle (ang1 + temp)
-      ]
-      [ ;; if ang2 < ang1 
-        let temp (360 - ang1) + ang2
-        set temp random temp
-        set fin_angle (ang1 + temp)
-      ]
-    ]
-  ]
-  set heading fin_angle
-end
 
 to java-pick-a-secret-number-less-than [ amax ]
   set secret-number (random amax)
@@ -1179,16 +1535,36 @@ to java-pick-secret-number-range [aleft aright]
   set secret-number (random (amax - amin + 1)) + amin
 end
 
-to java-set-step-size [ aspeed ]
+to java-set-step_size [ aspeed ]
   set bonus-speed aspeed
   if (aspeed < 0) [ set bonus-speed 0 ]
 end
 
-to java-step-size-plus [amount-number]
+to java-set-step_size-plus-sensor [a-sensor]
+  let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  set bonus-speed bonus-speed + my-dist
+end
+
+to java-set-step_size-minus-sensor [a-sensor]
+  let my-dist 0
+  if a-sensor = "1" or a-sensor = 1
+  [set my-dist arduino-distance-1]
+  if a-sensor = "2" or a-sensor = 2
+  [set my-dist arduino-distance-2]
+  set bonus-speed bonus-speed - my-dist
+  if bonus-speed < 0
+  [set bonus-speed 0]
+end
+
+to java-set-step_size-plus [amount-number]
   set bonus-speed bonus-speed + amount-number
 end
 
-to java-step-size-minus [amount-number]
+to java-set-step_size-minus [amount-number]
   set bonus-speed bonus-speed - amount-number
   if (bonus-speed < 0) [ set bonus-speed 0 ]
 end
@@ -1206,24 +1582,11 @@ to java-go-forward
   ]
   ;;turtle variables that will be harvested at meaure points.
   set odometer odometer + moved
-
   if any? measurepoints
   [
     if distfromlast = NaN
     [set distfromlast 0]
     set distfromlast distfromlast + moved
-  ]
-end
-
-to java-set-xy [aX aY]
-  let myDistance distancexy aX aY
-  setxy aX aY
-  set odometer odometer + myDistance
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + myDistance
   ]
 end
 
@@ -1236,16 +1599,13 @@ to java-left [amount-number]
   left amount-number
 end
 
+
 to java-pen-up
   pen-up
 end
 
 to java-pen-down
   pen-down
-end
-
-to java-stamp
-  stamp
 end
 
 to java-start-measuring
@@ -1267,7 +1627,6 @@ to java-clear-measure-points
     ]
 end
 
-;; wabbit procedure.
 ;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
   hatch-measurepoints 1
@@ -1278,29 +1637,25 @@ to java-place-measure-point
    set color black 
    
    set tagentkind [agent-kind-string] of myself
-   set tcycles [flag-counter] of myself
-   set theading [heading] of myself    ;; previously was count (measurepoints)
+   set tcycles [flag-counter] of myself;; previously: count measurepoints - 1
+   set theading [heading] of myself
    set todometer [ odometer ] of myself
- 
    ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
    [set taccel NaN]
    [set taccel [ distfromlast - odistfromlast ] of myself]
- 
    set tdistfromlast [ distfromlast ] of myself
    set tspeed [bonus-speed] of myself
    set tcolor [ color ] of myself
    set tpenwidth [ pen-size ] of myself
    set tpencolor [ color ] of myself
+   set measurepoint-creator [agent-kind-string] of myself
    
    set label-color black
    set label [flag-counter] of myself
-   
-   set measurepoint-creator [agent-kind-string] of myself
   ]
   set odistfromlast distfromlast
   set distfromlast 0
   set flag-counter flag-counter + 1
-
 end
 
 to java-plant-flag
@@ -1739,6 +2094,7 @@ to make-other-stuff
         set color green
         set shape "turtle"
         set agent-kind-string "wabbit-one"
+        set flag-counter 1
        ]
        
  create-wabbits 1
@@ -1747,19 +2103,16 @@ to make-other-stuff
         set color green
         set shape "turtle"
         set agent-kind-string "wabbit-two"
+        set flag-counter 1
        ]
   ask wabbits
        [set size 30
         set pen-size 3
         
-        set distfromlast NaN
-        set odistfromlast NaN
-        
         ; pen is up now
         set pen-was-down false 
         set bonus-speed 0
-      
-        set flag-counter 1
+        
         set secret-number random 101    ;SECRET NUMBER
         set repeat-num random 5 + 2     ;REPEAT NUMBER
         
@@ -1767,6 +2120,8 @@ to make-other-stuff
         set initial-y ycor
         set previous-x ""
         set previous-y ""
+        set distfromlast NaN
+        set odistfromlast NaN
        ]
 end
 

@@ -1,3 +1,5 @@
+extensions [arduino]
+
 breed [wabbits wabbit]
 breed [followers follower]
 breed [blocks block]
@@ -30,6 +32,7 @@ wabbits-own [pen-was-down ;; if true, the pen was down before the wabbit wrapped
              initial-y
              previous-x
              previous-y
+             old-size
             ]
 agent-kinds-own 
 [
@@ -167,8 +170,24 @@ to setup ;; sets up the screen
   create-measure-option-command-list
   create-var-name-list
   hide-invisibles
+  setup-arduino
   
   reset-ticks    ;; creates ticks and initializes them to 0
+end
+
+to setup-arduino
+  if arduino:is-open? = false
+  [
+    let ports arduino:ports 
+    ifelse (length ports > 0)
+    [arduino:open user-one-of "Select a Port:" ports]
+   [user-message "No available ports:  Check your connections."]
+  ]
+end
+
+to-report arduino-distance
+  let real-dist arduino:get "dx"
+  report precision real-dist 2
 end
 
 to hide-invisibles
@@ -242,31 +261,13 @@ to create-categories-list
     "Control"
     "Movement"
     "Agents & Pen"
+    "Sensors"
     "Measure"
   ]
 end
 
 to create-my-agent-sets-list
   set my-agent-sets-list []
-end
-
-to java-clear-measure-points
-  ask measurepoints [die]
-  ask set-datas
-  [
-    set odometer 0            ;total distance covered
-    set distfromlast NaN        ;dist since last measure point
-    set odistfromlast NaN      ;last measure points distfromlast (for accel)
-  ]
-end
-
-to java-start-measuring
-      ask set-datas
-    [
-      set distfromlast NaN        ;dist since last measure point
-      set odistfromlast NaN      ;last measure points distfromlast (for accel)
-      set odometer 0
-    ]
 end
 
 to create-set-data [a-set-name]
@@ -286,7 +287,7 @@ end
 to reset-set-data
   set odometer 0            ;total distance covered
   set distfromlast NaN        ;dist since last measure point
-  set odistfromlast NaN     ;last measure points distfromlast (for accel)
+  set odistfromlast NaN      ;last measure points distfromlast (for accel)
   set set-bonus-speed 0 
   set set-pen_width 1
 end
@@ -359,13 +360,27 @@ end
 
 ; similar to create-predicate-list
 to create-comp-int-list
-  set comp-int-left-vars ["heading" "color"]
+  set comp-int-left-vars ["heading" "step-size" "color"]
 end
 
 ; similar to create-predicate-list
 to create-comp-vars-lists
-  set comp-vars-left-vars ["heading" "color"]
-  set comp-vars-right-vars ["heading" "color"]
+  set comp-vars-left-vars ["heading" "step-size" "color"]
+  set comp-vars-right-vars ["heading" "step-size" "color"]
+end
+
+to-report java-heading [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result heading ]
+  report result
+end
+
+to-report java-step-size [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result bonus-speed ]
+  report result
 end
 
 to-report java-color [aWho]
@@ -376,16 +391,10 @@ to-report java-color [aWho]
 end
 
 
-to-report java-heading [aWho]
-  let result 0
-  ask turtle aWho
-  [ set result heading ]
-  report result
-end
-  
 to-report coin-flip
   report random-float 1 < 0.5
 end
+
 
 to-report java-true [aWho]
   report true
@@ -422,7 +431,6 @@ to create-blocks-list
   set blocks-list []
   
   ;;;;; PUT BLOCK DEFINITIONS HERE: ;;;;;
-  
   create-blocks 1
   [
     set block-name "go-forward"
@@ -435,7 +443,7 @@ to create-blocks-list
   ]
     set blocks-list lput max-one-of blocks [who] blocks-list
     
-      create-blocks 1
+    create-blocks 1
   [
     set block-name "set-group-color"
     set category "Movement"
@@ -445,6 +453,36 @@ to create-blocks-list
     set is-set-update true
   ]
     set blocks-list lput max-one-of blocks [who] blocks-list
+    
+    create-blocks 1
+  [
+    set block-name "face"
+    set category "Movement"
+      set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 200
+      set min-value -200
+    ; other variables not applicable
+  ]
+       set arg-list lput max-one-of args [who] arg-list
+       
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 200
+      set min-value -200
+    ; other variables not applicable
+  ]
+       set arg-list lput max-one-of args [who] arg-list
+       set is-observer false
+       set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
     
     create-blocks 1
   [
@@ -490,6 +528,42 @@ to create-blocks-list
       
       create-blocks 1
   [
+    set block-name "forward-sensor"
+    set category "Sensors"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    set is-set-update true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "right-turn-sensor"
+    set category "Sensors"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    set is-set-update true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "left-turn-sensor"
+    set category "Sensors"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    set is-set-update true
+    ; other variables not applicable
+  ]
+set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      create-blocks 1
+  [
     set block-name "set-heading"
     set category "Movement"
     
@@ -511,29 +585,18 @@ to create-blocks-list
     
     create-blocks 1 ;;;;AMY
   [
-    set block-name "set-random-heading"
+    set block-name "set-random-heading-0-to"
     set category "Movement"
     
     set arg-list []
     hatch-args 1
     [
       set arg-type "int"
-      set default-value 0
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    
-    hatch-args 1
-    [
-      set arg-type "int"
       set default-value 360
       set max-value 360
-      set min-value -360
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    
-    set label-after-arg " to "
     set is-observer false
     set is-basic false
     set is-set-update true
@@ -541,7 +604,7 @@ to create-blocks-list
   ]
     set blocks-list lput max-one-of blocks [who] blocks-list
     
-      create-blocks 1
+    create-blocks 1
   [
     set block-name "set-step_size"
     set is-observer false
@@ -601,34 +664,6 @@ to create-blocks-list
     ; other variables not applicable
   ]
     set blocks-list lput max-one-of blocks [who] blocks-list
-    
-;    create-blocks 1
-;  [
-;    set block-name "set-xy"
-;    set category "Movement"
-;    set arg-list []
-;        hatch-args 1
-;    [
-;      set arg-type "int"
-;      set default-value 0
-;      set max-value max-pxcor
-;      set min-value min-pxcor
-;    ]
-;    set arg-list lput max-one-of args [who] arg-list
-;        hatch-args 1
-;    [
-;      set arg-type "int"
-;      set default-value 0
-;      set max-value max-pycor
-;      set min-value min-pycor
-;    ]
-;    set arg-list lput max-one-of args [who] arg-list
-;    set is-observer false
-;    set is-basic false
-;    set is-set-update false
-;    ; other variables not applicable
-;  ]
-;      set blocks-list lput max-one-of blocks [who] blocks-list
     
     create-blocks 1
   [
@@ -693,6 +728,7 @@ to create-blocks-list
     set is-basic false
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+  
   create-blocks 1
   [
     set block-name "go-invisible"
@@ -710,72 +746,6 @@ to create-blocks-list
     set arg-list []
     set is-observer false
     set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      create-blocks 1
-  [
-    set block-name "my-place-measure-point"
-    set display-name "place measure point"
-    set category "Measure"
-    set arg-list []
-    set is-observer true
-    set is-basic false
-    set is-set-update false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      create-blocks 1
-  [
-    set block-name "reset-measures"
-    set display-name "clear measure points"
-    set category "Measure"
-    set arg-list []
-    set is-observer true
-    set is-basic false
-    set is-set-update false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-                  create-blocks 1
-  [
-    set block-name "start-measuring"
-    ;set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      create-blocks 1
-  [
-    set block-name "face"
-    set category "Movement"
-      set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 200
-      set min-value -200
-    ; other variables not applicable
-  ]
-       set arg-list lput max-one-of args [who] arg-list
-       
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 200
-      set min-value -200
-    ; other variables not applicable
-  ]
-       set arg-list lput max-one-of args [who] arg-list
-       set is-observer false
-       set is-basic false
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
@@ -810,6 +780,74 @@ to create-blocks-list
     set is-set-update true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+  
+        create-blocks 1
+  [
+    set block-name "set-by-sensor"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["agent_size" "pen_width" "color" "step_size" "heading" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["plus" "minus" "times" "divided by"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1
+    [
+       set arg-type "int"
+       set default-value 1
+       set max-value 360
+       set min-value 1
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+    set category "Sensors"
+    set is-set-update true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  create-blocks 1
+  [
+    set block-name "my-place-measure-point"
+    set display-name "place measure point"
+    set category "Measure"
+    set arg-list []
+    set is-observer true
+    set is-basic false
+    set is-set-update false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      create-blocks 1
+  [
+    set block-name "reset-measures"
+    set display-name "clear measure points"
+    set category "Measure"
+    set arg-list []
+    set is-observer true
+    set is-basic false
+    set is-set-update false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      create-blocks 1
+  [
+    set block-name "start-measuring"
+    ;set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
  
   ;;;;; END OF BLOCK DEFINITIONS ;;;;;
 end
@@ -849,24 +887,27 @@ to create-agent-kind-list
     set primitives-list lput "go-forward" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
+    set primitives-list lput "forward-sensor" primitives-list
+    set primitives-list lput "right-turn-sensor" primitives-list 
+    set primitives-list lput "left-turn-sensor" primitives-list
+    set primitives-list lput "set-heading" primitives-list
+    set primitives-list lput "set-group-color" primitives-list
+    set primitives-list lput "reset-forward-values" primitives-list ; set level
+    set primitives-list lput "face" primitives-list
+    set primitives-list lput "set-random-heading-0-to" primitives-list
+    set primitives-list lput "step_size-plus" primitives-list ; set level
+    set primitives-list lput "step_size-minus" primitives-list ; set level
     set primitives-list lput "pen-up" primitives-list 
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "stamp" primitives-list
     set primitives-list lput "set" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
-    set primitives-list lput "set-heading" primitives-list
-    set primitives-list lput "set-group-color" primitives-list
-    set primitives-list lput "reset-forward-values" primitives-list ; set level
-    set primitives-list lput "face" primitives-list
-    set primitives-list lput "set-random-heading" primitives-list
-    set primitives-list lput "step_size-plus" primitives-list ; set level
-    set primitives-list lput "step_size-minus" primitives-list ; set level
     set primitives-list lput "set-shape" primitives-list
+    set primitives-list lput "set-by-sensor" primitives-list
     set primitives-list lput "my-place-measure-point" primitives-list
     set primitives-list lput "reset-measures" primitives-list
     set primitives-list lput "start-measuring" primitives-list
-;    set primitives-list lput "set-xy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
 end
@@ -885,8 +926,38 @@ to create-wabbit-kind-list
   ]
 end
 
-to java-reset-measures
-  java-clear-measure-points
+to java-my-place-measure-point 
+  let my-measurepoint-creator "observer-measure-point-creator"
+  if called-set-name != "" and called-set-name != 0
+  [set my-measurepoint-creator called-set-name]
+  ask set-datas
+  [java-place-measure-point my-measurepoint-creator]
+end
+
+;;NEEDED FOR MEASURE LINKING
+to java-place-measure-point [a-set-name]
+  let my-set-name set-name
+  hatch-measurepoints 1
+  [
+   ht
+   set measure-points lput self measure-points
+   set tagentkind my-set-name
+   set tcolor [ color ] of myself
+   set tcycles count measurepoints with [tagentkind = my-set-name] - 1
+   set todometer [ odometer ] of myself
+   set tdistfromlast [ distfromlast ] of myself
+   set tspeed [set-bonus-speed] of myself
+   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
+   [set taccel NaN]
+   [set taccel [ distfromlast - odistfromlast ] of myself]
+   set tpenwidth [ set-pen_width ] of myself
+   set measurepoint-creator a-set-name
+   
+   set label-color black
+   set label tcycles
+  ]
+  set odistfromlast distfromlast
+  set distfromlast 0
 end
 
 to-report java-is-repeat-var
@@ -927,13 +998,13 @@ to java-go-forward
     
     ask called-set
     [
+      set odometer odometer + set-bonus-speed
       if any? measurepoints
       [
         if distfromlast = NaN
         [set distfromlast 0]
         set distfromlast distfromlast + set-bonus-speed
       ]
-      set odometer odometer + set-bonus-speed
     ]
   ]
 end
@@ -963,137 +1034,63 @@ to java-left [amount-number]
   ]
 end
 
-to java-face [xcoord ycoord]
+to java-right [amount-number]
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [right amount-number]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [right amount-number]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [right amount-number]
+    ]
+  ]
+end
+
+to java-forward-sensor
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [ 
+    let my-speed arduino-distance
     let current-agent-set agent-set called-set-name
     ifelse current-agent-set = false
     [
       if called-set-name = "all"
-      [
-        ask followers 
-        [facexy xcoord ycoord]
-      ]
+      [ask followers [forward my-speed]]
       if called-set-name = "other"
-      [
-        ask other-agents 
-        [facexy xcoord ycoord]
-      ]
+      [ask other-agents [forward my-speed]]
     ]
     [
       ask [agents] of current-agent-set
-      [facexy xcoord ycoord]
+      [forward my-speed]
     ]
-  ]
-end
-
-to java-set [ base-attrib operator-name opvalue ] 
-  ; "agent_size" "pen_width" "color" "step_size" "heading"
-  ; "equal to" "plus" "minus" "times" "divided by" "random up to"
-  
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    if base-attrib = "agent_size" [ask called-set [java-set-size operator-name opvalue]]
-    if base-attrib = "heading" [ask called-set [java-set-heading-2 operator-name opvalue]]
     
-    let value 0
-    ;if base-attrib = "agent_size" [ask called-set [set value set-size]]
-    if base-attrib = "pen_width" [ask called-set [set value set-pen_width]]
-    if base-attrib = "step_size" [ask called-set [set value set-bonus-speed]]
-    ;if base-attrib = "heading" [ask called-set [set value set-heading]]
-    
-    if operator-name = "equal to" [set value opvalue]
-    if operator-name = "plus" [set value value + opvalue]
-    if operator-name = "minus" [set value value - opvalue]
-    if operator-name = "times" [set value value * opvalue]
-    if operator-name = "divided by"
-    [
-      if opvalue != 0
-      [set value value / opvalue]
-    ]
-    if operator-name = "random up to" [set value random opvalue]
-    
-    ;if base-attrib = "agent_size" [java-set-size value]
-    if base-attrib = "pen_width" [java-set-pen_width value]
-    if base-attrib = "color" [java-set-color operator-name opvalue]
-    if base-attrib = "step_size" [java-set-step_size value]
-    ;if base-attrib = "heading" [java-set-heading value]
-  ]
-end
-
-to java-set-pen_width [amount]
-  if amount < 0
-  [set amount 0]
-
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
     ask called-set
-    [set set-pen_width amount]
-    
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
     [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [set pen-size amount]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [set pen-size amount]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [set pen-size amount]
+      set odometer odometer + my-speed
+      set distfromlast distfromlast + my-speed
     ]
   ]
 end
 
-to set-size [opname amount]
-  if opname = "equal to" 
-  [
-    ifelse amount > 0
-    [set size amount]
-    [set size 0]
-  ]
-    if opname = "plus" 
-    [
-      ifelse size + amount > 0
-      [set size size + amount]
-      [set size 0]
-    ]
-    if opname = "minus" 
-    [
-      ifelse size > amount
-      [set size size - amount]
-      [set size 0]
-    ]
-    if opname = "times" 
-    [
-      ifelse amount > 0
-      [set size size * amount]
-      [set size 0]
-    ]
-    if opname = "divided by"
-    [
-      if amount != 0
-      [
-        ifelse amount > 0
-        [set size size / amount]
-        [set size 0]
-      ]
-    ]
-    if opname = "random up to" 
-    [
-      ifelse amount > 0
-      [set size random amount]
-      [set size 0]
-    ]
+to java-right-turn-sensor
+  java-right arduino-distance
+end
+
+to java-left-turn-sensor
+  java-left arduino-distance
 end
 
 to java-set-heading [angle]
@@ -1123,9 +1120,10 @@ to java-set-heading [angle]
   ]
 end
 
-to java-set-heading-2 [opname angle]
-  if angle >= 360 or angle < 0
+to java-set-random-heading-0-to [angle]
+  if angle > 360 or angle < 0
   [set angle angle mod 360]
+  
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
@@ -1135,43 +1133,22 @@ to java-set-heading-2 [opname angle]
       if called-set-name = "all"
       [
         ask followers 
-        [set-heading opname angle]
+        [set heading random angle]
       ]
       if called-set-name = "other"
       [
         ask other-agents 
-        [set-heading opname angle]
+        [set heading random angle]
       ]
     ]
     [
       ask [agents] of current-agent-set
-      [set-heading opname angle]
+      [set heading random angle]
     ]
   ]
 end
 
-to set-heading [opname angle]
-  if opname = "equal to" 
-  [set heading angle]
-  if opname = "plus" 
-  [right angle]
-  if opname = "minus" 
-  [left angle]
-  if opname = "times" 
-  [set heading (heading * angle) mod 360]
-  if opname = "divided by"
-  [
-    if angle != 0
-    [set heading heading / angle]
-  ]
-  if opname = "random up to" 
-  [set heading random angle]
-end
-
-to java-set-size [opname amount]
-  if amount < 0
-  [set amount 0]
-
+to java-face [xcoord ycoord]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [ 
@@ -1181,247 +1158,38 @@ to java-set-size [opname amount]
       if called-set-name = "all"
       [
         ask followers 
-        [set-size opname amount]
+        [facexy xcoord ycoord]
       ]
       if called-set-name = "other"
       [
         ask other-agents 
-        [set-size opname amount]
+        [facexy xcoord ycoord]
       ]
     ]
     [
       ask [agents] of current-agent-set
-      [set-size opname amount]
+      [facexy xcoord ycoord]
     ]
   ]
 end
 
-to java-right [amount-number]
+to set-pen_width-plus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
-    [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [right amount-number]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [right amount-number]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [right amount-number]
-    ]
+    let my-pen_width [set-pen_width] of called-set
+    java-pen_width my-pen_width + amount
   ]
 end
 
-to-report random-heading-range [angle1 angle2]
-  let fin_angle 0   ;; resulting angle
-  ifelse (angle2 - angle1) >= 360 or (angle2 - angle1) <= -360 ;; if user enters angle greater than 360
-  [ set fin_angle random 360 ] ;; can set to any angle.
-  [
-    let ang1 (angle1 mod 360) ;; convert all angles to (0, 359) form to reduce confusion
-    let ang2 (angle2 mod 360)
-    
-    ifelse ang2 = ang1
-    [ set fin_angle ang1]
-    [
-      ifelse ang2 > ang1
-      [
-        let temp ang2 - ang1
-        set temp random temp
-        set fin_angle (ang1 + temp)
-      ]
-      [ ;; if ang2 < ang1 
-        let temp (360 - ang1) + ang2
-        set temp random temp
-        set fin_angle (ang1 + temp)
-      ]
-    ]
-  ]
-  
-  report fin_angle
-end
-
-to java-set-random-heading [angle1 angle2]  ;; sweep from angle1 to angle2, clockwise!
+to set-pen_width-minus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
-    [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [set heading random-heading-range angle1 angle2]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [set heading random-heading-range angle1 angle2]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [set heading random-heading-range angle1 angle2]
-    ]
+    let my-pen_width [set-pen_width] of called-set
+    java-pen_width my-pen_width - amount
   ]
 end
-
-to java-set-step_size [ amount ]
-  if amount < 0
-  [set amount 0]
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    ask called-set
-    [
-      set set-bonus-speed amount
-    ]
-  ]
-end
-
-to java-step_size-plus [amount]
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    ask called-set
-    [set set-bonus-speed set-bonus-speed + amount]
-  ]
-end
-
-to java-step_size-minus [amount]
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    ask called-set
-    [
-      set set-bonus-speed set-bonus-speed - amount
-      if set-bonus-speed < 0
-      [set set-bonus-speed 0]
-    ]
-  ]
-end
-
-to java-reset-forward-values
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    ask called-set
-    [set set-bonus-speed 0]
-  ]
-end
-
-to java-pen-up
- pen-up
-end
-
-to java-pen-down
-  pen-down
-end
-
-to java-stamp
-  stamp
-end
-
-to java-set-shape [aShape]
-  ; "square" "circle" "arrow" are allowed shapes.
-  
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [ 
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
-    [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [set shape aShape]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [set shape aShape]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [set shape aShape]
-    ]
-  ]
-end
-
-to java-go-invisible
-  ; ht
-  if size != 0
-  [set old-size size]
-  set size 0
-end
-
-to java-go-visible
-  if size = 0
-  [set size old-size]
-end
-
-to set-color-plus [amount]
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
-    [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [set-my-color "plus" amount]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [set-my-color "plus" amount]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [set-my-color "plus" amount]
-    ]
-  ]
-end
-
-to set-color-minus [amount]
-  let called-set one-of set-datas with [set-name = called-set-name]
-  if called-set != nobody
-  [
-    let current-agent-set agent-set called-set-name
-    ifelse current-agent-set = false
-    [
-      if called-set-name = "all"
-      [
-        ask followers 
-        [set-my-color "minus" amount]
-      ]
-      if called-set-name = "other"
-      [
-        ask other-agents 
-        [set-my-color "minus" amount]
-      ]
-    ]
-    [
-      ask [agents] of current-agent-set
-      [set-my-color "minus" amount]
-    ]
-  ]
-end
-
-;to java-set-xy [aX aY]
-;  setxy aX aY
-;end
 
 to java-set-group-color
   let called-set one-of set-datas with [set-name = called-set-name]
@@ -1506,27 +1274,6 @@ to java-set-group-color
   ]
 end
 
-to set-my-color [opname value]
-  let temp-color color
-  if opname = "equal to" 
-  [set temp-color value mod 140]
-  if opname = "plus" 
-  [set temp-color (color + value) mod 140]
-  if opname = "minus" 
-  [set temp-color (color - value) mod 140]
-  if opname = "times" 
-  [set temp-color (color * value) mod 140]
-  if opname = "divided by"
-  [
-    if value != 0
-    [set temp-color color / value]
-  ]
-  if opname = "random up to" 
-  [set temp-color (random value) mod 140]
-  set color temp-color
-  set old-color temp-color
-end
-
 to java-set-color [opname value]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
@@ -1558,27 +1305,402 @@ to java-set-color [opname value]
   ]
 end
 
-to set-pen_width-plus [amount]
+to set-my-color [opname value]
+  let temp-color color
+  if opname = "equal to" 
+  [set temp-color value mod 140]
+  if opname = "plus" 
+  [set temp-color (color + value) mod 140]
+  if opname = "minus" 
+  [set temp-color (color - value) mod 140]
+  if opname = "times" 
+  [set temp-color (color * value) mod 140]
+  if opname = "divided by"
+  [
+    if value != 0
+    [set temp-color color / value]
+  ]
+  if opname = "random up to" 
+  [set temp-color (random value) mod 140]
+  set color temp-color
+  set old-color temp-color
+end
+
+to set-color-plus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let my-pen_width [set-pen_width] of called-set
-    java-pen_width my-pen_width + amount
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set-my-color "plus" amount]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set-my-color "plus" amount]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set-my-color "plus" amount]
+    ]
   ]
 end
 
-to set-pen_width-minus [amount]
+to set-color-minus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let my-pen_width [set-pen_width] of called-set
-    java-pen_width my-pen_width - amount
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set-my-color "minus" amount]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set-my-color "minus" amount]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set-my-color "minus" amount]
+    ]
   ]
+end
+
+to java-set-step_size [ amount ]
+  if amount < 0
+  [set amount 0]
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    ask called-set
+    [
+      set set-bonus-speed amount
+    ]
+  ]
+end
+
+to java-step_size-plus [amount]
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    ask called-set
+    [set set-bonus-speed set-bonus-speed + amount]
+  ]
+end
+
+to java-step_size-minus [amount]
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    ask called-set
+    [
+      set set-bonus-speed set-bonus-speed - amount
+      if set-bonus-speed < 0
+      [set set-bonus-speed 0]
+    ]
+  ]
+end
+
+to java-reset-measures
+  java-clear-measure-points
+end
+
+to java-clear-measure-points
+  ask measurepoints [die]
+  ask set-datas
+  [
+    set odometer 0            ;total distance covered
+    set distfromlast NaN        ;dist since last measure point
+    set odistfromlast NaN     ;last measure points distfromlast (for accel)
+  ]
+end
+
+to java-start-measuring
+      ask set-datas
+    [
+      set distfromlast NaN        ;dist since last measure point
+      set odistfromlast NaN      ;last measure points distfromlast (for accel)
+      set odometer 0
+    ]
+end
+
+to java-reset-forward-values
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    ask called-set
+    [set set-bonus-speed 0]
+  ]
+end
+
+to java-pen-up
+ pen-up
+end
+
+to java-pen-down
+  pen-down
+end
+
+to java-stamp
+  stamp
+end
+
+to java-set-by-sensor [base-attrib operator-name opvalue]
+  let value arduino-distance
+  
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    if operator-name = "plus" [set value value + opvalue]
+    if operator-name = "minus" [set value value - opvalue]
+    if operator-name = "times" [set value value * opvalue]
+    if operator-name = "divided by"
+    [
+      if opvalue != 0
+      [set value value / opvalue]
+    ]
+    
+    if base-attrib = "agent_size" [ask called-set [java-set-size "equal to" value]]
+    if base-attrib = "heading" [ask called-set [java-set-heading-2 "equal to" value]]
+    
+    if base-attrib = "pen_width" [java-set-pen_width value]
+    if base-attrib = "color" [java-set-color "equal to" value]
+    if base-attrib = "step_size" [java-set-step_size value]
+  ]
+end
+
+to java-set [ base-attrib operator-name opvalue ] 
+  ; "agent_size" "pen_width" "color" "step_size" "heading"
+  ; "equal to" "plus" "minus" "times" "divided by" "random up to"
+  
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    if base-attrib = "agent_size" [ask called-set [java-set-size operator-name opvalue]]
+    if base-attrib = "heading" [ask called-set [java-set-heading-2 operator-name opvalue]]
+    
+    let value 0
+    ;if base-attrib = "agent_size" [ask called-set [set value set-size]]
+    if base-attrib = "pen_width" [ask called-set [set value set-pen_width]]
+    if base-attrib = "color" [java-set-color operator-name opvalue]
+    if base-attrib = "step_size" [ask called-set [set value set-bonus-speed]]
+    ;if base-attrib = "heading" [ask called-set [set value set-heading]]
+    
+    if operator-name = "equal to" [set value opvalue]
+    if operator-name = "plus" [set value value + opvalue]
+    if operator-name = "minus" [set value value - opvalue]
+    if operator-name = "times" [set value value * opvalue]
+    if operator-name = "divided by"
+    [
+      if opvalue != 0
+      [set value value / opvalue]
+    ]
+    if operator-name = "random up to" [set value random opvalue]
+    
+    ;if base-attrib = "agent_size" [java-set-size value]
+    if base-attrib = "pen_width" [java-set-pen_width value]
+    if base-attrib = "step_size" [java-set-step_size value]
+    ;if base-attrib = "heading" [java-set-heading value]
+  ]
+end
+
+to java-set-size [opname amount]
+  if amount < 0
+  [set amount 0]
+
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [ 
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set-size opname amount]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set-size opname amount]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set-size opname amount]
+    ]
+  ]
+end
+
+to set-size [opname amount]
+  if opname = "equal to" 
+  [
+    ifelse amount > 0
+    [set size amount]
+    [set size 0]
+  ]
+    if opname = "plus" 
+    [
+      ifelse size + amount > 0
+      [set size size + amount]
+      [set size 0]
+    ]
+    if opname = "minus" 
+    [
+      ifelse size > amount
+      [set size size - amount]
+      [set size 0]
+    ]
+    if opname = "times" 
+    [
+      ifelse amount > 0
+      [set size size * amount]
+      [set size 0]
+    ]
+    if opname = "divided by"
+    [
+      if amount != 0
+      [
+        ifelse amount > 0
+        [set size size / amount]
+        [set size 0]
+      ]
+    ]
+    if opname = "random up to" 
+    [
+      ifelse amount > 0
+      [set size random amount]
+      [set size 0]
+    ]
+end
+
+to java-set-heading-2 [opname angle]
+  if angle >= 360 or angle < 0
+  [set angle angle mod 360]
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set-heading opname angle]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set-heading opname angle]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set-heading opname angle]
+    ]
+  ]
+end
+
+to set-heading [opname angle]
+  if opname = "equal to" 
+  [set heading angle]
+  if opname = "plus" 
+  [right angle]
+  if opname = "minus" 
+  [left angle]
+  if opname = "times" 
+  [set heading (heading * angle) mod 360]
+  if opname = "divided by"
+  [
+    if angle != 0
+    [set heading heading / angle]
+  ]
+  if opname = "random up to" 
+  [set heading random angle]
+end
+
+to java-set-pen_width [amount]
+  if amount < 0
+  [set amount 0]
+
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [
+    ask called-set
+    [set set-pen_width amount]
+    
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set pen-size amount]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set pen-size amount]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set pen-size amount]
+    ]
+  ]
+end
+
+to java-set-shape [aShape]
+  ; "square" "circle" "arrow" are allowed shapes.
+  
+  let called-set one-of set-datas with [set-name = called-set-name]
+  if called-set != nobody
+  [ 
+    let current-agent-set agent-set called-set-name
+    ifelse current-agent-set = false
+    [
+      if called-set-name = "all"
+      [
+        ask followers 
+        [set shape aShape]
+      ]
+      if called-set-name = "other"
+      [
+        ask other-agents 
+        [set shape aShape]
+      ]
+    ]
+    [
+      ask [agents] of current-agent-set
+      [set shape aShape]
+    ]
+  ]
+end
+
+to java-go-invisible
+  ; ht
+  if size != 0
+  [set old-size size]
+  set size 0
+end
+
+to java-go-visible
+  ; st
+  if size = 0
+  [set size old-size]
 end
 
 to java-pen_width [a-width]
-  if a-width < 0
-  [set a-width 0]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
@@ -1844,12 +1966,12 @@ end
 
 to set-defaults
   set-default-shape wabbits "circle"
+  set NaN -9007199254740992
   set number-of-steps 0
   set last-cycle false
   set can-highlight-agents false
   set called-set-name ""
   set measure-points []
-  set NaN -9007199254740992
 end
 
 to setup-cycle
@@ -1864,41 +1986,8 @@ ask wabbits
   set previous-x xcor
   set previous-y ycor
 ]
-;ask set-datas
-;[java-place-measure-point]
-end
-
-to java-my-place-measure-point
-  let my-measurepoint-creator "observer-measure-point-creator"
-  if called-set-name != "" and called-set-name != 0
-  [set my-measurepoint-creator called-set-name]
-  ask set-datas
-  [java-place-measure-point my-measurepoint-creator]
-end
-
-to java-place-measure-point [a-set-name]
-  let my-set-name set-name
-  hatch-measurepoints 1
-  [
-   ht
-   set measure-points lput self measure-points
-   set tagentkind my-set-name
-   set tcycles count measurepoints with [tagentkind = my-set-name] - 1
-   set tcolor [color] of myself
-   set todometer [ odometer ] of myself
-   set tdistfromlast [ distfromlast ] of myself
-   set tspeed [set-bonus-speed] of myself
-   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
-   [set taccel NaN]
-   [set taccel [ distfromlast - odistfromlast ] of myself]
-   set tpenwidth [ set-pen_width ] of myself
-   set measurepoint-creator a-set-name
-   
-   set label-color black
-   set label tcycles
-  ]
-  set odistfromlast distfromlast
-  set distfromlast 0
+ask set-datas
+[java-place-measure-point 0]
 end
 
 to-report is-good-color [my-color]
@@ -2004,7 +2093,7 @@ to make-other-stuff
         set color green
         set shape "turtle"
         set agent-kind-string "controller"
-        ht   ;; hide the turtle so that it is invisible.  
+        ht
        ]
   ask wabbits
        [set size 30

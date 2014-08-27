@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> 
+		ViMAP, a programming language designed for K-12
+	</title> 
+	<link type = "text/css" rel = "stylesheet" href = "style.css" media = "all"/>
+</head>
+
+
+<body>  
+<h1 class="vimap"><img src = "logo.jpg"/>Dictionary</h1> 
+<div id = "bar">
+<table>
+    <tr> 
+        <th class = "border-fade"><a href = "download.html">Download</a></th>
+        <th class = "already-on">Dictionary</th>
+        <th class = "border-fade"><a href = "videos.html">Videos</a></th>
+        <th class = "border-fade"><a href = "about.html">About</a></th>
+        <th class = "border-fade"><a href = "contact.html">Contact</a></th>
+    </tr>    
+</table></div>
+
+<div id = "main">
+
+<a href = "manual.html">Show All</a><br /><b>Categories:</b> <a href = "manual_Control.html">Control</a> <a href = "manual_Groups.html">Groups</a> <a href = "manual_Measure.html">Measure</a> <a href = "manual_Movement.html">Movement</a> <a href = "manual_Pen.html">Pen</a> <a href = "manual_Secret Number.html">Secret Number</a> <b>Sensors</b> <a href = "manual_Turtles.html">Turtles</a> <br /><b>Special Units:</b> <a href = "manual_Ants.html">Ants</a> <br />
+
+    <h3 class = "speech"><a id="forward-sensor">forward sensor</a></h3>
+    <p><img src = "../blockImages/forward-sensor.png" />
+    <br />
+        The turtles move forward with a step-size the magnitude of the current sensor reading.
+    </p>
+
+    <h3 class = "speech"><a id="left-turn-sensor">left turn sensor</a></h3>
+    <p><img src = "../blockImages/left-turn-sensor.png" />
+    <br />
+        The turtles turn left by the magnitude of the current sensor reading.
+    </p>
+
+    <h3 class = "speech"><a id="right-turn-sensor">right turn using sensor</a></h3>
+    <p><img src = "../blockImages/right-turn-sensor.png" />
+    <br />
+        The turtles turn right by the magnitude of the current sensor reading.
+    </p>
+
+    <h3 class = "speech"><a id="set-by-sensor">set by sensor</a></h3>
+    <p><img src = "../blockImages/set-by-sensor.png" />
+    <br />
+        The turtles set a one of their attributes based on an operation on the sensor reading. Choose <i>agent-size</i>, <i>pen-width</i>, <i>color</i>, <i>step-size</i>, or <i>heading</i> from the first drop down menu, and a  operation (<i>plus</i>, <i>minus</i>, <i>times</i>, or <i>divided by</i>) from the second. In the field, enter a number. For example, if you want the pen-width of the agent to vary with the sensor reading, you could use: <i>Set by sensor pen-size times 1</i>.
+    </p>
+
+    <h3 class = "speech"><a id="set-color-by">set color by sensor</a></h3>
+    <p><img src = "../blockImages/set-color-by.png" />
+    <br />
+        Asks the turtle to set its color to a new value based on the sensor reading of sensor 1 or sensor 2.
+    </p>
+
+    <h3 class = "speech"><a id="set-step_size-minus-sensor">set step-size minus a sensor reading</a></h3>
+    <p><img src = "../blockImages/set-step_size-minus-sensor.png" />
+    <br />
+        Asks the turtle to set its step-size to a new value. The new step-size will be <b><i>difference</i></b> between the old step-size and the value of the sensor 1 reading or the sensor 2 reading.
+    </p>
+
+    <h3 class = "speech"><a id="set-step_size-plus-sensor">set step-size plus a sensor reading</a></h3>
+    <p><img src = "../blockImages/set-step_size-plus-sensor.png" />
+    <br />
+        Asks the turtle to set its step-size to a new value. The new step-size will be <b><i>sum</i></b> of the old step-size and the value of the sensor 1 reading or the sensor 2 reading.
+    </p>
+
+    <h3 class = "speech"><a id="set_">set turtle attribute using sensor</a></h3>
+    <p><img src = "../blockImages/set_.png " />
+    <br />
+        Sets an attribute of a turtle to a value matching the sensor reading. <br/> Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. For example,you may ask the turtle to set its pen-width to the magnitude of the sensor reading by choosing <i>set pen-width sensor-1</i>. <!-- Ants -->
+    </p>
+
+    <h3 class = "speech"><a id="set">set turtle attribute using sensor and math </a></h3>
+    <p><img src = "../blockImages/set.png " />
+    <br />
+        Sets an attribute of a turtle to another value based on an operation on the sensor reading. <br/> Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. Choose an operation in the third, and in the fourth field, enter a number.  For example, you may ask the turtle to set its pen-width to one-half the magnitude of the sensor reading by choosing <i>set pen-width sensor-1 divided-by 2</i>.
+    </p>
+
+    <h3 class = "speech"><a id="x-minus-sensor">x minus a sensor reading</a></h3>
+    <p><img src = "../blockImages/x-minus-sensor.png" />
+    <br />
+        Asks the turtle to set its x-coordinate equal to the original x-coordinate, minus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+    </p>
+
+    <h3 class = "speech"><a id="x-plus-sensor">x plus a sensor reading</a></h3>
+    <p><img src = "../blockImages/x-plus-sensor.png" />
+    <br />
+        Asks the turtle to set its x-coordinate equal to the original x-coordinate, plus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+    </p>
+
+    <h3 class = "speech"><a id="y-minus-sensor">y minus a sensor reading</a></h3>
+    <p><img src = "../blockImages/y-minus-sensor.png" />
+    <br />
+        Asks the turtle to set its y-coordinate equal to the original y-coordinate, minus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+    </p>
+
+    <h3 class = "speech"><a id="y-plus-sensor">y plus a sensor reading</a></h3>
+    <p><img src = "../blockImages/y-plus-sensor.png" />
+    <br />
+        Asks the turtle to set its y-coordinate equal to the original y-coordinate, plus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+    </p>
+
+
+</div>
+
+
+
+
+
+
+	
+
+
+<div id = "footer"><i>(c) Mind, Matter, &amp; Media Lab, Vanderbilt University<br/>
+Our research is supported by several grants from the National Science Foundation and Vanderbilt University.</i></div>
+
+
+</body>
+
+</html>
