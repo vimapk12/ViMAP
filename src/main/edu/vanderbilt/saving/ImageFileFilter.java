@@ -1,4 +1,4 @@
-/////////////
+//--//--//--//--//--//--//
 //
 //   Copyright 2014  
 //   Mind, Matter & Media Lab, Vanderbilt University.
@@ -10,7 +10,7 @@
 //   The copyright information for NetLogo can be found here: 
 //   https://ccl.northwestern.edu/netlogo/docs/copyright.html  
 //
-/////////////  
+//--//--//--//--//--//--// 
 
 
 package edu.vanderbilt.saving;

@@ -1,4 +1,4 @@
-/////////////
+//--//--//--//--//--//--//
 //
 //   Copyright 2014  
 //   Mind, Matter & Media Lab, Vanderbilt University.
@@ -10,7 +10,7 @@
 //   The copyright information for NetLogo can be found here: 
 //   https://ccl.northwestern.edu/netlogo/docs/copyright.html  
 //
-/////////////  
+//--//--//--//--//--//--// 
 
 
 package edu.vanderbilt.driverandlayout;
@@ -283,7 +283,7 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ethnocentrism-measure.nlogo";
         
         // Ants
-        //final String netLogoFile = "/ants.nlogo"; 
+        // final String netLogoFile = "/ants.nlogo"; 
         
         // Bird-Butterfly
         // final String netLogoFile = "/bird-butterfly2.nlogo";
@@ -295,10 +295,10 @@ public abstract class ViMAP {
         // final String netLogoFile = "/imageCompDataArd.nlogo";
         
         // 1 Turtle
-        // final String netLogoFile = "/oneTurtle-measure.nlogo";
+         final String netLogoFile = "/oneTurtle-measure.nlogo";
         
         // Two Turtle
-         final String netLogoFile = "/twoTurtle-measure.nlogo";
+        // final String netLogoFile = "/twoTurtle-measure.nlogo";
         
         // 1 Turtle, 1 sensor
         // final String netLogoFile = "/oneT-ard-measure2.nlogo";
@@ -312,7 +312,7 @@ public abstract class ViMAP {
         // 2 turtle, 2 sensor
         // final String netLogoFile = "/twoTurtle-arduino-2s.nlogo";
         
-        //  Ethnocentrism
+        // Ethnocentrism
         // final String netLogoFile = "/ethnocentrism-new-measure2.nlogo";
         
         // enter desired file name in dialog box.
