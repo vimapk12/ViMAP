@@ -126,6 +126,14 @@ public final class BlockView extends Box {
         this.labels = new HashSet<JLabel>();
         JLabel nameLabel = new JLabel(aTemplate.getDisplayName().
              replace("-", " ") + " ");
+        // We decided that we want step size to actually be displayed as 
+        // step-size.  
+        String s = nameLabel.getText();
+        if ( s.contains("step size") )
+        {
+          s = s.replace("step size", "step-size");
+          nameLabel.setText(s);
+        }
         // this.nameLabel = new JLabel(aTemplate.getDisplayName() + " ");
         Font font = nameLabel.getFont();
         // same font but bold
