@@ -1424,7 +1424,7 @@ to java-go-forward
 let forward-distance bonus-speed
   if forward-distance < 0
   [set forward-distance 0]
-  jump forward-distance
+  forward forward-distance
   set fd-step-size forward-distance
   set odometer odometer + forward-distance
   if any? measurepoints

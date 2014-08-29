@@ -931,13 +931,13 @@ to java-go-forward
     ifelse current-agent-set = false
     [
       if called-set-name = "all"
-      [ask followers [jump my-bonus-speed]]
+      [ask followers [forward my-bonus-speed]]
       if called-set-name = "other"
-      [ask other-agents [jump my-bonus-speed]]
+      [ask other-agents [forward my-bonus-speed]]
     ]
     [
       ask [agents] of current-agent-set
-      [jump my-bonus-speed]
+      [forward my-bonus-speed]
     ]
     
     ask called-set

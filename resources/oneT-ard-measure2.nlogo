@@ -1129,7 +1129,7 @@ end
 to java-forward-sensor-times [factor]
   let my-dist arduino-distance * factor
   set fd-step-size my-dist
-  jump my-dist
+  forward my-dist
   set odometer odometer + my-dist
   if any? measurepoints
   [
@@ -1283,7 +1283,7 @@ to java-forward [ distance-number]
 let forward-distance distance-number + bonus-speed
   if forward-distance < 0
   [set forward-distance 0]
-  jump forward-distance
+  forward forward-distance
   set fd-step-size forward-distance
   set odometer odometer + forward-distance
   if any? measurepoints
