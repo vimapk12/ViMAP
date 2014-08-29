@@ -134,6 +134,7 @@ public final class BlockView extends Box {
           s = s.replace("step size", "step-size");
           nameLabel.setText(s);
         }
+        s = null;
         // this.nameLabel = new JLabel(aTemplate.getDisplayName() + " ");
         Font font = nameLabel.getFont();
         // same font but bold

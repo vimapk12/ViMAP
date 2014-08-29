@@ -68,7 +68,7 @@ set-datas-own
   distfromlast        ;dist since last measure point
   odistfromlast       ;last measure points distfromlast (for accel)
   set-bonus-speed
-  set-pen_width
+  set-pen-width
 ]
 followers-own
 [
@@ -303,7 +303,7 @@ to reset-set-data
   set distfromlast NaN        ;dist since last measure point
   set odistfromlast NaN     ;last measure points distfromlast (for accel)
   set set-bonus-speed 0 
-  set set-pen_width 1
+  set set-pen-width 1
 end
 
 to delete-set-data [a-set-name]
@@ -558,7 +558,7 @@ to create-blocks-list
     
       create-blocks 1
   [
-    set block-name "set-step_size"
+    set block-name "set-step-size"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -577,7 +577,7 @@ to create-blocks-list
     
     create-blocks 1
   [
-    set block-name "step_size-plus"
+    set block-name "step-size-plus"
     set category "Movement"
     
     set arg-list []
@@ -598,7 +598,7 @@ to create-blocks-list
     
     create-blocks 1
   [
-    set block-name "step_size-minus"
+    set block-name "step-size-minus"
     set category "Movement"
     
     set arg-list []
@@ -802,7 +802,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["agent_size" "pen_width" "color" "step_size" "heading" ]
+      set enum-list ["agent-size" "pen-width" "color" "step-size" "heading" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -860,7 +860,7 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "set-step_size" primitives-list
+    set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
@@ -875,8 +875,8 @@ to create-agent-kind-list
     set primitives-list lput "reset-forward-values" primitives-list ; set level
     set primitives-list lput "face" primitives-list
     set primitives-list lput "set-random-heading" primitives-list
-    set primitives-list lput "step_size-plus" primitives-list ; set level
-    set primitives-list lput "step_size-minus" primitives-list ; set level
+    set primitives-list lput "step-size-plus" primitives-list ; set level
+    set primitives-list lput "step-size-minus" primitives-list ; set level
     set primitives-list lput "set-shape" primitives-list
     set primitives-list lput "my-place-measure-point" primitives-list
     set primitives-list lput "reset-measures" primitives-list
@@ -1004,19 +1004,19 @@ to java-face [xcoord ycoord]
 end
 
 to java-set [ base-attrib operator-name opvalue ] 
-  ; "agent_size" "pen_width" "color" "step_size" "heading"
+  ; "agent-size" "pen-width" "color" "step-size" "heading"
   ; "equal to" "plus" "minus" "times" "divided by" "random up to"
   
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    if base-attrib = "agent_size" [ask called-set [java-set-size operator-name opvalue]]
+    if base-attrib = "agent-size" [ask called-set [java-set-size operator-name opvalue]]
     if base-attrib = "heading" [ask called-set [java-set-heading-2 operator-name opvalue]]
     
     let value 0
-    ;if base-attrib = "agent_size" [ask called-set [set value set-size]]
-    if base-attrib = "pen_width" [ask called-set [set value set-pen_width]]
-    if base-attrib = "step_size" [ask called-set [set value set-bonus-speed]]
+    ;if base-attrib = "agent-size" [ask called-set [set value set-size]]
+    if base-attrib = "pen-width" [ask called-set [set value set-pen-width]]
+    if base-attrib = "step-size" [ask called-set [set value set-bonus-speed]]
     ;if base-attrib = "heading" [ask called-set [set value set-heading]]
     
     if operator-name = "equal to" [set value opvalue]
@@ -1030,15 +1030,15 @@ to java-set [ base-attrib operator-name opvalue ]
     ]
     if operator-name = "random up to" [set value random opvalue]
     
-    ;if base-attrib = "agent_size" [java-set-size value]
-    if base-attrib = "pen_width" [java-set-pen_width value]
+    ;if base-attrib = "agent-size" [java-set-size value]
+    if base-attrib = "pen-width" [java-set-pen-width value]
     if base-attrib = "color" [java-set-color operator-name opvalue]
-    if base-attrib = "step_size" [java-set-step_size value]
+    if base-attrib = "step-size" [java-set-step-size value]
     ;if base-attrib = "heading" [java-set-heading value]
   ]
 end
 
-to java-set-pen_width [amount]
+to java-set-pen-width [amount]
   if amount < 0
   [set amount 0]
 
@@ -1046,7 +1046,7 @@ to java-set-pen_width [amount]
   if called-set != nobody
   [
     ask called-set
-    [set set-pen_width amount]
+    [set set-pen-width amount]
     
     let current-agent-set agent-set called-set-name
     ifelse current-agent-set = false
@@ -1289,7 +1289,7 @@ to java-set-random-heading [angle1 angle2]  ;; sweep from angle1 to angle2, cloc
   ]
 end
 
-to java-set-step_size [ amount ]
+to java-set-step-size [ amount ]
   if amount < 0
   [set amount 0]
   let called-set one-of set-datas with [set-name = called-set-name]
@@ -1302,7 +1302,7 @@ to java-set-step_size [ amount ]
   ]
 end
 
-to java-step_size-plus [amount]
+to java-step-size-plus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
@@ -1311,7 +1311,7 @@ to java-step_size-plus [amount]
   ]
 end
 
-to java-step_size-minus [amount]
+to java-step-size-minus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
@@ -1573,25 +1573,25 @@ to java-set-color [opname value]
   ]
 end
 
-to set-pen_width-plus [amount]
+to set-pen-width-plus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let my-pen_width [set-pen_width] of called-set
-    java-pen_width my-pen_width + amount
+    let my-pen-width [set-pen-width] of called-set
+    java-pen-width my-pen-width + amount
   ]
 end
 
-to set-pen_width-minus [amount]
+to set-pen-width-minus [amount]
   let called-set one-of set-datas with [set-name = called-set-name]
   if called-set != nobody
   [
-    let my-pen_width [set-pen_width] of called-set
-    java-pen_width my-pen_width - amount
+    let my-pen-width [set-pen-width] of called-set
+    java-pen-width my-pen-width - amount
   ]
 end
 
-to java-pen_width [a-width]
+to java-pen-width [a-width]
   if a-width < 0
   [set a-width 0]
   let called-set one-of set-datas with [set-name = called-set-name]
@@ -1599,7 +1599,7 @@ to java-pen_width [a-width]
   [
     ask called-set
     [
-      set set-pen_width a-width
+      set set-pen-width a-width
     ]
     
     let current-agent-set agent-set called-set-name
@@ -1906,7 +1906,7 @@ to java-place-measure-point [a-set-name]
    ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
    [set taccel NaN]
    [set taccel [ distfromlast - odistfromlast ] of myself]
-   set tpenwidth [ set-pen_width ] of myself
+   set tpenwidth [ set-pen-width ] of myself
    set measurepoint-creator a-set-name
    
    set label-color black
