@@ -861,7 +861,7 @@ to java-die
 end
 
 to java-go-forward
-  forward forward-distance
+  jump forward-distance
 end
 
 ; butterfly primitive

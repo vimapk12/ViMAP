@@ -1331,11 +1331,20 @@ to java-go-forward
   [set forward-distance 0]
   
   let moved 0
-  while [moved < forward-distance and can-move? 1]
+  while [ not can-move? forward-distance ]
   [
-   jump 1 
-   set moved moved + 1
+    set forward-distance forward-distance - 1 
   ]
+  jump forward-distance 
+  set moved moved + forward-distance 
+  
+  ;; old implementation
+  ;while [moved < forward-distance and can-move? 1]
+  ;[
+  ; jump 1 
+  ; set moved moved + 1
+  ;]
+  
   ;;turtle variables that will be harvested at meaure points.
   set odometer odometer + moved
   if any? measurepoints
