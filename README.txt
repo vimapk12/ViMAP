@@ -1,213 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title> 
-    ViMAP, a programming language designed for K-12
-  </title> 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link type = "text/css" rel = "stylesheet" href = "download.css" media = "all"/>
-</head>
+# ViMAP, a programming language designed for K-12
 
-<body>  
-<h1 class="vimap">Download<img src = "logo.jpg" alt="ViMAP Logo"/></h1>  
-<div id = "bar">
-  <table>
-    <tr> 
-      <th class = "already-on">Download</th>
-      <th class = "border-fade"><a href = "manual.html">Dictionary</a></th>
-      <th class = "border-fade"><a href = "videos.html">Videos</a></th>
-      <th class = "border-fade"><a href = "about.html">About</a></th>
-      <th class = "border-fade"><a href = "contact.html">Contact</a></th>
-    </tr>    
-  </table>
-</div>
+## How to build from source (for Mac and Windows)
 
-<div id = "main">
+### ECLIPSE
 
-<h3>How to build from source (for Mac and Windows)</h3> 
-
-<h4>ECLIPSE</h4> 
-<ol>
-  <li><a href = "https://www.eclipse.org/downloads/" target = "_blank">Download Eclipse.</a></li>
-  <li>
-    Open Eclipse and create or choose a workspace (i.e. a directory).
-    The workspace is where you will house your main project folder, which also serves as your Git repository.
-  </li>
-  <li> Download Java SE7, if you don't already have it.
-    <ul>
-      <li>Java SE7 includes JDK 7 and JRE 7.</li> 
-      <li>Download it <a href = "http://docs.oracle.com/javase/7/docs/webnotes/install/index.html" target = "_blank">here</a>.</li>
-    </ul>
-  </li>
-  <li> Eclipse -> Preferences -> Java -> Compiler
-    <ul>
-      <li>Deselect the checkbox that says "Use default compliance settings"</li>
-      <li>Set the compiler compliance level to 1.7.</li>
-      <li>Set "Generated .class files compatibility" and "Source compatibility also to 1.7</li>
-      <li>Remember to hit 'Apply' to apply your changes.  Don't just hit 'OK'.</li>
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht1.png" alt="Select Compiler"/></li>
-    </ul>
-  </li>
-  <li> Eclipse -> Preferences -> Java -> Installed JREs
-    <ul>
-      <li>
-        From the list of Installed JRE's choose Java SE7 (recommended) or above. 
-        Java SE7 is needed to contribute to the ViMAP open source project.
-      </li> 
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht6.png" alt="Select JRE"/></li>
-    </ul>
-  </li>
-  <li> Eclipse -> Preferences -> Ant (General Ant Settings)
-    <ul>
-      <li> In 'Names:' enter 'build.xml'</li>
-      <li> In 'Separate JRE timeout (ms):' enter '20000'</li>
-      <li> Select "show error dialog when Ant build fails"</li>
-      <li> Click Apply, followed by OK.</li>
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht5.png" alt="Set Up Ant"/></li>
-    </ul>
-  </li>
-  <li> Close Eclipse</li>
-</ol>
+1. [Download Eclipse](https://www.eclipse.org/downloads/).
+2. Open Eclipse and create or choose a workspace (i.e. a directory). The workspace is where you will house your main project folder, which also serves as your Git repository.
+3. Download Java SE7, if you don't already have it.
+  * Java SE7 includes JDK 7 and JRE 7.
+  * Download it [here](http://docs.oracle.com/javase/7/docs/webnotes/install/index.html).
+4. Eclipse -> Preferences -> Java -> Compiler
+  * Deselect the checkbox that says "Use default compliance settings"
+  * Set the compiler compliance level to 1.7.
+  * Set "Generated .class files compatibility" and "Source compatibility also to 1.7
+  * Remember to hit 'Apply' to apply your changes.  Don't just hit 'OK'.
+5. Eclipse -> Preferences -> Java -> Installed JREs
+  * From the list of Installed JRE's choose Java SE7 (recommended) or above. Java SE7 is needed to contribute to the ViMAP open source project.
+6. Eclipse -> Preferences -> Ant (General Ant Settings)
+  * In 'Names:' enter 'build.xml'
+  * In 'Separate JRE timeout (ms):' enter '20000'
+  * Select "show error dialog when Ant build fails"
+  * Click Apply, followed by OK.
+  * Close Eclipse
 
 
-<h4>GIT</h4> 
-<ol>
-  <li>Install the <a href = "http://git-scm.com/downloads" target = "_blank"> latest version of Git</a>.</li>
-  <li> 
-    With the command line, navigate to the directory you want to use for the project; 
-    this must be the same directory as the Eclipse workspace.  At the command prompt, enter the following:
-    <ul>
-      <li style="list-style-type: none;">
-        <span id = "code">$ git clone https://github.com/vimapk12/ViMAP.git</span>
-      </li>
-    </ul>    
-    This will create a new repository called 'ViMAP' and clone of all the files 
-    in the online repository to this new local repository.
-  </li>
-</ol>
+### GIT
+1. Install the [latest version of Git](http://git-scm.com/downloads).
+2. With the command line, navigate to the directory you want to use for the project; this must be the same directory as the Eclipse workspace.  At the command prompt, enter the following: 
+  * ```$ git clone https://github.com/vimapk12/ViMAP.git ```
+  * This will create a new repository called 'ViMAP' and clone of all the files in the online repository to this new local repository.
 
 
-<h4>ECLIPSE</h4>
-<ol>
-  <li> Launch Eclipse and choose the workspace that contains the newly created ViMAP repository, and then click OK. </li>
-  <li>
-  	File -> Import -> Git -> Projects from Git:
-  	<ul>
-      <li>Select 'Projects from Git' and hit 'Next'.</li>
-    </ul>
-  </li>
-  <li> Choose 'Existing local repository' and hit 'Next'.</li>
-  <li> Click 'Add...' in the top right corner, browse for ViMAP repository, select the ViMAP repository folder.</li>
-  <li> Now the new repository is recognized so hit 'Finish' or 'Next'.</li>
-  <li> Select 'Use the New Project Wizard' and hit Finish.</li>
-  <li> Choose 'Java Project' and hit 'Next'.
-    <ul>
-      <li> Select execution environment to be JavaSE-1.7</li>
-      <li>Title the Project "ViMAP"</li> 
-      <li> Select 'Use default location'</li>
-      <li>Click 'Finish' (Hooray!)</li>
-    </ul>
-  </li>
-  <li> There are only 3 folders that should be set as source folders (i.e. in the build path): 
-    <ul>
-        <li>src/main</li>
-        <li>src/test</li>
-        <li>resources</li>   
-        <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht7.png" alt="Source Folders"/></li>
-    </ul> 
-  </li>  
-  <li>To add a folder that is currently not set as a source folder:
-    <ul>
-      <li> right-click on that folder -> Build path -> Use as Source Folder</li>
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht3.png" alt="Add Source Folder"/></li>
-    </ul>
-  </li>
-  <li>
-    To remove a folder that is currently set as a source folder but should not be:
-    <ul>
-      <li> right click on that folder -> Build path -> Remove from Build Path</li>
-    </ul>
-  </li> 
-</ol>
+### ECLIPSE
+1. Launch Eclipse and choose the workspace that contains the newly created ViMAP repository, and then click OK.
+2. File -> Import -> Git -> Projects from Git:
+  * Select 'Projects from Git' and hit 'Next'.
+3. Choose 'Existing local repository' and hit 'Next'.
+4. Click 'Add...' in the top right corner, browse for ViMAP repository, select the ViMAP repository folder.
+5. Now the new repository is recognized so hit 'Finish' or 'Next'.
+6. Select 'Use the New Project Wizard' and hit Finish.
+7. Choose 'Java Project' and hit 'Next'.
+  * Select execution environment to be JavaSE-1.7
+  * Title the Project "ViMAP" 
+  * Click 'Finish' (Hooray!)
+8. There are only 3 folders that should be set as source folders (i.e. in the build path): 
+  * src/main
+  * src/test
+  * resources   
+9. To add a folder that is currently not set as a source folder:
+  * right-click on that folder -> Build path -> Use as Source Folder
+10. To remove a folder that is currently set as a source folder but should not be:
+  * right click on that folder -> Build path -> Remove from Build Path
 
 
-<h4>NETLOGO</h4>
-<ol>
-  <li> 
-    <a href = "https://ccl.northwestern.edu/netlogo/download.shtml" target = "_blank">Download NetLogo version 5.0.1</a> and open the .dmg disk image.
-  </li>
-  <li> 
-    Drag the NetLogo 5.0.1 icon to your dock and/or to your Applications folder.
-    You will be using it quite a bit during development.
-  </li>
-</ol>
+### NETLOGO
+1. [Download NetLogo version 5.1.0](https://ccl.northwestern.edu/netlogo/download.shtml) and open the .dmg disk image.
+2. Drag the NetLogo 5.1.0 icon to your dock and/or to your Applications folder. You will be using it quite a bit during development.
 
 
-<h4>JAR FILES</h4>
-<ol>
-  <li>
-    You need to obtain eight .jar files and add them in Eclipse as external libraries.
-    Four of the jars are located in the NetLogo disk image file (.dmg) that you just downloaded. They are:
-    <ul>
-      <li> NetLogo.jar </li>
-      <li> qtj.jar (extensions -> qtj) </li>
-      <li> bitmap.jar (extensions -> bitmap) </li>
-      <li> scala-library.jar (lib) </li>
-    </ul>
-  </li>
-  <li>
-    The rest of the jar files can be found here:
-    <ul>
-      <li> 
-        <a href = "http://xstream.codehaus.org/download.html" target = "_blank">
-        xstream-1.4.7.jar</a> (click on Binary distribution to download)
-      </li>
-      <li><a href = "http://sourceforge.net/projects/kxml/files/kxml2/2.3.0/" target = "_blank">kxml2-2.3.0.jar</a></li>
-      <li> 
-        <a href = "http://mvnrepository.com/artifact/junit/junit/4.8.2" target = "_blank">junit-4.8.2.jar</a> (click on "Download (Jar))" 
-      </li>
-      <li> 
-        <a href = "http://code.google.com/p/flying-saucer/downloads/detail?name=flyingsaucer-R8.zip&amp;can=2&amp;q=" target = "_blank">core-renderer.jar</a>
-      </li>
-    </ul>
-  </li>
-  <li>
-    Once you have all of the JAR files, you must add them to your project. 
-    First, create a directory within your project to house the jar files.  
-    It is preferable to house them in the repository rather than on your Desktop.
-  </li>
-  <li>
-    Select ViMAP folder in Eclipse
-    <ul>
-      <li> Project -> Properties -> Java Build Path</li>
-      <li> Click on the "Libraries" tab, then click Add External JARs.</li>
-      <li> Find and select each .jar and click "Open"</li>
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht4.png" alt="Add Jars to Build"/></li>
-    </ul>
-  </li>
-</ol>
+### JAR FILES
+1. You need to obtain eight .jar files and add them in Eclipse as external libraries. Four of the jars are located in the NetLogo disk image file (.dmg) that you just downloaded. They are:
+  * NetLogo.jar 
+  * qtj.jar (extensions -> qtj) 
+  * bitmap.jar (extensions -> bitmap) 
+  * scala-library.jar (lib) 
+2. The rest of the jar files can be found here:
+  * [xstream-1.4.7.jar](http://xstream.codehaus.org/download.html) (click on Binary distribution to download)
+  * [kxml2-2.3.0.jar](http://sourceforge.net/projects/kxml/files/kxml2/2.3.0/)
+  * [junit-4.8.2.jar](http://mvnrepository.com/artifact/junit/junit/4.8.2) (click on "Download (Jar)")
+  * [core-renderer.jar](http://code.google.com/p/flying-saucer/downloads/detail?name=flyingsaucer-R8.zip&can=2&q=)
+3. Once you have all of the JAR files, you must add them to your project. First, create a directory within your project to house the jar files. It is preferable to house them in the repository rather than on your Desktop.
+4. Select ViMAP folder in Eclipse
+  * Project -> Properties -> Java Build Path
+  * Click on the "Libraries" tab, then click Add External JARs.
+  * Find and select each .jar and click "Open"
 
-<h4>FINAL STEPS</h4>
-<ol>
-  <li> Save/Refresh the project.</li>
-  <li> 
-    Open the "ViMAP.java" file and scroll down to the init( ) function.  
-    Make sure only one netLogoFile String is selected and comment the other strings out. 
-    <ul>
-      <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht2.png" alt="Select NetLogo Model"/></li>
-    </ul>
-  </li> 
-  <li> Save the Project and Run to launch the project from source.</li>
-</ol>
-</div>
 
-<div id = "footer">
-  <i>
-    (c) Mind, Matter &amp; Media Lab, Vanderbilt University
-    <br/>
-    Our research is supported by several grants from the National Science Foundation and Vanderbilt University.
-  </i>
-</div>
+### FINAL STEPS
+1. Save/Refresh the project.
+2. Open the "ViMAP.java" file and scroll down to the init( ) function. Make sure only one netLogoFile String is selected and comment the other strings out. 
+3. Save the Project and Run to launch the project from source.
 
-</body>
-</html>
+*Copyright Mind, Matter & Media Lab, Vanderbilt University. Our research is supported by several grants from the National Science Foundation and Vanderbilt University.*
