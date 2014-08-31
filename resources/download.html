@@ -4,7 +4,7 @@
   <title> 
     ViMAP, a programming language designed for K-12
   </title> 
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link type = "text/css" rel = "stylesheet" href = "download.css" media = "all"/>
 </head>
 
@@ -39,7 +39,7 @@
       <li>Download it <a href = "http://docs.oracle.com/javase/7/docs/webnotes/install/index.html" target = "_blank">here</a>.</li>
     </ul>
   </li>
-  <li> Eclipse &rarr; Preferences &rarr; Java &rarr; Compiler
+  <li> Eclipse -> Preferences -> Java -> Compiler
     <ul>
       <li>Deselect the checkbox that says "Use default compliance settings"</li>
       <li>Set the compiler compliance level to 1.7.</li>
@@ -48,7 +48,7 @@
       <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht1.png" alt="Select Compiler"/></li>
     </ul>
   </li>
-  <li> Eclipse &rarr; Preferences &rarr; Java &rarr; Installed JREs
+  <li> Eclipse -> Preferences -> Java -> Installed JREs
     <ul>
       <li>
         From the list of Installed JRE's choose Java SE7 (recommended) or above. 
@@ -57,7 +57,7 @@
       <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht6.png" alt="Select JRE"/></li>
     </ul>
   </li>
-  <li> Eclipse &rarr; Preferences &rarr; Ant (General Ant Settings)
+  <li> Eclipse -> Preferences -> Ant (General Ant Settings)
     <ul>
       <li> In 'Names:' enter 'build.xml'</li>
       <li> In 'Separate JRE timeout (ms):' enter '20000'</li>
@@ -76,10 +76,11 @@
   <li> 
     With the command line, navigate to the directory you want to use for the project; 
     this must be the same directory as the Eclipse workspace.  At the command prompt, enter the following:
-  <li style="list-style-type: none;">
-    <span id = "code">$ git clone https://github.com/pratim/ViMAP.git</span>
-  </li>
-  <li style="list-style-type: none;">        
+    <ul>
+      <li style="list-style-type: none;">
+        <span id = "code">$ git clone https://github.com/pratim/ViMAP.git</span>
+      </li>
+    </ul>    
     This will create a new repository called 'ViMAP' and clone of all the files 
     in the online repository to this new local repository.
   </li>
@@ -90,7 +91,7 @@
 <ol>
   <li> Launch Eclipse and choose the workspace that contains the newly created ViMAP repository, and then click OK. </li>
   <li>
-  	File &rarr; Import &rarr; Git &rarr; Projects from Git:
+  	File -> Import -> Git -> Projects from Git:
   	<ul>
       <li>Select 'Projects from Git' and hit 'Next'.</li>
     </ul>
@@ -106,6 +107,7 @@
       <li> Select 'Use default location'</li>
       <li>Click 'Finish' (Hooray!)</li>
     </ul>
+  </li>
   <li> There are only 3 folders that should be set as source folders (i.e. in the build path): 
     <ul>
         <li>src/main</li>
@@ -116,14 +118,14 @@
   </li>  
   <li>To add a folder that is currently not set as a source folder:
     <ul>
-      <li> right-click on that folder &rarr; Build path &rarr; Use as Source Folder</li>
+      <li> right-click on that folder -> Build path -> Use as Source Folder</li>
       <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht3.png" alt="Add Source Folder"/></li>
     </ul>
   </li>
   <li>
     To remove a folder that is currently set as a source folder but should not be:
     <ul>
-      <li> right click on that folder &rarr; Build path &rarr; Remove from Build Path</li>
+      <li> right click on that folder -> Build path -> Remove from Build Path</li>
     </ul>
   </li> 
 </ol>
@@ -150,11 +152,11 @@
     You need to obtain ten .jar files and add them in Eclipse as external libraries.
     Five of the jars are located in the NetLogo disk image file (.dmg) that you just downloaded. They are:
     <ul>
-      <li> NetLogo.jar
-      <li> qtj.jar (extensions &rarr; qtj)
-      <li> bitmap.jar (extensions &rarr; bitmap)
-      <li> sample-scala.jar (extensions &rarr; sample-scala)
-      <li> scala-library.jar (lib) 
+      <li> NetLogo.jar </li>
+      <li> qtj.jar (extensions -> qtj) </li>
+      <li> bitmap.jar (extensions -> bitmap) </li>
+      <li> sample-scala.jar (extensions -> sample-scala) </li>
+      <li> scala-library.jar (lib) </li>
     </ul>
   </li>
   <li>
@@ -185,7 +187,7 @@
   <li>
     Select ViMAP folder in Eclipse
     <ul>
-      <li> Project &rarr; Properties &rarr; Java Build Path</li>
+      <li> Project -> Properties -> Java Build Path</li>
       <li> Click on the "Libraries" tab, then click Add External JARs.</li>
       <li> Find and select each .jar and click "Open"</li>
       <li style="list-style-type: none;"><img src = "./download_page_screenshots/scrnsht4.png" alt="Add Jars to Build"/></li>
