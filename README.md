@@ -54,26 +54,26 @@
 
 
 ### NETLOGO
-1. [Download NetLogo version 5.1.0](https://ccl.northwestern.edu/netlogo/download.shtml) and open the .dmg disk image.
+1. [Download NetLogo version 5.1.0](https://ccl.northwestern.edu/netlogo/download.shtml) and open the DMG file.
 2. Drag the NetLogo 5.1.0 icon to your dock and/or to your Applications folder. You will be using it quite a bit during development.
 
 
 ### JAR FILES
-1. You need to obtain eight .jar files and add them in Eclipse as external libraries. Four of the jars are located in the NetLogo disk image file (.dmg) that you just downloaded. They are:
+1. You need to obtain eight JAR files and add them in Eclipse as external libraries. Four of the JARs are located in the NetLogo disk image file (.dmg) that you just downloaded. They are:
   * NetLogo.jar 
   * qtj.jar (extensions -> qtj) 
   * bitmap.jar (extensions -> bitmap) 
   * scala-library.jar (lib) 
-2. The rest of the jar files can be found here:
+2. The rest of the JAR files can be found here:
   * [xstream-1.4.7.jar](http://xstream.codehaus.org/download.html) (click on Binary distribution to download)
   * [kxml2-2.3.0.jar](http://sourceforge.net/projects/kxml/files/kxml2/2.3.0/)
   * [junit-4.8.2.jar](http://mvnrepository.com/artifact/junit/junit/4.8.2) (click on "Download (Jar)")
   * [core-renderer.jar](http://code.google.com/p/flying-saucer/downloads/detail?name=flyingsaucer-R8.zip&can=2&q=)
-3. Once you have all of the JAR files, you must add them to your project. First, create a directory within your project to house the jar files. It is preferable to house them in the repository rather than on your Desktop.
-4. Select ViMAP folder in Eclipse
+3. Once you have all of the JAR files, you must add them to your project. First, move the JAR files to a new directory in your Eclipse project.
+4. Select the ViMAP folder in Eclipse.
   * Project -> Properties -> Java Build Path
   * Click on the "Libraries" tab, then click Add External JARs.
-  * Find and select each .jar and click "Open"
+  * Find and select each JAR and click "Open"
 
 
 ### FINAL STEPS
