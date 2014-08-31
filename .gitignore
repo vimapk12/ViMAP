@@ -30,7 +30,6 @@ docs/
 /project/boot/
 /project/plugins/project/
 .metadata
-*.jpg
 
 # Compiled source #
 ###################
