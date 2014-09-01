@@ -1,4 +1,4 @@
-# ViMAP, a programming language designed for K--12
+# ViMAP, a programming language designed for K-12
 
 ## How to build from source (for Mac and Windows)
 
