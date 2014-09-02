@@ -428,7 +428,6 @@ public final class DefaultRunController implements RunController {
         return (int) Double.parseDouble(trimmedInput);
     }
     
-    @SuppressWarnings("unused")
     private void doStep() {
         if (!this.globalEnvironment.hasCurrentAgent()) {
             Util.printIfDebugging("all agents ran at doStep");
@@ -519,7 +518,6 @@ public final class DefaultRunController implements RunController {
         runBlock(currentBlock);
     }
     
-    @SuppressWarnings("unused")
     private void runBlock(final Block block) {            
         // evaluate the block's code
         Util.printIfDebugging("running block: " + block);
