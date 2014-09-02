@@ -295,8 +295,10 @@ public abstract class ViMAP {
         // final String netLogoFile = "/imageCompDataArd.nlogo";
         
         // 1 Turtle
-        final String netLogoFile = "/oneTurtle-measure.nlogo";
+         final String netLogoFile = "/oneTurtle-measure.nlogo";
         
+    	// final String netLogoFile = "/kit.nlogo";
+         
         // Two Turtle
         // final String netLogoFile = "/twoTurtle-measure.nlogo";
         

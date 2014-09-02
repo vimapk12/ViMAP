@@ -256,7 +256,7 @@ to create-categories-list
   [
     "Control"
     "Movement"
-    "Agents & Pen"
+    "Pen"
     "Measure"
   ]
 end
@@ -661,7 +661,7 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "pen-up"
-    set category "Agents & Pen"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -673,7 +673,7 @@ to create-blocks-list
       create-blocks 1
   [
     set block-name "pen-down"
-    set category "Agents & Pen"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic true
@@ -685,7 +685,7 @@ to create-blocks-list
       create-blocks 1
   [
     set block-name "stamp"
-    set category "Agents & Pen"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -703,7 +703,7 @@ to create-blocks-list
       set enum-list ["circle" "square" "arrow"]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Agents & Pen"
+    set category "Pen"
     set is-observer false
     set is-basic false
   ]
@@ -711,7 +711,7 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "go-invisible"
-    set category "Agents & Pen"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -721,7 +721,7 @@ to create-blocks-list
       create-blocks 1
   [
     set block-name "go-visible"
-    set category "Agents & Pen"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -757,7 +757,7 @@ to create-blocks-list
                   create-blocks 1
   [
     set block-name "start-measuring"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -821,7 +821,7 @@ to create-blocks-list
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
     set is-basic false
-    set category "Agents & Pen"
+    set category "Pen"
     set is-set-update true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list

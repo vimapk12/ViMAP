@@ -343,6 +343,7 @@ to create-categories-list
     "Movement"
     "Drawing"
     "Sensors"
+    "Measure"
   ]
 end
 
@@ -610,7 +611,7 @@ to create-blocks-list
          create-blocks 1
   [
     set block-name "place-measure-point"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -621,7 +622,7 @@ to create-blocks-list
       create-blocks 1
   [
     set block-name "clear-measure-points"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -632,7 +633,7 @@ to create-blocks-list
           create-blocks 1
   [
     set block-name "start-measuring"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false

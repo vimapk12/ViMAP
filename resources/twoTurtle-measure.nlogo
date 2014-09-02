@@ -326,7 +326,8 @@ to create-categories-list
     "Control"
     "Movement"
     "Pen"
-    "Secret Number"   ;;;SECRET NUMBER
+    "Secret Number"   ;SECRET NUMBER
+    "Measure"
   ]
 end
 
@@ -498,6 +499,7 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "set-label"
+    set category "Measure"
     set arg-list []
     hatch-args 1
     [
@@ -626,7 +628,7 @@ to create-blocks-list
       create-blocks 1
   [
     set block-name "place-measure-point"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -637,7 +639,7 @@ to create-blocks-list
                     create-blocks 1
   [
     set block-name "start-measuring"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false
@@ -648,7 +650,7 @@ to create-blocks-list
                   create-blocks 1
   [
     set block-name "clear-measure-points"
-    ;set category "Pen"
+    set category "Measure"
     set arg-list []
     set is-observer false
     set is-basic false

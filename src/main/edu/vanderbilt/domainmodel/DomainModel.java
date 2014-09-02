@@ -52,6 +52,8 @@ public final class DomainModel {
     
     public static final String MOVEMENT_CATEGORY_STRING = "Movement";
     
+    public static final String MEASURE_CATEGORY_STRING = "Measure";
+    
     /**
      * Name of the "setup" procedure, which is always 
      * present for each agent type.
@@ -274,7 +276,8 @@ public final class DomainModel {
         blockColorOptions.add(new Color(sky));
         
         final int pink = 0xbb42c3;
-        blockColorOptions.add(new Color(pink));
+        final Color measureColor = new Color(pink);
+        blockColorOptions.add(measureColor);
         
         this.categoryToBlockColor.put(
             CategorySelectView.ALL_CATEGORY_STRING, 
@@ -306,6 +309,14 @@ public final class DomainModel {
             );
             categoriesToMatch.remove(MOVEMENT_CATEGORY_STRING);
             blockColorOptions.remove(movementBlockColor);
+        }
+        if ( this.categories.contains(MEASURE_CATEGORY_STRING) )
+        {
+          this.categoryToBlockColor.put(
+            MEASURE_CATEGORY_STRING, 
+            measureColor);
+          categoriesToMatch.remove(MEASURE_CATEGORY_STRING);
+          blockColorOptions.remove(measureColor);
         }
         if (this.categories.contains(SECRET_NUMBER_CATEGORY_STRING)) {
             this.categoryToBlockColor.put(
