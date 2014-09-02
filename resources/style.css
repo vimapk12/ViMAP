@@ -184,7 +184,14 @@ th > a
 
 #about
 {
-  font-family: Trebuchet MS, sans-serif;
+  font-family: Optima, sans-serif;
+  margin-left: 16px;
+}
+
+
+#contact
+{
+  font-family: Optima, sans-serif
 }
 
 
