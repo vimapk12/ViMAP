@@ -431,7 +431,7 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
   
-              create-blocks 1
+  create-blocks 1
   [
     set block-name "start-measuring"
     set category "Measure"
@@ -442,7 +442,23 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
       
-      create-blocks 1
+  create-blocks 1
+  [
+    set block-name "set-label"
+    set category "Measure"
+    set arg-list [ ] 
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+      
+  create-blocks 1
   [
     set block-name "set-by-sensor"
     set category "Sensors"
@@ -1004,9 +1020,12 @@ to create-agent-kind-list
     set primitives-list lput "right-turn" primitives-list
     set primitives-list lput "left-turn" primitives-list
     set primitives-list lput "plant-flag" primitives-list
+    
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "set-label" primitives-list
+    
     set primitives-list lput "set-pen-thickness-by" primitives-list
     set primitives-list lput "set-heading" primitives-list
     set primitives-list lput "set-pen-thickness" primitives-list
@@ -1279,6 +1298,24 @@ to java-clear-measure-points
       set odometer 0
     ]
 end
+
+
+to java-set-label [variable-name]
+  set label-color black
+  if variable-name = "step-size"
+  [ set label bonus-speed ]
+  if variable-name = "color"
+  [set label color]
+  if variable-name = "heading"
+  [set label heading]
+  if variable-name = "secret-number"
+  [set label secret-number]
+  if variable-name = "pen-width"
+  [set label pen-size]
+  if variable-name = "none"
+  [set label ""]
+end
+
 
 to java-forward [ distance-number]
 let forward-distance distance-number + bonus-speed

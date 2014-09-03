@@ -920,12 +920,12 @@ to create-agent-kind-list
     
     set primitives-list []
     set primitives-list lput "change" primitives-list
-	set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -967,12 +967,13 @@ to create-agent-kind-list
     
     set primitives-list []
     set primitives-list lput "change" primitives-list
-    set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
+    
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list

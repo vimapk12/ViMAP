@@ -1,26 +1,10 @@
-;;--;;--;;--;;--;;--;;--;;
-;  
-;   Copyright 2014  
-;   Mind, Matter & Media Lab, Vanderbilt University.
-;   This is a source file for the ViMAP open source project.
-;   Principal Investigator: Pratim Sengupta 
-;   Lead Developer: Mason Wright
-;  
-;   Simulations powered by NetLogo. 
-;   The copyright information for NetLogo can be found here: 
-;   https://ccl.northwestern.edu/netlogo/docs/copyright.html  
-;   
-;;--;;--;;--;;--;;--;;--;; 
-
-
-extensions [arduino]
-
 breed [wabbits wabbit]
 breed [blocks block]
 breed [sensors sensor]
 breed [agent-kinds kind]
 breed [args arg]
 
+;;NEEDED FOR MEASURE LINKING
 breed [ measurepoints measurepoint ]
 measurepoints-own [
  tticks
@@ -34,22 +18,44 @@ measurepoints-own [
  tagentkind
  tpenwidth
  tpencolor
- measurepoint-creator
 ]
+ 
+breed [ flags flag ]
 
-wabbits-own [pen-was-down ;; if true, the pen was down before the wabbit wrapped around the screen. Only used for wrapping around (so you can
-                  ;; put the pen back down after the turtle wraps around, if and only if it was down before.
-             agent-kind-string ;; "yellow-ball", "blue-ball", or "red-ball"
-             flag-counter ;; counts the number of flags/markers that have been dropped so far in the run
-             bonus-speed ;; how much faster than initial speed a wabbit is moving; can be negative, but starts at 0
-             initial-x
-             initial-y
-             previous-x
-             previous-y
-             odometer
-             distfromlast
-             odistfromlast
-            ]
+wabbits-own 
+[
+	; if true, the pen was down before the wabbit wrapped around the screen. 
+	; Only used for wrapping around (so you can
+	; put the pen back down after the turtle wraps around, 
+	; if and only if it was down before.
+	pen-was-down 
+                  
+     ; "yellow-ball", "blue-ball", or "red-ball"
+     agent-kind-string
+     
+     ; counts the number of flags/markers that have been dropped so far in the run
+     flag-counter 
+     odometer            ;total distance covered
+     distfromlast        ;dist since last measure point
+     odistfromlast       ;last measure points distfromlast (for accel)
+     
+     secret-number   ;;SECRET NUMBER
+     repeat-num
+
+     ; how much faster than initial speed a wabbit is moving.
+     ; can be negative, but starts at 0
+     bonus-speed 
+     initial-x
+     initial-y
+     previous-x
+     previous-y
+     
+     has-food
+     paint-color
+     energy
+     age
+     of-preference
+]
 agent-kinds-own 
 [
   name
@@ -66,15 +72,16 @@ args-own
 ]
 blocks-own  
 [
-  block-name ; the name that will appear on the block
+  ; the name that will appear on the block
+  block-name 
   arg-list
   is-observer
   is-basic
-  label-after-arg
+  is-set-update
   display-name
-
-  ; the name of the block's category, from categories-list (if any)
-  category
+  return-type ; "int", "real", "boolean", or uninitialized to mean none
+  label-after-arg ; label after first argument, for example, for infix blocks like "x + y", where "+" is a label
+  category   ; the name of the block's category, from categories-list (if any)
 ]
 
 sensors-own
@@ -83,42 +90,55 @@ sensors-own
   sensor-type
 ]
 
+patches-own
+[
+  is-food
+  is-nest
+  chemical-scent
+  ppaint-color
+]
+
 globals
    [
-    future-x ;; tells what the wabbit's x-coordinate would be if it went forward the given distance
-    serial-port
+    ; tells what the wabbit's x-coordinate would be 
+    ; if it went forward the given distance
+    future-x 
+    
     number-of-steps
     color-for-draw
-    
-    first-flag
-    second-flag
-    flag-distance
     
     ;;NEEDED FOR MEASURE LINKING
     measure-points
     
     wabbits-list
     wabbit-kind-list
-    blocks-list ;; list of blocks used to populate the toolbars / palettes in Java construction-world
-    sensors-list ;; list of sensors for Java construction-world
-    agent-kind-list ;; list of agent-kind in the model (breeds)
+    
+    ; list of blocks used to populate the toolbars or
+    ;  palettes in Java construction-world
+    blocks-list 
+    
+    ; list of sensors for Java construction-world
+    sensors-list 
+    
+    ; list of agent-type in the model (breeds)
+    agent-kind-list 
     predicate-list
     comp-int-left-vars
     comp-vars-left-vars
     comp-vars-right-vars
-    chart-data-name-list ;; list of data types to report to Java for graphing after each cycle
-    speed-up-amount
-    speed-down-amount
-    fd-step-size   
-
+    
+    ; list of data types to report to Java for graphing after each cycle
+    chart-data-name-list 
+    
     ; list of category names for blocks
     categories-list
         
     measure-option-string-lists
     measure-option-command-list
     
-    called-set-name ;; maybe be 0 or "" (empty string) if no called set.
     var-name-list
+    
+    called-set-name
     
     can-highlight-agents
     last-cycle
@@ -126,11 +146,23 @@ globals
     NaN
    ]
 
-to setup ;; sets up the screen
+;;;;;;;;;;;
+
+; sets up the screen
+to setup 
+  ;; (for this model to work with NetLogo's new plotting features,
+  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
+  ;; the beginning of your setup procedure and reset-ticks at the end
+  ;; of the procedure.)
+  ;; (for this model to work with NetLogo's new plotting features,
+  ;; __clear-all-and-reset-ticks should be replaced with clear-all at
+  ;; the beginning of your setup procedure and reset-ticks at the end
+  ;; of the procedure.)
   clear-all
+  ;ask patches [set ppaint-color green]
+   ;ask wabbits [set paint-color yellow]
   set-defaults
   color-background-patches
-  set measure-points []
   make-other-stuff
   create-blocks-list
   create-sensors-list
@@ -140,38 +172,45 @@ to setup ;; sets up the screen
   create-comp-vars-lists
   create-chart-data-name-list
   create-categories-list
+  ;;NEEDED FOR MEASURE LINKING
+  set measure-points []
   create-measure-option-string-lists
   create-measure-option-command-list
   create-var-name-list
-  setup-arduino
-  
-  reset-ticks    ;; creates ticks and initializes them to 0
-end
-
-to setup-arduino
-  if arduino:is-open? = false
-  [
-    let ports arduino:ports 
-    ifelse (length ports > 0)
-    [arduino:open user-one-of "Select a Port:" ports]
-    [user-message "No available ports:  Check your connections."]
-  ]
-end
-
-to-report arduino-distance-1
-  let real-dist arduino:get "dx"
-  report precision real-dist 2
-end
-
-to-report arduino-distance-2
-  let real-dist arduino:get "dy"
-  report precision real-dist 2
+  reset-ticks
 end
 
 to setup-cycle
+  ask patches [if ticks = 0 [set ppaint-color green] if is-nest [ set ppaint-color brown]]
+  ask wabbits [if ticks = 0 [set paint-color red]]
+ ask patches with [chemical-scent <= 3] 
+   
+   [set  pcolor ppaint-color]
+   ;diffuse ppaint-color .5
+  
 end
 
 to takedown-cycle
+
+  diffuse chemical-scent 0.5
+  
+   
+  ask patches 
+  [ 
+    ;set ppaint-color pcolor
+    set chemical-scent chemical-scent * 0.9
+   
+    recolor-patch 
+  ]
+end
+
+to recolor-patch  ;; patch procedure
+  ;; give color to nest and food sources
+  if not is-nest and not is-food and chemical-scent > 3
+  [ set pcolor scale-color green chemical-scent 0.1 5 ]
+  ;if not is-nest and not is-food and chemical-scent <= .1
+  ;[set pcolor ppaint-color]
+ 
 end
 
 to create-var-name-list
@@ -240,8 +279,6 @@ to-report get-list-as-csv [list-name]
 end
 
 to-report center-radius-and-name
-;report "10,10,10"
-
   let result-string ""
   let cpoint nobody
   let cpoint2 nobody
@@ -252,9 +289,29 @@ to-report center-radius-and-name
   while [not mouse-down?] [ ]
   set result-string (word (precision mouse-xcor 2)"," (precision mouse-ycor 2))
   
-  create-turtles 1 [ set shape "circle" set color black set size 5 setxy mouse-xcor mouse-ycor set cpoint self ]
-  create-turtles 1 [ set shape "circle" set color red set size 1 setxy mouse-xcor mouse-ycor set cpoint2 self ]
-  create-turtles 1 [ set shape "line half" set crad self setxy mouse-xcor mouse-ycor set color black]
+  create-turtles 1 
+  [ 
+  set shape "circle" 
+  set color black 
+  set size 5 
+  setxy mouse-xcor mouse-ycor 
+  set cpoint self 
+  ]
+  create-turtles 1 
+  [ 
+  	set shape "circle" 
+  	set color red 
+  	set size 1 
+  	setxy mouse-xcor mouse-ycor 
+  	set cpoint2 self 
+  ]
+  create-turtles 1 
+  [ 
+  set shape "line half" 
+  set crad self 
+  setxy mouse-xcor mouse-ycor 
+  set color black
+  ]
   
   display
   let radius 0
@@ -262,9 +319,14 @@ to-report center-radius-and-name
   while [mouse-down?]
   [
     ask cpoint [ set d distancexy mouse-xcor mouse-ycor ]
-    ask crad [ set size 2 * d  if (mouse-xcor != xcor or mouse-ycor != ycor) [ set heading towardsxy mouse-xcor mouse-ycor]  ]
- 	ask cpoint2 [ set size 2 * d ]
- 	display
+    ask crad 
+    [ 
+    	set size 2 * d  
+    	if (mouse-xcor != xcor or mouse-ycor != ycor) 
+    	[ set heading towardsxy mouse-xcor mouse-ycor] 
+	]
+     ask cpoint2 [ set size 2 * d ]
+     display
   ]
   
   set result-string ( word result-string "," (precision d 2) )
@@ -280,6 +342,16 @@ to-report center-radius-and-name
   
   set result-string ( word result-string "," my-name )
   report result-string
+end
+
+to create-categories-list
+  set categories-list
+  [
+    "Control"
+    "Movement"
+    "Pen"
+    "Secret Number"   ;;;SECRET NUMBER
+  ]
 end
 
 to create-chart-data-name-list
@@ -334,61 +406,59 @@ to cycle-ended
     set previous-x xcor
     set previous-y ycor
   ]
-end
-
-to create-categories-list
-  set categories-list
-  [
-    "Control"
-    "Movement"
-    "Drawing"
-    "Sensors"
-    "Measure"
-  ]
+  tick
 end
 
 to create-predicate-list
-  set predicate-list ["true" "false" "pcolor-blue"]
+  set predicate-list ["has-food" "at-nest" "food-here" "patch-matches-preference" "random-50%" "random-10%" "random-1%"]
 end
 
-; similar to create-predicate-list
 to create-comp-int-list
-  set comp-int-left-vars ["heading" "step-size" "color"]
+  set comp-int-left-vars ["heading" "step-size"]
 end
 
-; similar to create-predicate-list
 to create-comp-vars-lists
-  set comp-vars-left-vars ["heading" "step-size" "color"]
-  set comp-vars-right-vars ["heading" "step-size" "color"]
+  set comp-vars-left-vars ["heading" "step-size"]
+  set comp-vars-right-vars ["heading" "step-size"]
 end
 
-to-report java-heading [aWho]
-  let result 0
+to-report java-food-here [aWho]
+  let food-radius 2
+  let result true
   ask turtle aWho
-  [set result heading]
+  [
+  ;  set result [is-food] of patch-here
+  set result any? patches in-radius food-radius with [is-food]
+  ]
   report result
 end
 
-to-report java-step-size [aWho]
-  let result 0
+to-report java-at-nest [aWho]
+  let result true
   ask turtle aWho
-  [set result bonus-speed]
+  [
+    set result [is-nest] of patch-here
+  ]
   report result
 end
 
-to-report java-color [aWho]
-  let result 0
+to-report java-has-food [aWho]
+  let result true
   ask turtle aWho
-  [ set result color ]
+  [
+    set result has-food
+  ]
   report result
 end
 
-to-report java-true [aWho]
-  report true
-end
-
-to-report java-false [aWho]
-  report false
+to-report java-heading-upward [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading >= 0 and heading < 90) or (heading > 270 and heading <= 360)
+    [set result true]
+  ]
+  report result
 end
 
 to-report java-is-using-repeat
@@ -399,12 +469,38 @@ to-report java-is-image-computation
   report false
 end
 
-to-report java-pcolor-blue [aWho]
-let result ""
-ask turtle aWho
-[set result [pcolor] of patch-here = blue]
- report result
+to-report java-patch-matches-preference [aWho]
+  let result false
+  ask turtle aWho[
+    if shade-of? paint-color [ppaint-color] of patch-here = true [set result true]
+  ]
+  report result
 end
+
+to-report java-random-50% [aWho]
+  let result false
+  ask turtle aWho[
+    if random 100 <= 50 = true [set result true]
+  ]
+  report result
+end
+
+to-report java-random-10% [aWho]
+  let result false
+  ask turtle aWho[
+    if random 100 <= 10 = true [set result true]
+  ]
+  report result
+end
+
+to-report java-random-1% [aWho]
+  let result false
+  ask turtle aWho[
+    if random 100 <= 1 = true [set result true]
+  ]
+  report result
+end
+
 
 to reset
 setup
@@ -413,52 +509,17 @@ end
 to create-sensors-list
   set sensors-list []
 
-  ;;;;; END OF SENSOR DEFINITIONS ;;;;;
+  ;;; END OF SENSOR DEFINITIONS ;;;
 
 end
 
 to create-blocks-list
   set blocks-list []
   
-  ;;;;; PUT BLOCK DEFINITIONS HERE: ;;;;;
-  
-       create-blocks 1
+  ;;; PUT BLOCK DEFINITIONS HERE: ;;;
+  create-blocks 1
   [
-    set block-name "set-step_size-plus-sensor"
-    set is-observer false
-     set arg-list []
-     hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Sensors"
-    set is-basic true
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-    
-    create-blocks 1
-  [
-    set block-name "set-step_size-minus-sensor"
-    set is-observer false
-     set arg-list []
-     hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Sensors"
-    set is-basic true
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-  
-    create-blocks 1
-  [
-    set block-name "set-step_size"
+    set block-name "set-step-size"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -475,424 +536,184 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-      create-blocks 1
+  create-blocks 1
   [
-    set block-name "set-step_size-plus"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 100
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
+    set block-name "place-chemical"
     set category "Movement"
-    set is-basic true
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-    
-    create-blocks 1
-  [
-    set block-name "set-step_size-minus"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 100
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-  
-   create-blocks 1
-   [
-     set block-name "x-plus-sensor"
-     set category "Sensors"
-     set arg-list []
-         hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-     set is-observer false
-     set is-basic false
-     ; other variables not applicable
-   ]
- set blocks-list lput max-one-of blocks [who] blocks-list
- 
- create-blocks 1
-   [
-     set block-name "x-minus-sensor"
-     set category "Sensors"
-     set arg-list []
-         hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-     set is-observer false
-     set is-basic false
-     ; other variables not applicable
-   ]
- set blocks-list lput max-one-of blocks [who] blocks-list
- 
- create-blocks 1
-   [
-     set block-name "y-plus-sensor"
-     set category "Sensors"
-     set arg-list []
-         hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-     set is-observer false
-     set is-basic false
-     ; other variables not applicable
-   ]
- set blocks-list lput max-one-of blocks [who] blocks-list
- 
- create-blocks 1
-   [
-     set block-name "y-minus-sensor"
-     set category "Sensors"
-     set arg-list []
-         hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-     set is-observer false
-     set is-basic false
-     ; other variables not applicable
-   ]
- set blocks-list lput max-one-of blocks [who] blocks-list
- 
-      create-blocks 1
-    [
-      set block-name "set-xy"
-          set category "Movement"
-      set arg-list []
-      hatch-args 1
-      [
-        set arg-type "int"
-        set default-value 0
-        set max-value max-pxcor
-        set min-value min-pxcor
-      ]
-      set arg-list lput max-one-of args [who] arg-list
-          hatch-args 1
-      [
-        set arg-type "int"
-        set default-value 0
-        set max-value max-pycor
-        set min-value min-pycor
-      ]
-      set arg-list lput max-one-of args [who] arg-list
-      set is-observer false
-      set is-basic true
-      ; other variables not applicable
-    ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-  
-         create-blocks 1
-  [
-    set block-name "place-measure-point"
-    set category "Measure"
     set arg-list []
     set is-observer false
-    set is-basic false
+    set is-basic true
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
       
-      create-blocks 1
+  create-blocks 1
   [
-    set block-name "clear-measure-points"
-    set category "Measure"
+    set block-name "face-chemical"
+    set category "Movement"
     set arg-list []
     set is-observer false
-    set is-basic false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+  
+    create-blocks 1
+  [
+    set block-name "i-have-food"
+    set category "Control"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+    create-blocks 1
+  [
+    set block-name "face-nest"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+   create-blocks 1
+  [
+    set block-name "i-don't-have-food"
+    set category "Control"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+       create-blocks 1
+  [
+    set block-name "patch-matches-preference"
+    set category "Control"
+    set arg-list []
+    set is-observer false
+    set is-basic true
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
       
           create-blocks 1
   [
-    set block-name "start-measuring"
-    set category "Measure"
+    set block-name "random-50%"
+    set category "Control"
     set arg-list []
     set is-observer false
-    set is-basic false
+    set is-basic true
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  create-blocks 1
+      
+          create-blocks 1
   [
-    set block-name "set-label"
-    set category "Measure"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-create-blocks 1
-  [
-    set block-name "light-on"
-    set category "Movement"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-set blocks-list lput max-one-of blocks [who] blocks-list
-
-  create-blocks 1
-  [
-    set block-name "light-off"
-    set category "Movement"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-set blocks-list lput max-one-of blocks [who] blocks-list
-
-create-blocks 1
-  [
-    set block-name "right-turn-sensor"
-    set category "Sensors"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-set blocks-list lput max-one-of blocks [who] blocks-list
-
-create-blocks 1
-  [
-    set block-name "left-turn-sensor"
-    set category "Sensors"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-set blocks-list lput max-one-of blocks [who] blocks-list
-
-create-blocks 1 
-[
-  set block-name "set_"
-  set category "Sensors"
-  set arg-list []
-  hatch-args 1
-  [
-    set arg-type "enum"
-    set enum-list ["pen-width" "color" "heading" "step_size"]
-  ]
-  set arg-list lput max-one-of args [who] arg-list
-  hatch-args 1
-  [
-    set arg-type "enum"
-    set enum-list ["sensor-1" "sensor-2"]
-  ]
-  set arg-list lput max-one-of args [who] arg-list
-  set is-observer false
-  set is-basic false
-]
-set blocks-list lput max-one-of blocks [who] blocks-list
-
-create-blocks 1
-  [
-    set block-name "set"
-    set category "Sensors"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["pen-width" "color" "heading" "step_size"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["sensor-1" "sensor-2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["plus" "minus" "times" "divide"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-  hatch-args 1
-  [
-     set arg-type "int"
-     set default-value 1
-     set max-value 50
-     set min-value 0
-  ]
-  set arg-list lput max-one-of args [who] arg-list
-  set is-observer false
-  set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "change"
+    set block-name "random-10%"
     set category "Control"
     set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["step_size" "color" "heading"] ;"speed-up-amount"]; "pen-thickness"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["plus" "minus" "times" "divide"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-	hatch-args 1
-	[
-	   set arg-type "int"
-	   set default-value 1
-	   set max-value 50
-	   set min-value 0
-	]
-	set arg-list lput max-one-of args [who] arg-list
-	set is-observer false
-  set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "set-pen-thickness-by"
-    set category "Drawing"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["speed-down-number" "speed-up-number" "forward-dist"]
-    ]    
-      set arg-list lput max-one-of args [who] arg-list
-      set is-observer false
-      set is-basic false
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-
-create-blocks 1
-  [
-    set block-name "set-color-by"
-    set category "Sensors"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["sensor" "four-times-sensor" "ten-times-sensor"]
-    ]    
-      set arg-list lput max-one-of args [who] arg-list
-      hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["1" "2"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-      set is-observer false
-      set is-basic false
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "set-heading"
-        set category "Movement"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 360
-      set min-value 1
-    ]
-    set arg-list lput max-one-of args [who] arg-list
     set is-observer false
     set is-basic true
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-
-  create-blocks 1
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+               create-blocks 1
   [
-    set block-name "set-pen-thickness"
-    set category "Drawing"
-    
+    set block-name "random-1%"
+    set category "Control"
     set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 50
-      set min-value 1
-    ]
-    set arg-list lput max-one-of args [who] arg-list
     set is-observer false
-    set is-basic false
+    set is-basic true
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+  create-blocks 1
+  [
+    set block-name "pickup-food-here"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
   
   create-blocks 1
   [
     set block-name "go-forward"
     set category "Movement"
-
     set arg-list []
     set is-observer false
     set is-basic true
+    ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+      set blocks-list lput max-one-of blocks [who] blocks-list
+    
+    ;;NEEDED FOR MEASURE LINKING
       create-blocks 1
   [
-    set block-name "right-turn"
+    set block-name "place-measure-point"
+    ;set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+            create-blocks 1
+  [
+    set block-name "clear-measure-points"
+    ;set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+                  create-blocks 1
+  [
+    set block-name "start-measuring"
+    ;set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+              create-blocks 1
+  [
+    set block-name "random-turn"
+    set category "Movement"
+    
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 60
+      set max-value 180
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+ 
+        create-blocks 1
+  [
+    set block-name "right"
     set category "Movement"
     
     set arg-list []
@@ -900,8 +721,8 @@ create-blocks 1
     [
       set arg-type "int"
       set default-value 90
-      set max-value 180
-      set min-value 1
+      set max-value 360
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
@@ -911,7 +732,7 @@ create-blocks 1
       set blocks-list lput max-one-of blocks [who] blocks-list
       create-blocks 1
   [
-    set block-name "left-turn"
+    set block-name "left"
     set category "Movement"
     
     set arg-list []
@@ -919,8 +740,8 @@ create-blocks 1
     [
       set arg-type "int"
       set default-value 90
-      set max-value 180
-      set min-value 1
+      set max-value 360
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
@@ -931,158 +752,165 @@ create-blocks 1
   create-blocks 1
   [
     set block-name "pen-up"
-    set category "Drawing"
+    set category "Pen"
     set arg-list []
     set is-observer false
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      create-blocks 1
-  [
-    set block-name "pen-down"
-    set category "Drawing"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+      set blocks-list lput max-one-of blocks [who] blocks-list 
+      
         create-blocks 1
   [
     set block-name "plant-flag"
-    set category "Drawing"
+    set category "Pen"
     set arg-list []
     set is-observer false
-    set is-basic false
+    set is-basic true
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  ;;; Isaac's Blocks
-  
-  create-blocks 1
+      
+   create-blocks 1
   [
-    set block-name "turn-some-patches-blue"
-    set category "Drawing"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 10
-      set max-value 200
-      set min-value 1
-    ]
-    set arg-list lput max-one-of args [who] arg-list
+    set block-name "grow"
     set is-observer false
-    set is-basic false
-    ; other variables not applicable
-    
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "color-circle-blue"
-    set category "Drawing"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 10
-      set max-value 10000
-      set min-value 1 
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-     ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "color-square-blue"
-    set category "Drawing"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 100
-      set max-value 20000    
-      set min-value 1
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-     ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "color-polygon"
-    set category "Drawing"
     set arg-list []
     hatch-args 1
     [
       set arg-type "int"
       set default-value 4
-      set max-value 1000
-      set min-value 3
+      set max-value 25
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list 
+      
+  create-blocks 1
+  [
+    set block-name "randomize-patch-color"
+    set is-observer false
+    set arg-list []
     hatch-args 1
     [
-      set arg-type "enum"
-      set default-value "blue"
-      set enum-list ["blue" "red" "yellow" "green" "brown" "black" "white"]
+      set arg-type "int"
+      set default-value 50
+      set max-value 101
+      set min-value 0
     ]
-    set arg-list lput max-one-of args [who] arg-list 
-      
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
+  [
+    set block-name "patch-color"
     set is-observer false
-    set is-basic false
-      ; other variables not applicable
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 55
+      set max-value 139
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  create-blocks 1
+  [
+    set block-name "add-food"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 50
+      set max-value 101
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
     
-    
-  create-blocks 1
+            create-blocks 1
   [
-   set block-name "create-ngon"
-   set category "Drawing"
-   set arg-list []
-   hatch-args 1 ; sides
-   [
-    set arg-type "int"
-    set default-value 3
-    set max-value 100
-    set min-value 3
-   ]
-   set arg-list lput max-one-of args [who] arg-list
-   hatch-args 1 ; radius
-   [
-    set arg-type "int"
-    set default-value 30
-    set max-value 150
-    set min-value 1
-   ]
-   set arg-list lput max-one-of args [who] arg-list
-   
-   hatch-args 1 ; color
-   [
-    set arg-type "enum"
-    set default-value "blue"
-	set enum-list [ "blue" "red" "green" ]
-   ]
-   set arg-list lput max-one-of args [who] arg-list
-   
-   set is-observer false
-   set is-basic false
+    set block-name "pollinate"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-
-  ;;;;; END OF BLOCK DEFINITIONS ;;;;;
+      set blocks-list lput max-one-of blocks [who] blocks-list 
+      
+                  create-blocks 1
+  [
+    set block-name "tandum-running"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list 
+      
+    create-blocks 1
+  [
+    set block-name "set-paintcolor"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 15
+      set max-value 139
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+   
+                create-blocks 1
+  [
+    set block-name "eat-grass"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list 
+      
+                  create-blocks 1
+  [
+    set block-name "teach"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list 
+  ;;; END OF BLOCK DEFINITIONS ;;;
 end
 
 to create-agent-kind-list
@@ -1090,61 +918,114 @@ to create-agent-kind-list
   
   create-agent-kinds 1
   [
-    set name "turtle"
+    set name "ant"
     
     set methods-list []
     set methods-list lput "setup" methods-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "light-on" primitives-list
-    set primitives-list lput "light-off" primitives-list
-    set primitives-list lput "right-turn-sensor" primitives-list 
-    set primitives-list lput "left-turn-sensor" primitives-list
-    set primitives-list lput "set-color-by" primitives-list
-    set primitives-list lput "change" primitives-list
-    set primitives-list lput "go-forward" primitives-list
-    set primitives-list lput "set-step_size" primitives-list
-    set primitives-list lput "set-step_size-plus" primitives-list
-    set primitives-list lput "set-step_size-minus" primitives-list
-    set primitives-list lput "set-step_size-plus-sensor" primitives-list
-    set primitives-list lput "set-step_size-minus-sensor" primitives-list
-    set primitives-list lput "pen-up" primitives-list
-    set primitives-list lput "pen-down" primitives-list
-    set primitives-list lput "right-turn" primitives-list
-    set primitives-list lput "left-turn" primitives-list
-    set primitives-list lput "plant-flag" primitives-list
-    
-    set primitives-list lput "start-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "set-label" primitives-list
+    set primitives-list lput "start-measuring" primitives-list
+
+    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "go-forward" primitives-list
+  
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
+    set primitives-list lput "random-turn" primitives-list
+    set primitives-list lput "face-nest" primitives-list
+    set primitives-list lput "face-chemical" primitives-list
     
-    set primitives-list lput "set-pen-thickness-by" primitives-list
-    set primitives-list lput "set-heading" primitives-list
-    set primitives-list lput "set-pen-thickness" primitives-list
-    set primitives-list lput "create-ngon" primitives-list
-    set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "x-plus-sensor" primitives-list
-    set primitives-list lput "x-minus-sensor" primitives-list
-    set primitives-list lput "y-plus-sensor" primitives-list
-    set primitives-list lput "y-minus-sensor" primitives-list
-    set primitives-list lput "set" primitives-list
-    set primitives-list lput "set_" primitives-list
+    set primitives-list lput "i-have-food" primitives-list
+    set primitives-list lput "i-don't-have-food" primitives-list
+    set primitives-list lput "pickup-food-here" primitives-list
+    set primitives-list lput "place-chemical" primitives-list
+    set primitives-list lput "grow" primitives-list
+    set primitives-list lput "randomize-patch-color" primitives-list
+    set primitives-list lput "eat-grass" primitives-list
+    set primitives-list lput "patch-color" primitives-list
+    ;set primitives-list lput "patch-matches-preference" primitives-list
+    set primitives-list lput "teach" primitives-list
+    set primitives-list lput "set-paintcolor" primitives-list
+     set primitives-list lput "tandum-running" primitives-list
+  ]
+  set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
+  
+   create-agent-kinds 1
+  [
+    set name "pollinator"
+    
+    set methods-list []
+    set methods-list lput "setup" methods-list
+    set methods-list lput "go" methods-list
+    
+    set primitives-list []
+    set primitives-list lput "place-measure-point" primitives-list
+    set primitives-list lput "clear-measure-points" primitives-list
+    set primitives-list lput "start-measuring" primitives-list
+
+    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "go-forward" primitives-list
+  
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
+    set primitives-list lput "random-turn" primitives-list
+    set primitives-list lput "face-nest" primitives-list
+    set primitives-list lput "face-chemical" primitives-list
+    
+    set primitives-list lput "i-have-food" primitives-list
+    set primitives-list lput "i-don't-have-food" primitives-list
+    set primitives-list lput "pickup-food-here" primitives-list
+    set primitives-list lput "place-chemical" primitives-list
+    set primitives-list lput "grow" primitives-list
+    set primitives-list lput "randomize-patch-color" primitives-list
+    set primitives-list lput "pollinate" primitives-list
+    set primitives-list lput "eat-grass" primitives-list
+    set primitives-list lput "add-food" primitives-list
+    set primitives-list lput "patch-color" primitives-list
+    set primitives-list lput "set-paintcolor" primitives-list
+    ;set primitives-list lput "patch-matches-preference" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
 end
 
-to-report speed-down-number
-  report speed-down-amount
+
+
+
+to java-place-chemical
+  set chemical-scent chemical-scent + 60
 end
 
-to-report speed-up-number
-  report speed-up-amount
+to java-i-have-food
+  set has-food true
 end
 
-to-report forward-dist
-  report fd-step-size
+
+
+to java-i-don't-have-food
+  set has-food false
+end
+
+to java-pickup-food-here
+  let food-radius 2
+  if any? patches in-radius food-radius with [is-food]
+  [
+    ask one-of patches in-radius food-radius with [is-food]
+    [
+      set is-food false
+      set ppaint-color brown
+    ]
+  ] 
+;  ask patch-here
+;  [
+;    if is-food
+;    [
+;      set is-food false
+;      set pcolor black
+;    ]
+;  ]
 end
 
 to create-wabbits-list
@@ -1161,304 +1042,86 @@ to create-wabbit-kind-list
   ]
 end
 
-to java-set-step_size-plus-sensor [a-sensor]
-  let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  set bonus-speed bonus-speed + my-dist
+to java-set-step-size [ aspeed ]
+  set bonus-speed aspeed
+  if (aspeed < 0) [ set bonus-speed 0 ]
 end
 
-to java-set-step_size-minus-sensor [a-sensor]
-  let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  set bonus-speed bonus-speed - my-dist
-  if bonus-speed < 0
-  [set bonus-speed 0]
+to-report java-heading [aWho]
+  let result 0
+  ask turtle aWho
+  [set result heading]
+  report result
 end
 
-to java-light-on
- arduino:write-byte 49
+to-report java-step-size [aWho]
+  let result 0
+  ask turtle aWho
+  [set result bonus-speed]
+  report result
 end
 
-to java-light-off
- arduino:write-byte 48
-end
-
-to java-set_ [a-value a-sensor]
-  let my-dist 0
-  if a-sensor = "sensor-1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "sensor-2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  
-  if a-value = "step_size"
-  [set bonus-speed my-dist]
-  if a-value = "pen-width"
-  [set pen-size my-dist]
-  if a-value = "color"
-  [set color my-dist]
-  if a-value = "heading"
-  [set heading my-dist]
-end
-
-to java-set [a-value a-sensor a-operator a-amount]
-  let my-dist 0
-  if a-sensor = "sensor-1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "sensor-2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  
-  if a-value = "step_size"
-  [
-    if a-operator = "plus"
-    [set bonus-speed my-dist + a-amount]
-    if a-operator = "minus"
-    [set bonus-speed my-dist - a-amount]
-    if a-operator = "times"
-    [set bonus-speed my-dist * a-amount]
-    if a-operator = "divide" and a-amount != 0
-    [set bonus-speed my-dist / a-amount]
-  ]
-  if a-value = "pen-width"
-  [
-    if a-operator = "plus"
-    [set pen-size my-dist + a-amount]
-    if a-operator = "minus"
-    [set pen-size my-dist - a-amount]
-    if a-operator = "times"
-    [set pen-size my-dist * a-amount]
-    if a-operator = "divide" and a-amount != 0
-    [set pen-size my-dist / a-amount]
-  ]
-  if a-value = "color"
-  [
-    if a-operator = "plus"
-    [set color my-dist + a-amount]
-    if a-operator = "minus"
-    [set color my-dist - a-amount]
-    if a-operator = "times"
-    [set color my-dist * a-amount]
-    if a-operator = "divide" and a-amount != 0
-    [set color my-dist / a-amount]
-  ]
-  if a-value = "heading"
-  [
-    if a-operator = "plus"
-    [set heading my-dist + a-amount]
-    if a-operator = "minus"
-    [set heading my-dist - a-amount]
-    if a-operator = "times"
-    [set heading my-dist * a-amount]
-    if a-operator = "divide" and a-amount != 0
-    [set heading my-dist / a-amount]
-  ]
-end
-
-to java-x-plus-sensor [a-sensor]
-    let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  setxy xcor + my-dist ycor
-  set odometer odometer + my-dist
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + my-dist
-  ]
-end
-
-to java-x-minus-sensor [a-sensor]
-    let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  setxy xcor - my-dist ycor
-  set odometer odometer + my-dist
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + my-dist
-  ]
-end
-
-to java-y-plus-sensor [a-sensor]
-    let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  setxy xcor ycor + my-dist
-  set odometer odometer + my-dist
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + my-dist
-  ]
-end
-
-to java-y-minus-sensor [a-sensor]
-    let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  setxy xcor ycor - my-dist
-  set odometer odometer + my-dist
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + my-dist
-  ]
-end
-
-to java-set-xy [my-x my-y]
-  let dist-traveled distancexy my-x my-y
-  setxy my-x my-y
-  set odometer odometer + dist-traveled
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + dist-traveled
-  ]
-end
-
-to java-place-measure-point
-  hatch-measurepoints 1
-  [
-   set measure-points lput self measure-points
-   set size 15
-   set shape "flag"
-   set color black 
-   
-   set tagentkind [agent-kind-string] of myself
-   set tcycles [flag-counter] of myself ;; previously: count measurepoints - 1
-   set theading [heading] of myself
-   set todometer [ odometer ] of myself
-   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
-   [set taccel NaN]
-   [set taccel [ distfromlast - odistfromlast ] of myself]
-   set tdistfromlast [ distfromlast ] of myself
-   set tspeed [bonus-speed] of myself
-   set tcolor [ color ] of myself
-   set tpenwidth [ pen-size ] of myself
-   set tpencolor [ color ] of myself
-   set measurepoint-creator [agent-kind-string] of myself
-   
-   set label-color black
-   set label [flag-counter] of myself
-  ]
-  set odistfromlast distfromlast
-  set distfromlast 0
-  set flag-counter flag-counter + 1
-end
-
-to java-right-turn-sensor [a-sensor]
-  let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  rt my-dist
-end
-
-to java-left-turn-sensor [a-sensor]
-  let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
-  lt my-dist
-end
-
-to java-change [variable-name operator-name change-value]
-  if variable-name = "step_size"
-  [
-    if operator-name = "plus"
-    [set bonus-speed bonus-speed + change-value]
-    if operator-name = "minus"
-    [set bonus-speed bonus-speed - change-value]
-    if operator-name = "times"
-    [set bonus-speed bonus-speed * change-value]
-    if operator-name = "divide" and change-value != 0
-    [set bonus-speed bonus-speed / change-value]
-  ]
-  if variable-name = "color"
-  [
-    if operator-name = "plus"
-    [set color color + change-value]
-    if operator-name = "minus"
-    [set color color - change-value]
-    if operator-name = "times"
-    [set color color * change-value]
-    if operator-name = "divide" and change-value != 0
-    [set color color / change-value]
-  ]
-    if variable-name = "heading"
-  [
-    if operator-name = "plus"
-    [set heading heading + change-value]
-    if operator-name = "minus"
-    [set heading heading - change-value]
-    if operator-name = "times"
-    [set heading heading * change-value]
-    if operator-name = "divide" and change-value != 0
-    [set heading heading / change-value]
-  ]
-  
-     if variable-name = "speed-up-amount"
-  [
-    if operator-name = "plus"
-    [set bonus-speed bonus-speed + change-value]
-    if operator-name = "minus"
-    [set bonus-speed bonus-speed - change-value]
-    if operator-name = "times"
-    [set bonus-speed bonus-speed * change-value]
-    if operator-name = "divide" and change-value != 0
-    [set bonus-speed bonus-speed / change-value]
-  ]
-  if variable-name = "pen-thickness"
-  [
-    if operator-name = "plus"
-    [set pen-size pen-size + change-value]
-    if operator-name = "minus"
-    [set pen-size pen-size - change-value]
-    if operator-name = "times"
-    [set pen-size pen-size * change-value]
-    if operator-name = "divide" and change-value != 0
-    [set pen-size pen-size / change-value]
-  ]
-end
-
-to java-go-forward
-let forward-distance bonus-speed
+to java-go-forward 
+  let forward-distance bonus-speed
   if forward-distance < 0
   [set forward-distance 0]
-  forward forward-distance
-  set fd-step-size forward-distance
-  set odometer odometer + forward-distance
+  
+  let moved 0
+  while [moved < forward-distance and can-move? 1]
+  [
+   jump 1 
+   set moved moved + 1
+  ]
+  ;;turtle variables that will be harvested at meaure points.
+  set odometer odometer + moved
   if any? measurepoints
   [
     if distfromlast = NaN
     [set distfromlast 0]
-    set distfromlast distfromlast + forward-distance
+    set distfromlast distfromlast + moved
   ]
+end
+
+to java-right [amount-number]
+  right amount-number
+end
+
+to java-left [amount-number]
+  left amount-number
+end
+
+to java-random-turn [amount-number]
+  let rand (random-float amount-number * 2)
+  right rand - amount-number
+end
+
+to java-face-chemical
+  if (chemical-scent >= 0.05) and (chemical-scent < 2)
+[
+  let scent-ahead chemical-scent-at-angle 0
+  let scent-right chemical-scent-at-angle 45
+  let scent-left chemical-scent-at-angle -45
+  if (scent-right > scent-ahead) or (scent-left > scent-ahead)
+  [ 
+    ifelse scent-right > scent-left
+    [rt 45]
+    [lt 45] 
+  ]
+]
+end
+
+to-report chemical-scent-at-angle [angle]
+  let p patch-right-and-ahead angle 1
+  if p = nobody [ report 0 ]
+  report [chemical-scent] of p
+end
+
+to java-face-nest
+  facexy 0 0
 end
 
 to java-start-measuring
-    ask wabbits
+      ask wabbits
     [
       set distfromlast NaN        ;dist since last measure point
       set odistfromlast NaN      ;last measure points distfromlast (for accel)
@@ -1470,69 +1133,43 @@ to java-clear-measure-points
     ask measurepoints [die]
     ask wabbits
     [
-      set odistfromlast NaN
-      set distfromlast NaN
+      set distfromlast NaN        ;dist since last measure point
+      set odistfromlast NaN      ;last measure points distfromlast (for accel)
       set odometer 0
     ]
 end
 
-to java-set-label [variable-name]
-  set label-color black
-  if variable-name = "step-size"
-  [set label bonus-speed]
-  if variable-name = "color"
-  [set label color]
-  if variable-name = "heading"
-  [set label heading]
-  if variable-name = "secret-number"
-  [set label secret-number]
-  if variable-name = "pen-width"
-  [set label pen-size]
-  if variable-name = "none"
-  [set label ""]
-end
-
-
-to java-set-step_size [ aspeed ]
-  set bonus-speed aspeed
-  if (aspeed < 0) [ set bonus-speed 0 ]
-end
-
-to java-set-step_size-plus [amount-number]
-  set bonus-speed bonus-speed + amount-number
-end
-
-to java-set-step_size-minus [amount-number]
-  set bonus-speed bonus-speed - amount-number
-  if (bonus-speed < 0) [ set bonus-speed 0 ]
-end
-
-to java-right-turn [ amount-number]
-right amount-number
-end
-
-to java-left-turn [ amount-number]
-left amount-number
-end
-
-to java-set-heading [ amount-number]
-set heading amount-number
-end
-
-to java-set-pen-thickness [ amount-number]
-set pen-size amount-number
-end
-
-to java-pen-up
-pen-up
-end
-
-to java-pen-down
-pen-down
+;;NEEDED FOR MEASURE LINKING
+to java-place-measure-point
+  hatch-measurepoints 1
+  [
+   set measure-points lput self measure-points
+   set size 15
+   set shape "flag"
+   set color black 
+   
+   set tagentkind [agent-kind-string] of myself
+   set tcycles count measurepoints - 1
+   set theading [heading] of myself
+   set todometer [ odometer ] of myself
+   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
+   [set taccel NaN]
+   [set taccel [ distfromlast - odistfromlast ] of myself]
+   set tdistfromlast [ distfromlast ] of myself
+   set tspeed [bonus-speed] of myself
+   set tcolor [ color ] of myself
+   set tpenwidth [ pen-size ] of myself
+   set tpencolor [ color ] of myself
+   
+   set label-color black
+   set label tcycles
+  ]
+  set odistfromlast distfromlast
+  set distfromlast 0
 end
 
 to java-plant-flag
-let temp-flag-count 0
+  let temp-flag-count 0
   let x 0
   let y 0
   let color-to-draw 0
@@ -1557,216 +1194,73 @@ let temp-flag-count 0
   set flag-counter flag-counter + 1
 end
 
-to java-turn-some-patches-blue [ amount-number]
-  ask n-of amount-number patches [ set pcolor blue ]
-end
+to java-grow-to [asize]
+   ask wabbits [ifelse size < asize [set size size * 1.005 ]
+      [set size asize]]
+  end
 
-to java-set-pen-thickness-by [amount-number]
-  set pen-size runresult(amount-number)
-end
-
-to java-set-color-by [amount-number a-sensor]
-  let my-dist 0
-  if a-sensor = "1" or a-sensor = 1
-  [set my-dist arduino-distance-1]
-  if a-sensor = "2" or a-sensor = 2
-  [set my-dist arduino-distance-2]
+to java-randomize-patch-color [acolorplaceprob]
+  let currentcolor random 139
+  if random 100 < acolorplaceprob [ask [neighbors] of patch-here  [set ppaint-color currentcolor  set is-food true]]
   
-  if amount-number = "sensor" 
-  [set color my-dist]
-  if amount-number = "four-times-sensor" 
-  [set color my-dist * 4]
-  if amount-number = "ten-times-sensor"
-  [set color my-dist * 10]
 end
 
-to java-color-circle-blue [ amount-number]
-ask patches in-radius amount-number [set pcolor blue]
+to java-patch-color [acolorplaced]
+  let currentcolor acolorplaced
+  ask patch-here [set ppaint-color acolorplaced set is-food true] ask [neighbors] of patch-here  [set ppaint-color currentcolor  set is-food true];[paint-color] of self]
 end
 
-to java-color-square-blue [ side-length] 
-    let y ycor
-    let x xcor 
-    let amount-value (side-length / 2)
-    ask patches with [ 
-      (((pxcor >= x - amount-value) and (pxcor <= x)) or ((pxcor <= x + amount-value) and (pxcor >= x))) ; defines the x-coordinates of the included (right and left) patches relative to the turles x-coordinate   
-      and                                                                                                ; combines both - four possibilites 
-      (((pycor >= y - amount-value) and (pycor <= y)) or ((pycor <= y + amount-value) and (pycor >= y)))]; defines the y-coordinates of the included (up and down) patches relative to the turles y-coordinate   
-    [set pcolor blue] 
+to java-set-paintcolor [arg-paint]
+  set paint-color arg-paint
 end
 
-patches-own [isaac-variable-a ;assign to row fill-ins
-            isaac-variable-b] ; assign to column fill-ins
-
-to java-color-polygon [ number-of-sides b-color ] 
-   let color-of-polygon runresult b-color 
-   rt 180
-   forward ((6 / 2) / (tan ((360 / number-of-sides) / 2))) ;get turtle out of center into half-segment of side length
-   rt 90 
-   repeat (6 / 2) ; move forward along the side
-   [
-     set pcolor color-of-polygon
-     set isaac-variable-a 1
-     forward 1
-   ]
-   rt 180 - ((180 - (360 / number-of-sides)) / 1) ;do so for other sides 
-   repeat (number-of-sides - 1) 
- [ 
-  repeat 6
-  [
-    set pcolor color-of-polygon
-    set isaac-variable-a 1 
-    forward 1 
-  ]
-  rt 180 - ((180 - (360 / number-of-sides)) / 1)
- ]
-  repeat (6 / 2) ;move along first side to where turtle started
-  [
-    set pcolor color-of-polygon
-    set isaac-variable-a 1
-    forward 1
-  ]
- 
-  rt 90
-  forward ((6 / 2) / (tan ((360 / number-of-sides) / 2))) ; go back to center
-  let x xcor
-  let y ycor
-  ask patches with [isaac-variable-a = 1] 
-  [
-    let py pycor
-    let px pxcor
-    ask patches with ; fill in by rows with perimter as reference 
-    [
-      ((pycor = py) and ((pxcor >= px) and (pxcor <= x)))
-      or
-      ((pycor = py) and ((pxcor <= px) and (pxcor >= x)))
+to java-tandum-running
+  let student one-of wabbits-here
+  if student != nobody [
+    if [shape] of student = "bug" [
+  ask student [set paint-color [paint-color] of myself ]
     ]
-    [
-      set isaac-variable-a 2
-    ]    
-   ask patches with ; fill in by columns with perimeter as reference 
-    [
-      ((pxcor = px) and ((pycor >= py) and (pycor <= y)))
-      or
-      ((pxcor = px) and ((pycor <= py) and (pycor >= y)))
-    ]
-    [
-      set isaac-variable-b 3
-    ]
-   ]
-  ask patches with [(isaac-variable-a = 2) and (isaac-variable-b = 3)] [set pcolor color-of-polygon] ;intersection of rows and columns to remove extraneous fill in
-  set isaac-variable-a 0
-  set isaac-variable-b 0
-end  
-
-to java-create-ngon [ sides radius aColor ]
-  let cX xcor
-  let cY ycor
+  ] 
+end
   
-  ; these will hold the coefficients of condition functions
-  let xIsLess [] ; vertical line at left bound, xcor only
-  let xIsGreater[] ; vertical line at right bound, xcor only
-  let yIsLessSlope[] ; non-vertical line to be below, slope only. matches same index in yIsLessIntercept
-  let yIsLessIntercept[] ; non-vertical line to be below, y-intercept only
-  let yIsGreaterSlope[] ; non-vertical line to be above, slope only. matches same index in yIsGreaterIntercept
-  let yIsGreaterIntercept[] ; non-vertical line to be above, y-intercept only
-  
-  let i 0
-  while [ i < sides ]
-  [
-   ; angle from center of polygon to vertex. initially 90, or straight ahead
-   let theta1 ( 90 - 360 / sides * i ) mod 360 
-   
-   ; coordinates of first of two neighboring vertices
-   let x1 cX + radius * cos theta1
-   let y1 cY + radius * sin theta1
-   
-   let j i + 1
-   ; wrap around to 0
-   if j >= sides
-   [ set j 0 ]
-   ; angle to the next neighbor vertex from center
-   let theta2 ( 90 - 360 / sides * j ) mod 360
-
-   ; coordinates of next neighbor vertex, proceeding around the circumscribed circle
-   let x2 cX + radius * cos theta2
-   let y2 cY + radius * sin theta2
-   
-   ; if the line is vertical, handle as a special case
-   ifelse x1 = x2
-   [
-     ; if must be below the line
-     ifelse cX < x1
-     [
-       set xIsLess lput x1 xIsLess
-     ]
-     ; else must be above the line
-     [
-       set xIsGreater lput x1 xIsGreater
-     ]
-   ]
-   ; else must not be a vertical line, so slope exists
-   [
-     let slope ( y2 - y1 ) / ( x2 - x1 )
-     let intercept -1 * x1 * slope + y1
-     ; if must be above the line
-     ifelse cY > cX * slope + intercept
-     [
-       set yIsGreaterSlope lput slope yIsGreaterSlope
-       set yIsGreaterIntercept lput intercept yIsGreaterIntercept
-     ]
-     ; else must be below the line
-     [
-       set yIsLessSlope lput slope yIsLessSlope
-       set yIsLessIntercept lput intercept yIsLessIntercept
-     ]
-   ]
-   
-   ; proceed to next vertex. will run once for each edge of the polygon, making it into a constraint
-   set i i + 1
-  ]
-  
-let theColor runresult aColor
-ask patches with [ pxcor <= max-pxcor ]
-[
-  ; patch is "valid" if it satisfies all n constraints
-  let is-valid true
-  
-  ; is the patch x less than all vertical line right bounds?
-  foreach xIsLess
-  [
-    if pxcor >= ?
-    [ set is-valid false ]
-  ]
-  ; is the patch x greater than all vertical line left bounds?
-  foreach xIsGreater
-  [
-    if pxcor <= ?
-    [ set is-valid false ]
-  ]
-  ; is the patch's y below all non-vertical line upper bounds?
-  set i 0
-  while [ i < length yIsLessSlope ]
-  [
-    if pycor >= pxcor * item i yIsLessSlope + item i yIsLessIntercept
-    [ set is-valid false ]
-    set i i + 1
-  ]
-  ; is the patch's y above all non-vertical line lower bounds?
-  set i 0
-  while [ i < length yIsGreaterSlope ]
-  [
-    if pycor <= pxcor * item i yIsGreaterSlope + item i yIsGreaterIntercept
-    [ set is-valid false ]
-    set i i + 1
-  ]
-  
-  ; if the patch satisfies all n constraints, color it blue
-  if is-valid
-  [ set pcolor theColor ]
-]
+to java-add-food [afoodprob]
+   if random 100 < afoodprob [set is-food true]
 end
 
+to java-pollinate
+  if pcolor = black = false  [if pcolor = green = false [  
+    if random 100 > 50 [ set paint-color pcolor]]]
+end 
+
+to java-eat-grass
+  ask wabbits [
+     if ppaint-color = paint-color [
+        set ppaint-color brown + random 5
+       set energy energy + 20
+       ] 
+  
+     if pcolor != brown [
+    if random 100 > 45 [
+      set paint-color ppaint-color]
+    set pcolor paint-color + random -5
+    set energy (energy + 5)
+    ]
+    
+  
+      if pcolor = brown [ 
+    set pcolor black + random  10
+    set energy energy - 5
+    ]
+] 
+end
+
+to java-teach
+  let student one-of wabbits with [shape = "bug"]
+  if student != nobody [
+  ask student[set paint-color [paint-color] of myself]
+  ]
+  end
+  
 to draw-plus [x y color-to-draw]
   ask patch x y [set pcolor color-to-draw]
   ask patch (x + 1) y [set pcolor color-to-draw]
@@ -2150,12 +1644,14 @@ to-report list-item [list-name index]
 end
 
 to-report list-item-property [list-name index property]
-  report [runresult property] of item index list-name ; runresult converts the String variable into its NetLogo code equivalent (a property name)
+
+; runresult converts the String variable into its 
+; NetLogo code equivalent (a property name)
+  report [runresult property] of item index list-name 
 end
 
 to set-defaults
   set-default-shape wabbits "circle"
-  
   set NaN -9007199254740992
   set number-of-steps 0
   set can-highlight-agents false
@@ -2164,28 +1660,93 @@ end
 
 to color-background-patches
   ask patches
-       [set pcolor white]
+       [set pcolor black]
+  create-nest
+end
+
+to create-nest
+  ask patches
+  [
+    set is-nest false
+    set is-food false
+  ]
+  ask patches with [distancexy 0 0 < 4]
+  [
+    set is-nest true
+    set pcolor blue + 2
+  ]
+  
+  ;ask patches with [distancexy -15 15 < 4]
+  ;[
+   ; set is-food true
+   ; set pcolor orange + 2
+ ; ]
+  
+   ; ask patches with [distancexy 15 -15 < 4]
+  ;[
+  ;  set is-food true
+  ;  set pcolor orange + 2
+  ;]
 end
 
 to make-other-stuff
-  create-wabbits 1
-       [setxy  0 0
-        set heading 0
-        set color green
-        set shape "turtle"
-        set agent-kind-string "turtle"
-        set flag-counter 1
+  create-wabbits 20
+        [setxy random-xcor random-ycor
+        set heading random 360
+        set color red
+        set shape "ant"
+        set agent-kind-string "ant"
+        set distfromlast NaN
+        set odistfromlast NaN
        ]
   ask wabbits
-       [set size 30
-        set pen-size 3
-        set pen-was-down false ;; i.e., pen is up now
+       [set size 5
+        set pen-size 5
+        
+        set has-food false
+        ; pen is up now
+        set pen-was-down false 
         set bonus-speed 0
+        set flag-counter 0
+        
+        set secret-number random 101    ;SECRET NUMBER
+        set repeat-num random 5 + 2     ;REPEAT NUMBER
         
         set initial-x xcor
         set initial-y ycor
         set previous-x ""
         set previous-y ""
+       ]
+       
+       create-wabbits 1
+        [setxy 25 25
+        set heading 90
+        set color yellow
+        set paint-color color
+        set shape "circle"
+        set agent-kind-string "pollinator"
+        set distfromlast NaN
+        set odistfromlast NaN
+       ]
+        
+      create-wabbits 1
+        [setxy -25 -25
+        set heading 90
+        set color violet
+        set paint-color color
+        set shape "circle"
+        set agent-kind-string "pollinator"
+        set distfromlast NaN
+        set odistfromlast NaN
+       ]
+        
+        create-wabbits 1
+        [setxy 25 -25
+        set heading 90
+        set color orange
+        set paint-color color
+        set shape "circle"
+        set agent-kind-string "pollinator"
         set distfromlast NaN
         set odistfromlast NaN
        ]
@@ -2200,7 +1761,7 @@ to-report get-measures
       if (is-string? tdistfromlast) 
       [ set tdistfromlast 0 ]
     
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel) 
+      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -2218,7 +1779,7 @@ to-report get-measures-for [an-agent-kind]
       if (is-string? tdistfromlast) 
       [ set tdistfromlast 0 ]
       
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor)
+      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -2226,21 +1787,7 @@ to-report get-measures-for [an-agent-kind]
 end
 
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
-  let result []
-  let relevant-measures measurepoints with [ tagentkind = an-agent-kind and measurepoint-creator = a-measurepoint-creator ]
-  let relevant-list sort relevant-measures
-  foreach relevant-list 
-  [
-    ask ? 
-    [ 
-      if (is-string? tdistfromlast) 
-      [ set tdistfromlast 0 ]
-      
-      let datarep (list who tcolor (word "\"" tagentkind "\"") (length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
-      set result lput datarep result 
-    ]
-  ]
-  report result
+  report get-measures-for an-agent-kind
 end
 
 to-report get-agent-kinds-as-csv
@@ -2259,11 +1806,11 @@ end
 GRAPHICS-WINDOW
 10
 10
-421
-442
-200
-200
-1.0
+447
+468
+30
+30
+7.0
 1
 10
 1
@@ -2273,10 +1820,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--200
-200
--200
-200
+-30
+30
+-30
+30
 0
 0
 1
@@ -2284,39 +1831,39 @@ ticks
 30.0
 
 @#$#@#$#@
-## WHAT IS IT?
+## ## WHAT IS IT?
 
 This section could give a general understanding of what the model is trying to show or explain.
 
-## HOW IT WORKS
+## ## HOW IT WORKS
 
 This section could explain what rules the agents use to create the overall behavior of the model.
 
-## HOW TO USE IT
+## ## HOW TO USE IT
 
 This section could explain how to use the model, including a description of each of the items in the interface tab.
 
-## THINGS TO NOTICE
+## ## THINGS TO NOTICE
 
 This section could give some ideas of things for the user to notice while running the model.
 
-## THINGS TO TRY
+## ## THINGS TO TRY
 
 This section could give some ideas of things for the user to try to do (move sliders, switches, etc.) with the model.
 
-## EXTENDING THE MODEL
+## ## EXTENDING THE MODEL
 
 This section could give some ideas of things to add or change in the procedures tab to make the model more complicated, detailed, accurate, etc.
 
-## NETLOGO FEATURES
+## ## NETLOGO FEATURES
 
 This section could point out any especially interesting or unusual features of NetLogo that the model makes use of, particularly in the Procedures tab.  It might also point out places where workarounds were needed because of missing features.
 
-## RELATED MODELS
+## ## RELATED MODELS
 
 This section could give the names of models in the NetLogo Models Library or elsewhere which are of related interest.
 
-## CREDITS AND REFERENCES
+## ## CREDITS AND REFERENCES
 
 This section could contain a reference to the model's URL on the web if it has one, as well as any other necessary credits or references.
 @#$#@#$#@
@@ -2329,6 +1876,19 @@ airplane
 true
 0
 Polygon -7500403 true true 150 0 135 15 120 60 120 105 15 165 15 195 120 180 135 240 105 270 120 285 150 270 180 285 210 270 165 240 180 180 285 195 285 165 180 105 180 60 165 15
+
+ant
+true
+0
+Polygon -7500403 true true 136 61 129 46 144 30 119 45 124 60 114 82 97 37 132 10 93 36 111 84 127 105 172 105 189 84 208 35 171 11 202 35 204 37 186 82 177 60 180 44 159 32 170 44 165 60
+Polygon -7500403 true true 150 95 135 103 139 117 125 149 137 180 135 196 150 204 166 195 161 180 174 150 158 116 164 102
+Polygon -7500403 true true 149 186 128 197 114 232 134 270 149 282 166 270 185 232 171 195 149 186
+Polygon -16777216 true false 225 66 230 107 159 122 161 127 234 111 236 106
+Polygon -16777216 true false 78 58 99 116 139 123 137 128 95 119
+Polygon -16777216 true false 48 103 90 147 129 147 130 151 86 151
+Polygon -16777216 true false 65 224 92 171 134 160 135 164 95 175
+Polygon -16777216 true false 235 222 210 170 163 162 161 166 208 174
+Polygon -16777216 true false 249 107 211 147 168 147 168 150 213 150
 
 arrow
 true
@@ -2393,6 +1953,12 @@ false
 Polygon -7500403 true true 200 193 197 249 179 249 177 196 166 187 140 189 93 191 78 179 72 211 49 209 48 181 37 149 25 120 25 89 45 72 103 84 179 75 198 76 252 64 272 81 293 103 285 121 255 121 242 118 224 167
 Polygon -7500403 true true 73 210 86 251 62 249 48 208
 Polygon -7500403 true true 25 114 16 195 9 204 23 213 25 200 39 123
+Polygon -16777216 true false 256 83 266 89 258 90
+Polygon -16777216 true false 97 84 137 81 149 95 153 116 148 122 138 127 125 127 121 121 112 112 103 105 103 96 107 89
+Polygon -16777216 true false 194 122 175 123 171 129 168 137 176 155 187 157 202 164 205 156 209 146 204 136
+Polygon -16777216 true false 71 141 70 154 77 157 95 161 97 147 97 134 78 125 67 125
+Polygon -16777216 true false 60 237 80 239 83 249 64 249
+Polygon -16777216 true false 181 238 195 239 198 249 179 249
 
 cylinder
 false
@@ -2431,19 +1997,20 @@ Polygon -16777216 true false 150 168 90 184 62 210 47 232 67 244 90 220 109 205 
 fish
 false
 0
-Polygon -1 true false 44 131 21 87 15 86 0 120 15 150 0 180 13 214 20 212 45 166
-Polygon -1 true false 135 195 119 235 95 218 76 210 46 204 60 165
-Polygon -1 true false 75 45 83 77 71 103 86 114 166 78 135 60
+Polygon -16777216 true false 44 131 21 87 15 86 0 120 15 150 0 180 13 214 20 212 45 166
+Polygon -16777216 true false 135 195 119 235 95 218 76 210 46 204 60 165
+Polygon -16777216 true false 75 45 83 77 71 103 86 114 166 78 135 60
 Polygon -7500403 true true 30 136 151 77 226 81 280 119 292 146 292 160 287 170 270 195 195 210 151 212 30 166
 Circle -16777216 true false 215 106 30
 
 flag
 false
-0
-Rectangle -7500403 true true 60 15 75 300
-Polygon -7500403 true true 90 150 270 90 90 30
-Line -7500403 true 75 135 90 135
-Line -7500403 true 75 45 90 45
+1
+Rectangle -7500403 true false 60 15 75 300
+Polygon -7500403 true false 90 150 270 90 90 30
+Line -7500403 false 75 135 90 135
+Line -7500403 false 75 45 90 45
+Polygon -1184463 true false 90 15 300 90 90 165 90 150 270 90 90 30
 
 flower
 false
@@ -2499,6 +2066,8 @@ Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300
 Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
+Polygon -16777216 true false 153 80 87 158 114 102 125 193 101 269 135 269 150 219 162 266 202 265 178 192 186 103 221 162
+Polygon -16777216 true false 111 97 189 96 225 141 217 161 187 120 115 121 86 156 74 138
 
 plant
 false
@@ -2531,6 +2100,24 @@ false
 0
 Rectangle -7500403 true true 30 30 270 270
 Rectangle -16777216 true false 60 60 240 240
+
+squirrel
+false
+0
+Polygon -7500403 true true 87 267 106 290 145 292 157 288 175 292 209 292 207 281 190 276 174 277 156 271 154 261 157 245 151 230 156 221 171 209 214 165 231 171 239 171 263 154 281 137 294 136 297 126 295 119 279 117 241 145 242 128 262 132 282 124 288 108 269 88 247 73 226 72 213 76 208 88 190 112 151 107 119 117 84 139 61 175 57 210 65 231 79 253 65 243 46 187 49 157 82 109 115 93 146 83 202 49 231 13 181 12 142 6 95 30 50 39 12 96 0 162 23 250 68 275
+Polygon -16777216 true false 237 85 249 84 255 92 246 95
+Line -16777216 false 221 82 213 93
+Line -16777216 false 253 119 266 124
+Line -16777216 false 278 110 278 116
+Line -16777216 false 149 229 135 211
+Line -16777216 false 134 211 115 207
+Line -16777216 false 117 207 106 211
+Line -16777216 false 91 268 131 290
+Line -16777216 false 220 82 213 79
+Line -16777216 false 286 126 294 128
+Line -16777216 false 193 284 206 285
+Polygon -7500403 false true 15 135 15 180
+Polygon -16777216 false false 30 241 8 153 21 104 57 53 153 10 66 57 29 104 17 149 35 239 38 237 41 237 25 148 43 100 77 61 170 12 91 65 53 104 35 151 50 232
 
 star
 false
@@ -2620,9 +2207,9 @@ NetLogo 5.1.0
 @#$#@#$#@
 default
 0.0
--0.2 0 0.0 1.0
+-0.2 1 1.0 0.0
 0.0 1 1.0 0.0
-0.2 0 0.0 1.0
+0.2 1 1.0 0.0
 link direction
 true
 0

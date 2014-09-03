@@ -754,21 +754,6 @@ set blocks-list lput max-one-of blocks [who] blocks-list
   
   create-blocks 1
   [
-    set block-name "set-label"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["step_size" "heading" "color" "secret-number" "pen-width" "none"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
     set block-name "change-shape-to"
     set arg-list []
     hatch-args 1
@@ -883,6 +868,23 @@ set blocks-list lput max-one-of blocks [who] blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      
+  create-blocks 1
+  [
+    set block-name "set-label"
+    set category "Measure"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list   
   
   
   ;;BEGINSECRET NUMBER
@@ -1107,12 +1109,13 @@ to create-agent-kind-list
     set primitives-list lput "left-turn-sensor" primitives-list
     set primitives-list lput "set-color-by" primitives-list
     set primitives-list lput "change" primitives-list
-	set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
+    
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "start-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
+    set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step_size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -1165,12 +1168,13 @@ to create-agent-kind-list
     set primitives-list lput "left-turn-sensor" primitives-list
     set primitives-list lput "set-color-by" primitives-list
     set primitives-list lput "change" primitives-list
-    set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
+    
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "start-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
+    set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step_size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -1405,21 +1409,6 @@ to java-change-shape-to [ shapename ]
   set shape shapename
 end
 
-to java-set-label [variable-name]
-  set label-color black
-  if variable-name = "step_size"
-  [set label bonus-speed]
-  if variable-name = "color"
-  [set label color]
-  if variable-name = "heading"
-  [set label heading]
-  if variable-name = "secret-number"
-  [set label secret-number]
-  if variable-name = "pen-width"
-  [set label pen-size]
-  if variable-name = "none"
-  [set label ""]
-end
 
 to java-change [variable-name operator-name change-value]
   if variable-name = "step_size"
@@ -1672,6 +1661,23 @@ to java-place-measure-point
   set distfromlast 0
   set flag-counter flag-counter + 1
 end
+
+to java-set-label [variable-name]
+  set label-color black
+  if variable-name = "step-size"
+  [set label bonus-speed]
+  if variable-name = "color"
+  [set label color]
+  if variable-name = "heading"
+  [set label heading]
+  if variable-name = "secret-number"
+  [set label secret-number]
+  if variable-name = "pen-width"
+  [set label pen-size]
+  if variable-name = "none"
+  [set label ""]
+end
+
 
 to java-plant-flag
   let temp-flag-count 0

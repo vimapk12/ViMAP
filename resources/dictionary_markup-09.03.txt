@@ -1,0 +1,426 @@
+<!--  -->
+
+\command
+<title>repeat block
+<image>Repeat.png
+<category>  Control
+<text>Repeats all the command blocks inside the repeat block. Enter the <b><i>number</i></b> of times you want the commands to execute in the field.
+
+
+
+\command
+<title>if-then-otherwise
+<image>If.png
+<category>  Control
+<text>Creates a condition. Put commands inside the blank spaces to create an if-then-otherwise statement. For example, if <b><i>step-size-above-5</i></b>, then change color equal to 15 and go forward. Otherwise, just go forward.
+
+
+
+\command
+<title>pen down
+<image>pen-down.png 
+<category> Pen 
+<text>Leaves a pen-trail wherever the turtle travels in the world.
+
+\command
+<title>set step-size 
+<image>set-step-size.png
+<category> Movement 
+<text> Sets the step-size of the turtle or turtles to the <b><i>number</i></b> you put in the field. For example, a step-size of 50 is five times as large as a step-size of 10. This command is always used with a <extern_img=go-forward.png>
+
+\command
+<title>go forward
+<image>go-forward.png
+<category> Movement 
+<text>Turtles in the group will move in the direction of their heading. You must set the step-size with <extern_img=set-step-size.png> or the turtle will not move.
+
+\command
+<title>right turn 
+<image>right.png
+<category> Movement 
+<text>Turns the turtle or turtles right by the <b><i>number</i></b> of degrees you put in the field. For example, if the heading is 100 and you turn right 60, the new heading will be 160. It is the opposite command to <extern_img=left.png>
+
+\command
+<title>left turn
+<image>left.png
+<category> Movement 
+<text> Turns the turtle or turtles left by the <b><i>number</i></b> of degrees you put in the field. For example, if the heading is 100 and you turn left 60, the new heading will be 40. It is the opposite command to <extern_img=right.png>
+
+
+<!-- Movement -->
+
+\command
+<title>set heading 
+<image>set-heading.png
+<category> Movement
+<text>Enter a number in the field. The turtle or turtles will set their direction of travel to that polar coordinate. In ViMAP, a heading of 0 makes the turtle point in the direction of the top-center of the world, 90 is to the right, 180 is toward the bottom-center of the world, and 270 is to the left.
+
+\command
+<title>reset forward values
+<category> Movement
+<image>reset-forward-values.png
+<text>Resets the step-size of the turtle, or, of all turtles in the group, to zero.
+
+\command 
+<title>go forward sum
+<image>forward-sum.png
+<category> Movement
+<text>Compute the sum of the two numbers and the go forward the computed distance.
+
+\command
+<title>go backward
+<image>go-backward.png
+<category> Movement
+<text>Moves the turtle in the direction that is opposite the direction that it is pointing, but does not change the heading.
+<br/>
+You must set the <b><i>step-size</i></b> with <extern_img=set-step-size.png> or the turtle will not move.
+
+\command
+<title>face
+<image>face.png
+<category> Movement
+<text>The turtle, or turtles in the group, will change their heading to face (or point towards) the xy coordinates. Enter the x-coordinate in the first field and the y-coordinate in the second field. 
+
+
+\command
+<title>set step-size plus
+<image>set-step_size-plus.png
+<category> Movement
+<text>Set step-size for the turtle, equal to the current step-size plus a number you enter. For example, if the step-size was 10, and you <b><i>set step-size plus 2</i></b>, the updated step-size will be 12.
+
+
+\command
+<title>set step-size minus
+<image>set-step_size-minus.png
+<category> Movement
+<text>Set step-size for the turtle, equal to the current step-size minus a number you enter. For example, if the step-size was 10, and you <b><i>set step-size minus 2 </i></b>, the updated step-size will be 8. Does not allow step-sizes less than 0.
+
+\command
+<title>set xy
+<image>set-xy.png
+<category> Movement
+<text>Sets the position of the turtle or turtles to the x and y coordinates you specify. To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position. Enter the x-coordinate in the first field, and the y-coordinate in the second. 
+
+<!-- Groups -->
+
+\command
+<title>call group
+<image>Call-group.png
+<category>  Groups
+<text>This command specifies which turtles will follow your commands. You can command <b><i>all</i></b> turtles. To command only some of your turtles, you must create a group using the <b>Groups</b> menu option: Go to Groups, then Create Group.
+
+
+\command
+<title>update group ellipse
+<image>Update-group-ellipse.png
+<category>  Groups
+<text>This command updates which turtles are <b><i>members</i></b> of the <b><i>group</i></b>. Use this command in the setup code, before you ask the members of the groups to follow any commands. <br />The drop down menu 
+lets you choose which <b><i>group</i></b> to update.<br />Any turtles in the elliptical group you have chosen will become members of the group. All other turtles will not be in the group.
+
+\command
+<title>update group rectangle
+<image>Update-group-rectangle.png
+<category>  Groups
+<text>This command updates which turtles are <b><i>members</i></b> of the <b><i>group</i></b>. Use this command in the setup code, before you ask the members of the groups to follow any commands. <br />The drop down menu 
+lets you choose which <b><i>group</i></b> to update.<br />Any turtles in the rectangular group you have chosen will become members of the group. All other turtles will not be in the group.
+
+<!-- Measure -->
+
+\command
+<title>place measure point
+<image>place-measure-point.png
+<category> Measure
+<text>Places a flag in the world where the turtle currently is located.  The measure point also stores information about the turtle at that point that can be shown in the graphs.
+<br/>
+The measure points are read by the graphing tools in ViMAP. This command can be undone by <extern_img=clear-measure-points.png>. 
+
+\command
+<title>clear measure points
+<image>clear-measure-points.png
+<category> Measure
+<text>Removes all measure points that have been placed in the world by <extern_img=place-measure-point.png>.
+
+\command
+<title>set label 
+<image>set-label.png
+<category>Measure
+<text>Choose from the dropdown menu which attribute the turtle displays as a label. Now next to the turtle, a small, black, numeric label is visible and it displays the current value.  
+
+\command
+<title>start measuring
+<image>start-measuring.png
+<category>Measure
+<text>The turtle resets all its measurements to zero.  All previously placed measure flags are not removed and will display their proper values.  Each time the turtle receives the <extern_img=start-measuring.png> command, it starts to measure again from scratch.  
+
+
+<!-- Pen -->
+
+\command
+<title>pen up
+<image>pen-up.png 
+<category> Pen 
+<text>The turtle will no longer leave a pen-trail but pen marks that were made before this command executes will still be visible.
+
+\command
+<title>pen width 
+<image>set-pen-thickness.png 
+<category> Pen
+<text>The turtles will set their pen-width to the number you enter in the field. The default pen width is 1. This command must be used along with <extern_img=pen-down.png>
+
+\command
+<title>set by sensor and math
+<image>set.png 
+<category> Pen
+<text>Sets an attribute of a turtle to another value based on measurements in your model. 
+<br/>
+Use the the first drop down menu to select <i>size</i>, <i>pen-width</i>, or <i>color</i>. From the second drop down menu, choose <i>odometer</i>, <i>step-size</i>, or <i>change in step-size</i>. In the third drop down, choose <i>times</i> or <i>divided by</i>. Enter a numeric value into the field. For example, if you wish for the size of your turtle to co-vary with it&apos;s speed, you could <i> Set size step-size times 1 </i>.
+
+\command
+<title>set color 
+<image>change.png 
+<category> Pen
+<text>The turtles will set their color to the NetLogo color number you enter in the field. Use the dropdowns to select <b><i>color</i></b> and <b><i>equal to</i></b> a number that is entered into the field. <br /> <extern_img=NetLogo-Color-Chart.png> <br /><i>"NetLogo Color Chart", Source:</i> <a href = "http://ccl.northwestern.edu/netlogo/" target = "_blank">http://ccl.northwestern.edu/netlogo/</a><br /><br />Base colors are any color that ends in 5. Note that the color of the agent is also the color that will be left by using <extern_img=pen-down.png> 
+
+\command
+<title>change shape to
+<image>change-shape-to.png
+<category> Turtles
+<text>Use the drop down menu to choose a shape. 
+The agent will change its shape to the option you select. 
+
+\command
+<title>set shape
+<image>set-shape.png
+<category> Turtles
+<text>Use the drop down menu to choose a shape. 
+The agents will change their shape to the option you select.  
+
+\command
+<title>change turtle attribute
+<image>change.png
+<category> Turtles
+<text>Change an attribute of a turtle to another value. 
+<br/>
+Use the the first drop down menu to select <i>step-size</i>, <i>heading</i>, <i>color</i>, <i>pen-width</i>, or <i>secret-number</i> . From the second drop down menu, choose <i>plus</i>, <i>minus</i>, <i>equal to</i>, or <i>random up to</i>. Enter a numeric value into the field. For example, if <b><i>step-size</i></b> was currently 1, and you executed the following command: <b><i>change step-size plus 4</i></b>, the turtle&apos;s updated step-size would be 5.
+
+\command
+<title>stamp
+<image>stamp.png
+<category> Pen
+<text>Stamp an outline of the turtle onto the background.
+
+\command
+<title>go invisible
+<image>go-invisible.png
+<category> Turtles
+<text>This command hides the turtle. Even though you cannot see the turtle, it is still executing the commands.
+
+\command
+<title>go visible
+<image>go-visible.png
+<category> Turtles
+<text>This commands makes the turtle visible in the world. 
+
+<!-- Sensors -->
+\command
+<title>forward sensor
+<image>forward-sensor.png
+<category> Sensors
+<text>The turtles move forward with a step-size the magnitude of the current sensor reading.
+
+\command
+<title>right turn using sensor
+<image>right-turn-sensor.png
+<category> Sensors
+<text>The turtles turn right by the magnitude of the current sensor reading.
+
+\command
+<title>left turn sensor
+<image>left-turn-sensor.png
+<category> Sensors
+<text>The turtles turn left by the magnitude of the current sensor reading.
+
+\command
+<title>set by sensor
+<image>set-by-sensor.png
+<category> Sensors
+<text>The turtles set a one of their attributes based on an operation on the sensor reading. Choose <i>agent-size</i>, <i>pen-width</i>, <i>color</i>, <i>step-size</i>, or <i>heading</i> from the first drop down menu, and a  operation (<i>plus</i>, <i>minus</i>, <i>times</i>, or <i>divided by</i>) from the second. In the field, enter a number. For example, if you want the pen-width of the agent to vary with the sensor reading, you could use: <i>Set by sensor pen-size times 1</i>.
+
+
+
+\command
+<title>set step-size plus a sensor reading
+<image>set-step_size-plus-sensor.png
+<category> Sensors 
+<text>Asks the turtle to set its step-size to a new value. The new step-size will be <b><i>sum</i></b> of the old step-size and the value of the sensor 1 reading or the sensor 2 reading.
+
+\command
+<title>set step-size minus a sensor reading
+<image>set-step_size-minus-sensor.png
+<category> Sensors 
+<text>Asks the turtle to set its step-size to a new value. The new step-size will be <b><i>difference</i></b> between the old step-size and the value of the sensor 1 reading or the sensor 2 reading.
+
+\command
+<title>set color by sensor
+<image>set-color-by.png
+<category> Sensors
+<text>Asks the turtle to set its color to a new value based on the sensor reading of sensor 1 or sensor 2.
+
+\command
+<title>x plus a sensor reading
+<image>x-plus-sensor.png
+<category> Sensors
+<text>Asks the turtle to set its x-coordinate equal to the original x-coordinate, plus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+
+\command
+<title>x minus a sensor reading
+<image>x-minus-sensor.png
+<category> Sensors
+<text>Asks the turtle to set its x-coordinate equal to the original x-coordinate, minus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+
+\command
+<title>y plus a sensor reading
+<image>y-plus-sensor.png
+<category> Sensors
+<text>Asks the turtle to set its y-coordinate equal to the original y-coordinate, plus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+
+
+\command
+<title>y minus a sensor reading
+<image>y-minus-sensor.png
+<category> Sensors
+<text>Asks the turtle to set its y-coordinate equal to the original y-coordinate, minus the reading of sensor 1 or sensor 2.  To find out the coordinates for any point in the enactment world, secondary click (or right click) to get a report of the x and y coordinates for that position.
+
+
+\command
+<title>set turtle attribute using sensor and math 
+<image>set.png 
+<category> Sensors
+<text>Sets an attribute of a turtle to another value based on an operation on the sensor reading.
+<br/>
+Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. Choose an operation in the third, and in the fourth field, enter a number.  For example, you may ask the turtle to set its pen-width to one-half the magnitude of the sensor reading by choosing <i>set pen-width sensor-1 divided-by 2</i>.
+
+\command
+<title>set turtle attribute using sensor
+<image>set_.png 
+<category> Sensors
+<text>Sets an attribute of a turtle to a value matching the sensor reading.
+<br/>
+Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. For example,you may ask the turtle to set its pen-width to the magnitude of the sensor reading by choosing <i>set pen-width sensor-1</i>.
+
+<!-- Ants -->
+
+\command
+<title>face chemical
+<image>face-chemical.png
+<units>Ants
+<text>Points the turtle in the direction of the closest chemical.
+
+\command
+<title>face nest
+<image>face-nest.png
+<units>Ants
+<text>Points the ant in the direction of the nest.
+
+\command
+<title>i don&apos;t have food
+<image>i-don&apos;t-have-food.png
+<units>Ants
+<text>Tells the ant that it does not have any food. If the ant is asked later in the program it will report that it has no food.
+
+\command
+<title>i have food
+<image>i-have-food.png
+<units>Ants
+<text>Tells the ant that it currently has food. If the ant is asked later in the program it will report that it has food.
+
+\command
+<title>place chemical
+<image>place-chemical.png 
+<units>Ants
+<text>Similar to the <extern_img=stamp.png> command, but instead of putting down an imprint of itself, the ant places some invisible chemical in the world at its current location. The chemical can be detected by other ants. 
+
+\command
+<title>remove food here
+<image>remove-food-here.png 
+<units>Ants
+<text>Ant will try to pick up food. If it is standing on top of food <extern_img=i-have-food.png> will be true. 
+
+<!-- Unknown -->
+
+\command
+<title>random turn 
+<image>random-turn.png
+<category> Movement
+<text>First, the turtle chooses a random number between 1 and <b><i>number</i></b>. Next the turtle turns either right or left from where it is pointed by that number of degrees.
+
+
+\command
+<title>set random heading
+<image>set-random-heading.png
+<category> Movement
+<text>Set the turtle&apos;s <b><i>heading</i></b>, to a <b><i>random</i></b> number.<br />
+Enter any two angles to set the limits.  The random angle will be greater than or equal to <b><i>field1</i></b> but less than or equal to <b><i>field2</i></b>. 
+
+
+<!-- Secret Number -->
+
+\command
+<title>set color to secret number
+<image>set-color-to-secret-number.png
+<category> Secret Number
+<text>The turtle sets the color to the value of the secret number, based on the NetLogo color chart. <extern_img=NetLogo-Color-Chart.png><br /><i>"NetLogo Color Chart", Source:</i> <a href = "http://ccl.northwestern.edu/netlogo/" target = "_blank">http://ccl.northwestern.edu/netlogo/</a><br />
+
+\command
+<title>set heading to secret number
+<image>set-heading-to-secret-number.png
+<category> Secret Number
+<text>The turtle chooses a random number between 0 and 360 and then sets its heading to that number.
+
+ 
+\command
+<title>set step-size to secret number
+<image>set-step-size-to-secret-number.png
+<category> Secret Number
+<text>Set the turtle&apos;s <b><i>step-size</i></b> equal to the <b><i>secret number</i></b>.
+
+\command
+<title>step-size plus secret number
+<image>step-size-plus-secret-number.png
+<category> Secret Number
+<text>Set the turtle&apos;s <b><i>step-size</i></b> equal to the current <b><i>step-size</i></b> plus the <b><i>secret number</i></b>.
+
+\command
+<title>step-size minus secret number
+<image>step-size-minus-secret-number.png
+<category> Secret Number
+<text>Set the turtle&apos;s <b><i>step-size</i></b> equal to the current <b><i>step-size</i></b> minus the <b><i>secret number</i></b>.
+
+\command
+<title>turn right by secret number
+<image>turn-right-by-secret-number.png
+<category> Secret Number
+<text> The turtle turns <b><i>right</i></b> by the magnitude of the secret number. For example, if the assigned secret number is 30, the turtle will turn right 30 degrees.
+
+\command
+<title>turn left by secret number
+<image>turn-left-by-secret-number.png
+<category> Secret Number
+<text>The turtle turns <b><i>left</i></b> by the magnitude of the secret number. For example, if the assigned secret number is 30, the turtle will turn left 30 degrees.
+
+\command
+<title>pick a secret number less than 
+<image>pick-a-secret-number-less-than.png 
+<category> Secret Number
+<text>Chooses a random number greater than or equal to 0, but less than <b><i>number</i></b>.
+
+\command
+<title>pick a secret number range
+<image>pick-secret-number-range.png
+<category> Secret Number
+<text>Chooses a random number in between the two numbers that are entered in the fields, inclusive of the numbers.
+
+
+
+ 
+
