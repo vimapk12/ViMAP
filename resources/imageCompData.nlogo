@@ -364,7 +364,7 @@ to-report population [current-agent-kind]
 end
 
 to create-predicate-list
-  set predicate-list ["true" "false"]
+   set predicate-list ["true" "false"]
    set set-predicate-list [
   "true"
   "false"

@@ -56,14 +56,14 @@ public abstract class DomainModelImporter {
     /**
      * Name of the if-else block type.
      */
-    private static final String IF = "If";
+    private static final String IF = "if";
     
     private static final String SET_IF = "Groups-If";
         
     /**
      * Name of the repeat block type.
      */
-    private static final String REPEAT = "Repeat";
+    private static final String REPEAT = "repeat";
     
     /**
      * Name of the call set block type.
@@ -739,7 +739,6 @@ public abstract class DomainModelImporter {
         if (getIsUsingRepeat()) {
             result.add(getRepeatTemplate());
         }
-        
         if (isImageComputation) {
             result.addAll(getSetBlockTemplates(setTemplates));
         }
@@ -754,7 +753,8 @@ public abstract class DomainModelImporter {
         result.add(getCallSetTemplate());
         result.add(getUpdateSetTemplate(RECTANGLE));
         result.add(getUpdateSetTemplate(ELLIPSE));
-        result.add(getSetIfElseTemplate());
+       // Commenting out this code will not load Groups-If block
+       // result.add(getSetIfElseTemplate());
         
         if (setTemplates != null) {
             for (SetTemplate setTemplate: setTemplates) {

@@ -1,4 +1,4 @@
-<!--  -->
+<!--Control  -->
 
 \command
 <title>repeat block
@@ -9,10 +9,10 @@
 
 
 \command
-<title>if-then-otherwise
+<title>if statement version #1
 <image>If.png
 <category>  Control
-<text>Creates a condition. Put commands inside the blank spaces to create an if-then-otherwise statement. For example, if <b><i>step-size-above-5</i></b>, then change color equal to 15 and go forward. Otherwise, just go forward.
+<text>An if-statement consists of three aspects: one conditional statement and two blocks of code.  Drag any commands you wish into the two blocks.  The conditional statement is selected with the drop-down.  If the selected condition is true, then only block one will execute.  If the selected condition is false, then only block two (the otherwise block) will execute.   
 
 
 

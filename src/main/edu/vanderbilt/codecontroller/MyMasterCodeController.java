@@ -81,7 +81,7 @@ public final class MyMasterCodeController implements MasterCodeController {
     private String setName;
     private LayoutSize layoutSize;
     
-    private static final boolean PRINT_BLOCKS = true;
+    private static final boolean PRINT_BLOCKS = false;
     
     public MyMasterCodeController(
         final String aDomainModel,

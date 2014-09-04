@@ -348,7 +348,8 @@ to create-categories-list
 end
 
 to create-predicate-list
-  set predicate-list ["true" "false" "pcolor-blue"]
+  set predicate-list ["northward-heading" "southward-heading" "eastward-heading" 
+                      "westward-heading"]
 end
 
 ; similar to create-predicate-list
@@ -383,6 +384,52 @@ to-report java-color [aWho]
   report result
 end
 
+
+to-report java-northward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading >= 0 and heading < 90) or (heading > 270 and heading <= 360)
+    [ set result true ]
+  ]
+  report result
+end
+
+
+to-report java-southward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading > 90) and (heading < 270)
+    [ set result true ]
+  ]
+  report result
+end
+
+
+to-report java-eastward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading > 0) and (heading < 180)
+    [ set result true ]
+  ]
+  report result
+end
+
+
+to-report java-westward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading > 180) and (heading < 360)
+    [ set result true ]
+  ]
+  report result
+end
+
+
+
 to-report java-true [aWho]
   report true
 end
@@ -399,12 +446,6 @@ to-report java-is-image-computation
   report false
 end
 
-to-report java-pcolor-blue [aWho]
-let result ""
-ask turtle aWho
-[set result [pcolor] of patch-here = blue]
- report result
-end
 
 to reset
 setup

@@ -192,13 +192,13 @@ public final class BlockView extends Box {
         }
         
         // add "then" label after condition, for "If-else" block
-        if (aTemplate.getPredefinedBlockType() == PredefinedBlockType.IF_ELSE) {
-            JLabel extraLabel = new JLabel(" then ");
-            extraLabel.setFont(boldFont);
-            extraLabel.setForeground(Color.WHITE);
-            this.labels.add(extraLabel);
-            rowBox.add(extraLabel);
-        }
+      //  if (aTemplate.getPredefinedBlockType() == PredefinedBlockType.IF_ELSE) {
+      //      JLabel extraLabel = new JLabel(" then ");
+      //      extraLabel.setFont(boldFont);
+      //      extraLabel.setForeground(Color.WHITE);
+      //      this.labels.add(extraLabel);
+      //      rowBox.add(extraLabel);
+      //  }
         add(rowBox);
         
         if (aBlockComponents.size() > 2) {
@@ -304,10 +304,14 @@ public final class BlockView extends Box {
             if (
                 aTemplate.getPredefinedBlockType() 
                 == PredefinedBlockType.IF_ELSE
+                || aTemplate.getPredefinedBlockType()
+                == PredefinedBlockType.IF_ELSE_COMP_INT
+                || aTemplate.getPredefinedBlockType()
+                == PredefinedBlockType.IF_ELSE_COMP_TWO_VARS
             ) {
                 Box extraRowBox = Box.createHorizontalBox();
                 extraRowBox.setAlignmentX(LEFT_ALIGNMENT);
-                JLabel extraLabel = new JLabel("Otherwise");
+                JLabel extraLabel = new JLabel("otherwise");
                 extraLabel.setFont(boldFont);
                 extraLabel.setForeground(Color.WHITE);
                 extraRowBox.add(extraLabel);

@@ -387,7 +387,8 @@ to create-comp-vars-lists
 end
 
 to create-predicate-list
-  set predicate-list ["step-size-above-5" "heading-upward"]
+  set predicate-list ["northward-heading" "southward-heading" "eastward-heading" 
+                      "westward-heading"]
 end
 
 to-report java-heading [aWho]
@@ -413,25 +414,50 @@ to-report java-color [aWho]
 end
 
 
-to-report java-heading-upward [aWho]
+to-report java-northward-heading [aWho]
   let result false
   ask turtle aWho
   [
     if (heading >= 0 and heading < 90) or (heading > 270 and heading <= 360)
-    [set result true]
+    [ set result true ]
   ]
   report result
 end
 
-to-report java-step-size-above-5 [aWho]
+
+to-report java-southward-heading [aWho]
   let result false
   ask turtle aWho
   [
-    if bonus-speed > 5
-    [set result true]
+    if (heading > 90) and (heading < 270)
+    [ set result true ]
   ]
   report result
 end
+
+
+to-report java-eastward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading > 0) and (heading < 180)
+    [ set result true ]
+  ]
+  report result
+end
+
+
+to-report java-westward-heading [aWho]
+  let result false
+  ask turtle aWho
+  [
+    if (heading > 180) and (heading < 360)
+    [ set result true ]
+  ]
+  report result
+end
+
+
 
 to-report java-is-using-repeat
   report true
@@ -1382,7 +1408,7 @@ to java-clear-measure-points
 end
 
 to java-start-measuring
-      ask wabbits
+    ask wabbits
     [
       set distfromlast NaN        ;dist since last measure point
       set odistfromlast NaN      ;last measure points distfromlast (for accel)
