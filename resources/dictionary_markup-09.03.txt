@@ -12,14 +12,23 @@
 <title>if statement version #1
 <image>If.png
 <category>  Control
-<text>An if-statement consists of three aspects: one conditional statement and two blocks of code.  Drag any commands you wish into the two blocks.  In this version, the conditional statement is selected with the drop-down.  If the selected condition is true, then only block one will execute.  If the selected condition is false, then only block two (the otherwise block) will execute.   
+<text>An if-statement consists of three aspects: one conditional statement and two blocks of code.  Drag any commands you wish into the two blocks.  In this version, the conditional statement is selected with the drop-down.  If the selected condition is true, then only the commands in block one will execute.  If the selected condition is false, then only the commands in block two (the otherwise block) will execute.   
 
 
 \command
 <title>if statement version #2
 <image>if-comp-int.png
 <category> Control
-<text> An if-statement consists of three aspects: one conditional statement and two blocks of code.  In this version, the conditional statement is formed using two dropdowns and a text box.  First, select the turtle attribute you want to test from the first dropdown, such as "heading."  Next, select a relational operator from the dropdown such as "less than." Finally enter a numeric value into the text field- 34, for example.  If the condition is true (the turtle's heading is less than 34) then the first block of code will execute.  If the condition is false, then the second block of code will execute.  
+<text> In this version, the conditional statement is formed using two dropdowns and a text box.  First, select the turtle attribute you want to test from the first dropdown, such as "heading."  Next, select a relational operator from the dropdown such as "less than." Finally enter a numeric value into the text field- 34, for example.  If the condition is true (the turtle's heading is less than 34) then the commands in the first block will execute.  If the condition is false, then the commands in the second block will execute.  
+
+
+\command
+<title>if statement version #3
+<image>if-comp-two-vars.png
+<category> Control
+<text> In this version, the conditional statement is formed using three dropdowns.  First, select the turtle attribute you want to test from the first dropdown, such as "heading."  Next, select a relational operator from the dropdown such as "less than." Select another turtle attribute that you would like to compare to the first attribute.  If the condition is true (the turtle's heading is less than the value of the color for example) then the commands in the first block will execute.  If the condition is false, then the commands in the second block will execute. 
+
+
 
 \command
 <title>pen down
@@ -66,11 +75,6 @@
 <image>reset-forward-values.png
 <text>Resets the step-size of the turtle, or, of all turtles in the group, to zero.
 
-\command 
-<title>go forward sum
-<image>forward-sum.png
-<category> Movement
-<text>Compute the sum of the two numbers and the go forward the computed distance.
 
 \command
 <title>go backward
@@ -178,7 +182,7 @@ The measure points are read by the graphing tools in ViMAP. This command can be 
 <category> Pen
 <text>Sets an attribute of a turtle to another value based on measurements in your model. 
 <br/>
-Use the the first drop down menu to select <i>size</i>, <i>pen-width</i>, or <i>color</i>. From the second drop down menu, choose <i>odometer</i>, <i>step-size</i>, or <i>change in step-size</i>. In the third drop down, choose <i>times</i> or <i>divided by</i>. Enter a numeric value into the field. For example, if you wish for the size of your turtle to co-vary with it&apos;s speed, you could <i> Set size step-size times 1 </i>.
+Use the the first drop down menu to select <b><i>size</i></b>, <b><i>pen-width</i></b>, or <b><i>color</i></b>. From the second drop down menu, choose <b><i>odometer</i></b>, <b><i>step-size</i></b>, or <b><i>change in step-size</i></b>. In the third drop down, choose <b><i>times</i></b> or <b><i>divided by</i></b>. Enter a numeric value into the field. For example, if you wish for the size of your turtle to co-vary with it&apos;s speed, you could <b><i> Set size step-size times 1 </i></b>.
 
 \command
 <title>set color 
@@ -206,7 +210,7 @@ The agents will change their shape to the option you select.
 <category> Turtles
 <text>Change an attribute of a turtle to another value. 
 <br/>
-Use the the first drop down menu to select <i>step-size</i>, <i>heading</i>, <i>color</i>, <i>pen-width</i>, or <i>secret-number</i> . From the second drop down menu, choose <i>plus</i>, <i>minus</i>, <i>equal to</i>, or <i>random up to</i>. Enter a numeric value into the field. For example, if <b><i>step-size</i></b> was currently 1, and you executed the following command: <b><i>change step-size plus 4</i></b>, the turtle&apos;s updated step-size would be 5.
+Use the the first drop down menu to select <b><i>step-size</i></b>, <b><i>heading</i></b>, <b><i>color</i></b>, <b><i>pen-width</i></b>, or <b><i>secret-number</i></b> . From the second drop down menu, choose <b><i>plus</i></b>, <b><i>minus</i></b>, <b><i>equal to</i></b>, or <b><i>random up to</i></b>. Enter a numeric value into the field. For example, if <b><i>step-size</i></b> was currently 1, and you executed the following command: <b><i>change step-size plus 4</i></b>, the turtle&apos;s updated step-size would be 5.
 
 \command
 <title>stamp
@@ -249,7 +253,7 @@ Use the the first drop down menu to select <i>step-size</i>, <i>heading</i>, <i>
 <title>set by sensor
 <image>set-by-sensor.png
 <category> Sensors
-<text>The turtles set a one of their attributes based on an operation on the sensor reading. Choose <i>agent-size</i>, <i>pen-width</i>, <i>color</i>, <i>step-size</i>, or <i>heading</i> from the first drop down menu, and a  operation (<i>plus</i>, <i>minus</i>, <i>times</i>, or <i>divided by</i>) from the second. In the field, enter a number. For example, if you want the pen-width of the agent to vary with the sensor reading, you could use: <i>Set by sensor pen-size times 1</i>.
+<text>The turtles set a one of their attributes based on an operation on the sensor reading. Choose <b><i>agent-size</i></b>, <b><i>pen-width</i></b>, <b><i>color</i></b>, <b><i>step-size</i></b>, or <b><i>heading</i></b> from the first drop down menu, and a  operation (<b><i>plus</i></b>, <b><i>minus</i></b>, <b><i>times</i></b>, or <b><i>divided by</i></b>) from the second. In the field, enter a number. For example, if you want the pen-width of the agent to vary with the sensor reading, you could use: <b><i>Set by sensor pen-size times 1</i></b>.
 
 
 
@@ -303,7 +307,7 @@ Use the the first drop down menu to select <i>step-size</i>, <i>heading</i>, <i>
 <category> Sensors
 <text>Sets an attribute of a turtle to another value based on an operation on the sensor reading.
 <br/>
-Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. Choose an operation in the third, and in the fourth field, enter a number.  For example, you may ask the turtle to set its pen-width to one-half the magnitude of the sensor reading by choosing <i>set pen-width sensor-1 divided-by 2</i>.
+Use the the first drop down menu to select <b><i>pen-width</i></b>, <b><i>color</i></b>, <b><i>heading</i></b>, or <b><i>step-size</i></b>. Specify the sensor to be used using the second drop down menu. Choose an operation in the third, and in the fourth field, enter a number.  For example, you may ask the turtle to set its pen-width to one-half the magnitude of the sensor reading by choosing <b><i>set pen-width sensor-1 divided-by 2</i></b>.
 
 \command
 <title>set turtle attribute using sensor
@@ -311,7 +315,7 @@ Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>he
 <category> Sensors
 <text>Sets an attribute of a turtle to a value matching the sensor reading.
 <br/>
-Use the the first drop down menu to select <i>pen-width</i>, <i>color</i>, <i>heading</i>, or <i>step-size</i>. Specify the sensor to be used using the second drop down menu. For example,you may ask the turtle to set its pen-width to the magnitude of the sensor reading by choosing <i>set pen-width sensor-1</i>.
+Use the the first drop down menu to select <b><i>pen-width</i></b>, <b><i>color</i></b>, <b><i>heading</i></b>, or <b><i>step-size</i></b>. Specify the sensor to be used using the second drop down menu. For example,you may ask the turtle to set its pen-width to the magnitude of the sensor reading by choosing <b><i>set pen-width sensor-1</i></b>.
 
 <!-- Ants -->
 

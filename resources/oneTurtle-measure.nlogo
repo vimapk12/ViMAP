@@ -383,7 +383,7 @@ end
 
 to create-comp-vars-lists
   set comp-vars-left-vars ["heading" "step-size" "color"]
-  set comp-vars-right-vars ["heading" "step-size" "color"]
+  set comp-vars-right-vars ["color" "heading" "step-size" ]
 end
 
 to create-predicate-list
@@ -666,7 +666,7 @@ to create-blocks-list
       set blocks-list lput max-one-of blocks [who] blocks-list
             create-blocks 1
   [
-    set block-name "start-measuring"
+    set block-name "start-over-measuring"
     set category "Measure"
     set arg-list []
     set is-observer false
@@ -1003,7 +1003,7 @@ to create-agent-kind-list
   
   create-agent-kinds 1
   [
-    set name "wabbit"
+    set name "turtle"
     
     set methods-list []
     set methods-list lput "setup" methods-list
@@ -1016,7 +1016,7 @@ to create-agent-kind-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -1408,13 +1408,13 @@ to java-clear-measure-points
     ]
 end
 
-to java-start-measuring
+to java-start-over-measuring
     ask wabbits
     [
       set distfromlast NaN        ;dist since last measure point
       set odistfromlast NaN      ;last measure points distfromlast (for accel)
       set odometer 0
-      set flag-counter 1
+      
     ]
 end
 
@@ -1955,6 +1955,7 @@ to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
       if (is-string? tdistfromlast) 
       [ set tdistfromlast 0 ]
       
+      ;; (length result + 1)
       let datarep (list who tcolor (word "\"" tagentkind "\"") (length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]

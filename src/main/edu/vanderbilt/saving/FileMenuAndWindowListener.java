@@ -23,6 +23,7 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.channels.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
@@ -167,6 +168,8 @@ public class FileMenuAndWindowListener
     private void loadManualInBrowser() {
         final String fileName = "resources/manual.html";
         URI myUri = (new File(fileName)).toURI();
+             
+        
         try {
             Desktop.getDesktop().browse(myUri);
         } catch (IOException e) {

@@ -289,7 +289,7 @@ public abstract class ViMAP {
         // final String netLogoFile = "/bird-butterfly2.nlogo";
         
         // Image Computation
-        final String netLogoFile = "/imageCompData.nlogo";
+         final String netLogoFile = "/imageCompData.nlogo";
         
         // Image Computation with Sensing
         // final String netLogoFile = "/imageCompDataArd.nlogo";
