@@ -530,6 +530,7 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "change-shape-to"
+    set category "Pen"
     set arg-list []
     hatch-args 1
     [
@@ -719,7 +720,6 @@ to create-blocks-list
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
     set is-basic false
-    set category "Pen"
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
@@ -1010,7 +1010,7 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "change" primitives-list
+    set primitives-list lput "change" primitives-list  
     set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
@@ -1404,6 +1404,7 @@ to java-clear-measure-points
       set distfromlast NaN        ;dist since last measure point
       set odistfromlast NaN      ;last measure points distfromlast (for accel)
       set odometer 0
+      set flag-counter 1
     ]
 end
 
@@ -1413,6 +1414,7 @@ to java-start-measuring
       set distfromlast NaN        ;dist since last measure point
       set odistfromlast NaN      ;last measure points distfromlast (for accel)
       set odometer 0
+      set flag-counter 1
     ]
 end
 
@@ -1898,7 +1900,7 @@ to make-other-stuff
         set pen-was-down false 
         set bonus-speed 0
         
-        set secret-number random 101    ;SECRET NUMBER
+        set secret-number random 360    ;SECRET NUMBER
         set repeat-num random 5 + 2     ;REPEAT NUMBER
         
         set initial-x xcor
