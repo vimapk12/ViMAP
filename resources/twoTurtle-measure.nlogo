@@ -938,7 +938,7 @@ to create-agent-kind-list
   
   create-agent-kinds 1
   [
-    set name "turtle-one"
+    set name "turtle-one"  ;; Formerly wabbit-one, but we want it to display as "turtle"
     
     set methods-list []
     set methods-list lput "setup" methods-list
@@ -985,7 +985,8 @@ to create-agent-kind-list
   
    create-agent-kinds 1
   [
-    set name "turtle-two"
+    set name "turtle-two"  ;; formerly wabbit-two, decision to change the display name 
+                           ;; to turtle-two.
     
     set methods-list []
     set methods-list lput "setup" methods-list
@@ -1782,16 +1783,18 @@ to make-other-stuff
         set heading 0
         set color green
         set shape "turtle"
-        set agent-kind-string "turtle-one"
-       ]
+        set agent-kind-string "turtle-one" ;; formerly wabbit-one, but decided to display 
+       ]                                   ;; the name as turtle-one.
+       
        
  create-wabbits 1
        [setxy  100 0
         set heading 0
         set color green
         set shape "turtle"
-        set agent-kind-string "turtle-two"
-       ]
+        set agent-kind-string "turtle-two"  ;; formerly wabbit-one, but decided to display 
+       ]                                    ;; the name as turtle-one.
+       
   ask wabbits
        [set size 30
         set pen-size 3
