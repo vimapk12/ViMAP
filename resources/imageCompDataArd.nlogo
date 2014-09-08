@@ -855,7 +855,7 @@ set blocks-list lput max-one-of blocks [who] blocks-list
       
       create-blocks 1
   [
-    set block-name "start-measuring"
+    set block-name "start-over-measuring"
     ;set category "Pen"
     set arg-list []
     set is-observer false
@@ -922,7 +922,7 @@ to create-agent-kind-list
     set primitives-list lput "set-by-sensor" primitives-list
     set primitives-list lput "my-place-measure-point" primitives-list
     set primitives-list lput "reset-measures" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
 end
@@ -1440,7 +1440,7 @@ to java-clear-measure-points
   ]
 end
 
-to java-start-measuring
+to java-start-over-measuring
       ask set-datas
     [
       set distfromlast NaN        ;dist since last measure point

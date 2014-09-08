@@ -673,7 +673,7 @@ to create-blocks-list
       
           create-blocks 1
   [
-    set block-name "start-measuring"
+    set block-name "start-over-measuring"
     set category "Measure"
     set arg-list []
     set is-observer false
@@ -1156,7 +1156,7 @@ to create-agent-kind-list
     set primitives-list lput "left-turn" primitives-list
     set primitives-list lput "plant-flag" primitives-list
     
-    set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "set-label" primitives-list
@@ -1498,7 +1498,7 @@ let forward-distance bonus-speed
   ]
 end
 
-to java-start-measuring
+to java-start-over-measuring
     ask wabbits
     [
       set distfromlast NaN        ;dist since last measure point

@@ -663,7 +663,7 @@ to create-blocks-list
       
                     create-blocks 1
   [
-    set block-name "start-measuring"
+    set block-name "start-over-measuring"
     set category "Measure"
     set arg-list []
     set is-observer false
@@ -949,7 +949,7 @@ to create-agent-kind-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
     set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
@@ -997,7 +997,7 @@ to create-agent-kind-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-measuring" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
     set primitives-list lput "set-label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
@@ -1291,7 +1291,7 @@ to java-stamp
   stamp
 end
 
-to java-start-measuring
+to java-start-over-measuring
     ask wabbits
     [
       set distfromlast NaN        ;dist since last measure point
