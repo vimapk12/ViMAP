@@ -540,6 +540,7 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "change-shape-to"
+    set category "Pen"
     set arg-list []
     hatch-args 1
     [
@@ -937,7 +938,7 @@ to create-agent-kind-list
   
   create-agent-kinds 1
   [
-    set name "wabbit-one"
+    set name "turtle-one"
     
     set methods-list []
     set methods-list lput "setup" methods-list
@@ -984,7 +985,7 @@ to create-agent-kind-list
   
    create-agent-kinds 1
   [
-    set name "wabbit-two"
+    set name "turtle-two"
     
     set methods-list []
     set methods-list lput "setup" methods-list
@@ -1781,7 +1782,7 @@ to make-other-stuff
         set heading 0
         set color green
         set shape "turtle"
-        set agent-kind-string "wabbit-one"
+        set agent-kind-string "turtle-one"
        ]
        
  create-wabbits 1
@@ -1789,7 +1790,7 @@ to make-other-stuff
         set heading 0
         set color green
         set shape "turtle"
-        set agent-kind-string "wabbit-two"
+        set agent-kind-string "turtle-two"
        ]
   ask wabbits
        [set size 30
@@ -1803,7 +1804,7 @@ to make-other-stuff
         set bonus-speed 0
       
         set flag-counter 1
-        set secret-number random 101    ;SECRET NUMBER
+        set secret-number random 360    ;SECRET NUMBER
         set repeat-num random 5 + 2     ;REPEAT NUMBER
         
         set initial-x xcor
