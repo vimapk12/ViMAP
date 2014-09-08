@@ -1887,7 +1887,7 @@ to make-other-stuff
         set heading 0
         set color green
         set shape "turtle"
-        set agent-kind-string "wabbit"
+        set agent-kind-string "turtle"
         set distfromlast NaN
         set odistfromlast NaN
         set flag-counter 1
