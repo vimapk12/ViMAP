@@ -28,7 +28,7 @@
    <!-- compile the code -->
    <target name="compile" depends="clean, mkdir">
       <!-- compile all code from source dir into build dir. don't include Ant files in the compiled code -->
-      <javac target="1.7" source="1.7" srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath" includeantruntime="false" fork="true">
+      <javac target="1.5" source="1.5" srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath" includeantruntime="false" fork="true">
          <compilerarg value="-XDignore.symbol.file=true" />
       </javac>
    </target>
