@@ -270,7 +270,8 @@ public final class DomainModel {
         blockColorOptions.add(secretNumberBlockColor);
         
         final int tan = 0xc88330;
-        blockColorOptions.add(new Color(tan));
+        final Color userprocedurecolor = new Color(tan);
+        blockColorOptions.add(userprocedurecolor);
         
         final int sky = 0x2ca5e2;
         blockColorOptions.add(new Color(sky));
@@ -278,6 +279,11 @@ public final class DomainModel {
         final int pink = 0xbb42c3;
         final Color measureColor = new Color(pink);
         blockColorOptions.add(measureColor);
+        
+        final int darkred = 0xad3333;
+        final Color setscolor = new Color(darkred);
+        blockColorOptions.add(setscolor);
+        
         
         this.categoryToBlockColor.put(
             CategorySelectView.ALL_CATEGORY_STRING, 
@@ -317,6 +323,22 @@ public final class DomainModel {
             measureColor);
           categoriesToMatch.remove(MEASURE_CATEGORY_STRING);
           blockColorOptions.remove(measureColor);
+        }
+        if ( this.categories.contains(SET_CATEGORY_STRING) )
+        {
+        	this.categoryToBlockColor.put(
+        	  SET_CATEGORY_STRING, 
+        	  setscolor);
+        	categoriesToMatch.remove(SET_CATEGORY_STRING);
+        	blockColorOptions.remove(setscolor);
+        }
+        if ( this.categories.contains(USER_CATEGORY_STRING) )
+        {
+        	this.categoryToBlockColor.put(
+              USER_CATEGORY_STRING,
+              userprocedurecolor);
+        	categoriesToMatch.remove(USER_CATEGORY_STRING);
+        	blockColorOptions.remove(userprocedurecolor);
         }
         if (this.categories.contains(SECRET_NUMBER_CATEGORY_STRING)) {
             this.categoryToBlockColor.put(
