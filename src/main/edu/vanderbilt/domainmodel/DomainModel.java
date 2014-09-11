@@ -8,7 +8,7 @@
 //   
 //   Simulations powered by NetLogo. 
 //   The copyright information for NetLogo can be found here: 
-//   https://ccl.northwestern.edu/netlogo/docs/copyright.html  
+//   https://ccl.northwestern.edu/netlogo/docs/copyright.html  //
 //
 //--//--//--//--//--//--// 
 
