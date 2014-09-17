@@ -7,17 +7,22 @@ breed [args arg]
 ;;NEEDED FOR MEASURE LINKING
 breed [ measurepoints measurepoint ]
 measurepoints-own [
- tticks
+ 
+ tagentkind
+ tcolor
  tcycles
+ tpopulation
+ 
  theading
  todometer
  tdistfromlast
  tspeed
  taccel
- tcolor
- tagentkind
+ 
+ 
  tpenwidth
  tpencolor
+ measurepoint-creator
 ]
  
 
@@ -195,7 +200,9 @@ to setup-cycle ;
   
 end
 
+
 to takedown-cycle
+  place-measure-point
   diffuse chemical-scent 0.5 
   ask patches 
   [ 
@@ -239,44 +246,37 @@ to create-measure-option-string-lists
   set measure-option-string-lists []
   
   let tlist []
-  set tlist lput "Odometer" tlist
-  set tlist lput "Reading" tlist
+  set tlist lput "Total Number" tlist
+  set tlist lput "of Ants" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
-  set tlist lput "Distance Covered" tlist
-  set tlist lput "since" tlist
-  set tlist lput "Last Measure" tlist
+  set tlist lput "Average Energy" tlist
+  set tlist lput "of Ants" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
-  set tlist lput "Change in Distance Covered" tlist 
-  set tlist lput "since" tlist
-  set tlist lput "Last Measure" tlist
+  set tlist lput "Average" tlist 
+  set tlist lput "Proboscis" tlist
+  set tlist lput "Length" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
-  set tlist lput "Pen Width" tlist
-  set measure-option-string-lists lput tlist measure-option-string-lists
-  
-  set tlist []
-  set tlist lput "Pen Color" tlist
-  set measure-option-string-lists lput tlist measure-option-string-lists
-  
-  set tlist []
-  set tlist lput "Heading" tlist
+  set tlist lput "Energy" tlist
+  set tlist lput  "of Watched" tlist
+  set tlist lput "Butterfly" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
 end
 
+
 to create-measure-option-command-list
   set measure-option-command-list []
+  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 4 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 5 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 6 graph" measure-option-command-list
-  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 8 graph" measure-option-command-list
-  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 9 graph" measure-option-command-list
-  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 10 graph" measure-option-command-list
-  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 4 graph" measure-option-command-list
+  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 7 graph" measure-option-command-list
 end
+
 
 to-report get-list-as-csv [list-name]
   let retn ""
@@ -1272,6 +1272,20 @@ to java-place-measure-point
 end
 
 
+to place-measure-point
+  create-measurepoints 1
+  [
+    set measure-points lput self measure-points
+    set tagentkind "ant"
+    set tcycles count measurepoints - 1
+    set tpopulation (count wabbits with [agent-kind-string = "ant"])
+    set measurepoint-creator "ant"
+    ht
+  ]
+end
+
+
+
 
 to java-grow-to [asize]
    if size < 12 [set size size + asize]
@@ -1596,11 +1610,8 @@ to-report get-measures
   foreach measure-points 
   [
     ask ? 
-    [ 
-      if (is-string? tdistfromlast) 
-      [ set tdistfromlast 0 ]
-    
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
+    [
+      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -1615,10 +1626,7 @@ to-report get-measures-for [an-agent-kind]
   [
     ask ? 
     [ 
-      if (is-string? tdistfromlast) 
-      [ set tdistfromlast 0 ]
-      
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
