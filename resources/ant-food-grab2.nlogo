@@ -147,6 +147,7 @@ globals
     
     can-highlight-agents
     last-cycle
+    total-cycles
     
     NaN
    ]
@@ -424,24 +425,30 @@ end
 
 to-report java-random-50% [aWho]
   let result false
-  ask turtle aWho[
-    if random 100 <= 50 = true [set result true]
+  ask turtle aWho
+  [
+    if random 100 <= 50
+    [ set result true ]  
   ]
   report result
 end
 
 to-report java-random-10% [aWho]
   let result false
-  ask turtle aWho[
-    if random 100 <= 10 = true [set result true]
+  ask turtle aWho
+  [
+    if random 100 <= 10 
+    [ set result true ]
   ]
   report result
 end
 
 to-report java-random-1% [aWho]
   let result false
-  ask turtle aWho[
-    if random 100 <= 1 = true [set result true]
+  ask turtle aWho
+  [
+    if random 100 <= 1 
+    [ set result true ]
   ]
   report result
 end
@@ -1008,7 +1015,7 @@ to create-agent-kind-list
     set primitives-list lput "teach" primitives-list
     set primitives-list lput "set-paintcolor" primitives-list
      set primitives-list lput "tandum-running" primitives-list
-     set primitives-list lput "reproduce" primitives-list
+    ;; set primitives-list lput "reproduce" primitives-list
      set primitives-list lput "add-food" primitives-list
      set primitives-list lput "add-energy" primitives-list
      set primitives-list lput "lose-energy" primitives-list
@@ -1170,14 +1177,6 @@ end
 
 to java-go-forward 
   jump bonus-speed
-  ;;turtle variables that will be harvested at meaure points.
- ; set odometer odometer + moved
-;  if any? measurepoints
- ; [
-;    if distfromlast = NaN
-;    [set distfromlast 0]
-;    set distfromlast distfromlast + moved
- ; ]
 end
 
 to java-right [amount-number]
@@ -1193,8 +1192,8 @@ to java-lose-energy [lostEnergy]
 end
 
 to java-random-turn [amount-number]
-  let rand (random-float amount-number * 2)
-  right rand - amount-number
+  let rand random (amount-number * 2)
+  right amount-number - rand
 end
 
 to java-face-chemical
@@ -1243,6 +1242,7 @@ end
 
 ;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
+  set total-cycles total-cycles + 1
   hatch-measurepoints 1
   [
    set measure-points lput self measure-points
@@ -1273,11 +1273,12 @@ end
 
 
 to place-measure-point
+  set total-cycles total-cycles + 1
   create-measurepoints 1
   [
     set measure-points lput self measure-points
     set tagentkind "ant"
-    set tcycles count measurepoints - 1
+    set tcycles total-cycles
     set tpopulation (count wabbits with [agent-kind-string = "ant"])
     set measurepoint-creator "ant"
     ht
@@ -1308,36 +1309,17 @@ end
 
 
 to java-reproduce 
-  hatch 1 [
-    setxy [xcor] of myself [ycor] of myself
-      set heading random 360
-       set color red
-       set shape "ant"
-       set size 3
-       set agent-kind-string "ant"
-      set distfromlast NaN
-      set odistfromlast NaN
-      ]
-  ;ask wabbits
-      ; [set size 5
-     ;   set pen-size 5
-        
-       ; set has-food false
-        ; pen is up now
-       ; set pen-was-down false 
-       ; set bonus-speed 2
-       ; set flag-counter 0
-        
-       ; set secret-number random 101    ;SECRET NUMBER
-       ; set repeat-num random 5 + 2     ;REPEAT NUMBER
-        
-       ; set initial-x xcor
-       ; set initial-y ycor
-       ; set previous-x ""
-       ; set previous-y ""
-       ;]
-  
+  hatch 1 
+  [
+    set heading random 360
+    set size 3
+    set agent-kind-string "ant"
+    set distfromlast NaN
+    set odistfromlast NaN
+  ]
+  set energy 0
 end
+
 
 to java-patch-color [new_color]
   ask [neighbors] of patch-here  
