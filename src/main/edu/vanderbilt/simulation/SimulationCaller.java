@@ -1001,8 +1001,14 @@ public abstract class SimulationCaller {
                         && ((LogoList) report).size() > 0
                     ) {
                         LogoList measureList = (LogoList) report;
+                        //NOTE (CB:9/17/14) there has been an API change to Dump.list() with NetLogo 5.1.0.  
+                        //These new boolean values (false, false) are the defaults according to the in-code comments
+                        //The names of the variables are "readable" and "exporting" 
+                        String listDump = org.nlogo.api.Dump.list(measureList, false, false); 
+                        //String altLDump = org.nlogo.api.Dump.list(measureList, false, true);
+                        //String altLDmp2 = org.nlogo.api.Dump.list(measureList, true, false); 
                         String command = 
-                            "update-measures " + measureList.toString();
+                            "update-measures " + listDump; //measureList.toString();
                         command = command.replace(',', ' ');
                         measureWorld.runMeasureCommand(command);
                         measureWorld.repaint();
