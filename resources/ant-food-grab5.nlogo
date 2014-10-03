@@ -59,6 +59,7 @@ wabbits-own
      energy
      age
      of-preference
+     skin-hydrocarbon
 ]
 agent-kinds-own 
 [
@@ -147,7 +148,6 @@ globals
     
     can-highlight-agents
     last-cycle
-    total-cycles
     
     NaN
    ]
@@ -216,7 +216,7 @@ end
 
 to recolor-patch  ;; patch procedure
   ;; give color to nest and food sources
-  if not is-nest and not is-food and not is-depleted   ;; adjust last condition to reduce 
+  if not is-nest and not is-food    ;; adjust last condition to reduce 
   [ 
     let a_color scale-color green chemical-scent 0.1 5
     if a_color < 55
@@ -356,7 +356,7 @@ to cycle-ended
 end
 
 to create-predicate-list
-  set predicate-list ["has-food" "at-nest" "food-here" "patch-matches-preference" "random-50%" "random-10%" "random-1%" "has-50-energy" "has-0-energy"]
+  set predicate-list ["has-food" "at-nest" "food-here" "patch-matches-preference" "random-50%" "random-10%" "random-1%" "has-50-energy" "has-0-energy" "at-friend"]
 end
 
 to create-comp-int-list
@@ -369,18 +369,17 @@ to create-comp-vars-lists
 end
 
 to-report java-food-here [aWho]
+  let result false
   let food-radius 2
-  let result true
   ask turtle aWho
   [
-  ;  set result [is-food] of patch-here
-  set result any? patches in-radius food-radius with [is-food]
+    set result any? patches in-radius food-radius with [is-food = true]
   ]
   report result
 end
 
 to-report java-at-nest [aWho]
-  let result true
+  let result false
   ask turtle aWho
   [
     set result [is-nest] of patch-here
@@ -388,15 +387,24 @@ to-report java-at-nest [aWho]
   report result
 end
 
+to-report java-at-friend [aWho]
+  let result false
+  ask turtle aWho
+  [
+     set result any? other wabbits in-radius 2 with [skin-hydrocarbon = [skin-hydrocarbon] of myself]
+  ]
+  report result
+end
+
 to-report java-has-food [aWho]
-  let result true
+  let result false
   ask turtle aWho
   [
     set result has-food
   ]
   report result
 end
-
+ 
 to-report java-heading-upward [aWho]
   let result false
   ask turtle aWho
@@ -425,38 +433,43 @@ end
 
 to-report java-random-50% [aWho]
   let result false
-  ask turtle aWho
-  [
-    if random 100 <= 50
-    [ set result true ]  
-  ]
+  if aWho != nobody [
+  ask turtle aWho[
+    if random 100 <= 50 = true [set result true]
+  ]]
   report result
+end
+
+to java-ant-color [aColor]
+  set color aColor
 end
 
 to-report java-random-10% [aWho]
   let result false
-  ask turtle aWho
-  [
-    if random 100 <= 10 
-    [ set result true ]
+  if aWho != nobody [
+  ask turtle aWho[
+    if random 100 <= 10 = true [set result true]
+  ]
   ]
   report result
 end
 
 to-report java-random-1% [aWho]
   let result false
-  ask turtle aWho
-  [
-    if random 100 <= 1 
-    [ set result true ]
+  if aWho != nobody [
+  ask turtle aWho[
+    if random 100 <= 1 = true [set result true]
+  ]
   ]
   report result
 end
 
 to-report java-has-50-energy [aWho]
   let result false
+  if aWho != nobody [
   ask turtle aWho[
     if energy > 50 = true [set result true]
+  ]
   ]
   report result
 end
@@ -516,6 +529,29 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
       
+      create-blocks 1
+  [
+    set block-name "eat-agent"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+
+create-blocks 1
+  [
+    set block-name "face-friend"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
+      
+   
        create-blocks 1
   [
     set block-name "agent-die"
@@ -649,7 +685,18 @@ to create-blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
-      
+       
+ ;                      create-blocks 1
+  ;[
+  ;;  set block-name "at-friend"
+  ;  set category "Control"
+  ;  set arg-list []
+  ;  set is-observer false
+  ;  set is-basic true
+    ; other variables not applicable
+ ; ]
+  ;    set blocks-list lput max-one-of blocks [who] blocks-list
+         
   create-blocks 1
   [
     set block-name "pickup-food-here"
@@ -804,6 +851,25 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list 
+  
+  create-blocks 1
+  [
+    set block-name "ant-color"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 15
+      set max-value 139
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
   create-blocks 1
   [
@@ -834,7 +900,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "int"
-      set default-value 55
+      set default-value 75
       set max-value 139
       set min-value 0
     ]
@@ -942,6 +1008,26 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
+        
+    create-blocks 1
+  [
+    set block-name "set-skin-scent"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 1
+      set max-value 1000
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Control"
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
                   create-blocks 1
   [
     set block-name "set-food-preference-to-here"
@@ -1015,13 +1101,16 @@ to create-agent-kind-list
     set primitives-list lput "teach" primitives-list
     set primitives-list lput "set-paintcolor" primitives-list
      set primitives-list lput "tandum-running" primitives-list
-    ;; set primitives-list lput "reproduce" primitives-list
+     set primitives-list lput "reproduce" primitives-list
      set primitives-list lput "add-food" primitives-list
      set primitives-list lput "add-energy" primitives-list
      set primitives-list lput "lose-energy" primitives-list
      set primitives-list lput "agent-die" primitives-list
      set primitives-list lput "set-food-preference-to-here" primitives-list
-     
+     set primitives-list lput "ant-color" primitives-list
+     set primitives-list lput "face-friend" primitives-list
+     set primitives-list lput "set-skin-scent" primitives-list
+     set primitives-list lput "eat-agent" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
@@ -1106,6 +1195,53 @@ to create-agent-kind-list
       set primitives-list lput "agent-die" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
+
+create-agent-kinds 1
+  [
+    set name "spider"
+    
+    set methods-list []
+    set methods-list lput "setup" methods-list
+    set methods-list lput "go" methods-list
+    
+    set primitives-list []
+    set primitives-list lput "place-measure-point" primitives-list
+    set primitives-list lput "clear-measure-points" primitives-list
+    set primitives-list lput "start-measuring" primitives-list
+
+    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "go-forward" primitives-list
+  
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
+    set primitives-list lput "random-turn" primitives-list
+    set primitives-list lput "face-nest" primitives-list
+    set primitives-list lput "face-chemical" primitives-list
+    
+    set primitives-list lput "i-have-food" primitives-list
+    set primitives-list lput "i-don't-have-food" primitives-list
+    set primitives-list lput "pickup-food-here" primitives-list
+    set primitives-list lput "place-chemical" primitives-list
+    set primitives-list lput "grow" primitives-list
+    set primitives-list lput "randomize-patch-color" primitives-list
+    set primitives-list lput "eat-grass" primitives-list
+    set primitives-list lput "patch-color" primitives-list
+    ;set primitives-list lput "patch-matches-preference" primitives-list
+    set primitives-list lput "teach" primitives-list
+    set primitives-list lput "set-paintcolor" primitives-list
+     set primitives-list lput "tandum-running" primitives-list
+     set primitives-list lput "reproduce" primitives-list
+     set primitives-list lput "add-food" primitives-list
+     set primitives-list lput "add-energy" primitives-list
+     set primitives-list lput "lose-energy" primitives-list
+     set primitives-list lput "agent-die" primitives-list
+     set primitives-list lput "set-food-preference-to-here" primitives-list
+     set primitives-list lput "ant-color" primitives-list
+     set primitives-list lput "face-friend" primitives-list
+     set primitives-list lput "eat-agent" primitives-list
+  ]
+  set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
+  
 end
 
 
@@ -1119,6 +1255,18 @@ to java-i-have-food
   set has-food true
 end
 
+to java-face-friend
+  let fradius 2
+  if any? wabbits in-radius fradius with [agent-kind-string = "ant"]
+  [
+    ;ask one-of wabbits in-radius fradius with [agent-kind-string = "ant"]
+  let friend one-of wabbits in-radius fradius with [agent-kind-string = "ant"]
+  if friend != nobody [
+  let friend-x [xcor] of friend
+  let friend-y [ycor] of friend
+  
+  facexy friend-x friend-y]]
+end
 
 
 to java-i-don't-have-food
@@ -1158,7 +1306,7 @@ end
 
 to java-set-step-size [ aspeed ]
   set bonus-speed aspeed
-  if (aspeed < 0) [ set bonus-speed 0 ]
+  if (aspeed < 0)  [ set bonus-speed 0 ]
 end
 
 to-report java-heading [aWho]
@@ -1177,6 +1325,14 @@ end
 
 to java-go-forward 
   jump bonus-speed
+  ;;turtle variables that will be harvested at meaure points.
+ ; set odometer odometer + moved
+;  if any? measurepoints
+ ; [
+;    if distfromlast = NaN
+;    [set distfromlast 0]
+;    set distfromlast distfromlast + moved
+ ; ]
 end
 
 to java-right [amount-number]
@@ -1192,8 +1348,8 @@ to java-lose-energy [lostEnergy]
 end
 
 to java-random-turn [amount-number]
-  let rand random (amount-number * 2)
-  right amount-number - rand
+  let rand (random-float amount-number * 2)
+  right rand - amount-number
 end
 
 to java-face-chemical
@@ -1210,6 +1366,7 @@ to java-face-chemical
   ]
 ]
 end
+
 
 to-report chemical-scent-at-angle [angle]
   let p patch-right-and-ahead angle 1
@@ -1242,7 +1399,6 @@ end
 
 ;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
-  set total-cycles total-cycles + 1
   hatch-measurepoints 1
   [
    set measure-points lput self measure-points
@@ -1273,12 +1429,11 @@ end
 
 
 to place-measure-point
-  set total-cycles total-cycles + 1
   create-measurepoints 1
   [
     set measure-points lput self measure-points
     set tagentkind "ant"
-    set tcycles total-cycles
+    set tcycles count measurepoints - 1
     set tpopulation (count wabbits with [agent-kind-string = "ant"])
     set measurepoint-creator "ant"
     ht
@@ -1309,17 +1464,19 @@ end
 
 
 to java-reproduce 
-  hatch 1 
+  hatch-wabbits 1 
   [
+    setxy [xcor] of myself [ycor] of myself
     set heading random 360
+    set color red
+    set shape "ant"
     set size 3
+    set energy 100
     set agent-kind-string "ant"
     set distfromlast NaN
     set odistfromlast NaN
   ]
-  set energy 0
 end
-
 
 to java-patch-color [new_color]
   ask [neighbors] of patch-here  
@@ -1333,6 +1490,10 @@ end
 
 to java-set-paintcolor [arg-paint]
   set paint-color arg-paint
+end
+
+to java-set-skin-scent [skin-scent]
+  set skin-hydrocarbon skin-scent
 end
 
 
@@ -1376,6 +1537,16 @@ to java-agent-die
   die
 end
 
+to java-eat-agent
+  ;let food-radius 2
+  let prey one-of other wabbits-here
+  if prey != nobody [
+    ask prey 
+    [
+      die
+    ]
+  ]
+end
 
 to java-eat-grass
   if not is-depleted and not is-nest
@@ -1512,6 +1683,7 @@ to make-other-stuff
         set color red
         set shape "ant"
         set size 3
+        set energy 100
         set agent-kind-string "ant"
         set distfromlast NaN
         set odistfromlast NaN
@@ -1561,6 +1733,18 @@ to make-other-stuff
         set paint-color color
         set shape "ant"
         set agent-kind-string "queen-ant"
+        set distfromlast NaN
+        set odistfromlast NaN
+       ]
+        
+        create-wabbits 1
+        [setxy random-xcor random-ycor
+        set heading random 360
+        set color grey
+        set shape "spider"
+        set size 8
+        set energy 100
+        set agent-kind-string "spider"
         set distfromlast NaN
         set odistfromlast NaN
        ]
@@ -1918,6 +2102,31 @@ Rectangle -7500403 true true 47 225 75 285
 Rectangle -7500403 true true 15 75 210 225
 Circle -7500403 true true 135 75 150
 Circle -16777216 true false 165 76 116
+
+spider
+true
+0
+Circle -7500403 true true 105 148 92
+Circle -7500403 true true 126 109 46
+Rectangle -16777216 true false 75 150 90 165
+Polygon -16777216 true false 130 167 108 130 108 91 91 91 92 130 119 168 123 156
+Polygon -16777216 true false 110 183 75 158 72 119 56 120 59 157 110 194
+Polygon -16777216 true false 124 226 85 255 91 287 106 282 104 259 132 238
+Polygon -16777216 true false 116 199 68 210 59 245 72 246 77 215 119 204
+Polygon -16777216 true false 176 160 188 136 188 95 204 95 202 137 181 172 172 160
+Polygon -16777216 true false 192 195 240 152 240 121 219 124 219 151 186 180
+Polygon -16777216 true false 186 217 237 223 236 252 215 252 216 233 180 220
+Polygon -16777216 true false 175 231 208 253 208 276 183 276 183 257 164 235
+Polygon -7500403 true true 133 116 123 95 146 74 133 99
+Polygon -7500403 true true 164 110 172 95 154 80 164 114
+Circle -16777216 true false 134 116 2
+Circle -16777216 true false 132 119 4
+Circle -16777216 true false 137 116 4
+Circle -16777216 true false 139 123 3
+Circle -16777216 true false 154 114 4
+Circle -16777216 true false 159 123 6
+Circle -16777216 true false 161 113 9
+Polygon -2674135 true false 143 202 128 230 173 228 119 180 168 183
 
 square
 false

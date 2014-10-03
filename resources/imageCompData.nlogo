@@ -134,7 +134,8 @@ globals
     comp-vars-right-vars
     set-predicate-list
     chart-data-name-list ;; list of data types to report to Java for graphing after each cycle
-    my-agent-sets-list
+  
+    my-agent-sets-list   ;; list of my-agent-sets
     
     ; list of category names for blocks
     categories-list
@@ -936,7 +937,7 @@ to java-go-forward
       [ask other-agents [jump my-bonus-speed]]
     ]
     [
-      ask [agents] of current-agent-set
+      ask [agents] of current-agent-set  ;; current-agent-set is a my-agent-set.
       [jump my-bonus-speed]
     ]
     
