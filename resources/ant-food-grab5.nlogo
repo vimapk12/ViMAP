@@ -13,7 +13,7 @@ measurepoints-own [
  tcycles
  tpopulation
  T-ENERGY-AVG
- tcolor-preference
+ tfood-preference
  
  theading
  todometer
@@ -57,7 +57,7 @@ wabbits-own
      previous-y
      
      has-food
-     paint-color
+     paint-color   ;; food-preference
      energy
      age
      of-preference
@@ -117,6 +117,7 @@ globals
     
     ;;NEEDED FOR MEASURE LINKING
     measure-points
+    measurepoint-count
     
     wabbits-list
     wabbit-kind-list
@@ -170,6 +171,7 @@ to setup
   ;ask patches [set ppaint-color green]
    ;ask wabbits [set paint-color yellow]
   set-defaults
+  set measure-points [ ]
   color-background-patches
   make-other-stuff
   create-blocks-list  
@@ -186,7 +188,6 @@ to setup
   create-chart-data-name-list
   create-categories-list
   ;;NEEDED FOR MEASURE LINKING
-  set measure-points []
   create-measure-option-string-lists
   create-measure-option-command-list
   create-var-name-list
@@ -259,9 +260,8 @@ to create-measure-option-string-lists
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
-  set tlist lput "Average" tlist 
-  set tlist lput "Proboscis" tlist
-  set tlist lput "Length" tlist
+  set tlist lput "Food" tlist 
+  set tlist lput "Preferences" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
@@ -1449,32 +1449,6 @@ end
 
 ;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
-  hatch-measurepoints 1
-  [
-   set measure-points lput self measure-points
-   set size 15
-   set shape "flag"
-   set color black 
-   
-   set tagentkind [agent-kind-string] of myself
-   set tcycles count measurepoints - 1
-   set theading [heading] of myself
-   set todometer [ odometer ] of myself
-   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
-   [set taccel NaN]
-   [set taccel [ distfromlast - odistfromlast ] of myself]
-   set tdistfromlast [ distfromlast ] of myself
-   set tspeed [bonus-speed] of myself
-   set tcolor [ color ] of myself
-   set tpenwidth [ pen-size ] of myself
-   set tpencolor [ color ] of myself
-   
-   set label-color black
-   set label tcycles
-   ht
-  ]
-  set odistfromlast distfromlast
-  set distfromlast 0
 end
 
 to-report mean-ant-energy
@@ -1503,32 +1477,36 @@ end
 
 ;;NEEDED FOR GRAPHING
 to place-measure-point
+  set measurepoint-count measurepoint-count + 1
   create-measurepoints 1
   [
     set measure-points lput self measure-points
-    set tcycles count measurepoints - 1
-    ifelse any? wabbits with [agent-kind-string = "ant"]
-    [
-      set T-ENERGY-AVG mean-ant-energy
-      set tcolor-preference mean-food-preference
-    set tagentkind "ant"
-    set tpopulation (count wabbits with [agent-kind-string = "ant"])
-    set measurepoint-creator "ant"
     ht
-    ]
-    [
-       set T-ENERGY-AVG 0
-    ]
- ht
+    set tcolor mean-food-preference
+    set tagentkind "ant"
+    set tcycles measurepoint-count
+    
+    set tpopulation (count wabbits with [agent-kind-string = "ant"])
+    set T-ENERGY-AVG mean-ant-energy
+    set measurepoint-creator "ant"
   ]
-    
-    
-    
+  ask measurepoints with [tagentkind = "food-preference"]
+  [
+    set tfood-preference set-food-preference-and-color ([tcycles] of self) 
+  ]                                                            ;; "food-preference" measurepoints will
+                                                               ;;  have a tcycle from 1 - 14
+                                                               ;;  there are only 14 of them.
 end
 
+;; measurepoint procedure
+to-report set-food-preference-and-color [i]
+  let shade ((i * 10) - 5)
+  set tcolor shade
+  report count wabbits with [agent-kind-string = "ant" and shade-of? paint-color shade]
+end
 
-
-
+    
+  
 to java-grow-to [asize]
    if size < 12 [set size size + asize]
 end
@@ -1862,6 +1840,25 @@ to make-other-stuff
         set previous-y ""
         ;if agent-kind-string != "queen-ant" or agent-kind-string != "pollinator" [set size 3]
        ]
+       
+  let j 1
+  create-measurepoints 14
+  [
+   ht
+   set measure-points lput self measure-points
+   
+   set tagentkind "food-preference"
+   
+   set tcycles j
+   set j (j + 1)
+ ; set label-color black
+ ; set label tcycles
+  ]
+  
+ ; let a_shade 0
+ ;count wabbits with [shade-of? paint-color a_shade] and with [agent-kind-string = "ant"]
+ ; set a_shade (a_shade + 10)
+  
 end
      
 
@@ -1871,7 +1868,7 @@ to-report get-measures
   [
     ask ? 
     [
-      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tcolor-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -1879,14 +1876,14 @@ to-report get-measures
 end
 
 to-report get-measures-for [an-agent-kind]
-  let result []
+  let result obtain-histogram-list
   let relevant-measures measurepoints with [ tagentkind = an-agent-kind ]
   let relevant-list sort relevant-measures
   foreach relevant-list 
   [
     ask ? 
     [ 
-      let datarep (list who mean-food-preference  (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tcolor-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who mean-food-preference (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tfood-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -1896,6 +1893,18 @@ end
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   report get-measures-for an-agent-kind
 end
+
+
+to-report obtain-histogram-list
+  let result [ ] 
+  ask measurepoints with [tagentkind = "food-preference"]
+  [
+    let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tfood-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor)
+    set result lput datarep result
+  ]
+  report result
+end
+
 
 to-report get-agent-kinds-as-csv
   let retn ""
