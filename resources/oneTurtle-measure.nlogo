@@ -685,43 +685,70 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
   
-  
   ;;SECOND CHANGE BLOCK
   
   create-blocks 1
   [
-    set block-name "set"
-    set arg-list []
+    set block-name "set-textbox"
+    set category "All-Purpose"
+    set arg-list [ ]
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["size" "pen-width" "color" ] ;"repeat-number"]
+      set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " to "
     hatch-args 1
     [
-      set arg-type "enum"
-      set enum-list ["odometer" "step-size" "chg in stepsize"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["times" "divided by"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-       set arg-type "int"
-       set default-value 1
-       set max-value 100
-       set min-value 1
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
-    set is-basic false
+    set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+    
+   
+   
+   
+   ;; Original set block that will serve as a template but will soon be replaced.  Jordan D. Nelson
+   
+   ; set block-name "set"
+   ; set arg-list []
+   ; hatch-args 1
+   ; [
+   ;   set arg-type "enum"
+   ;   set enum-list ["size" "pen-width" "color" ] ;"repeat-number"]
+   ; ]
+   ; set arg-list lput max-one-of args [who] arg-list
+   ; hatch-args 1
+   ; [
+   ;   set arg-type "enum"
+   ;   set enum-list ["odometer" "step-size" "chg in stepsize"]
+   ; ]
+   ; set arg-list lput max-one-of args [who] arg-list
+   ; hatch-args 1
+   ; [
+   ;   set arg-type "enum"
+   ;   set enum-list ["times" "divided by"]
+   ; ]
+   ; set arg-list lput max-one-of args [who] arg-list
+   ; hatch-args 1
+   ; [
+   ;    set arg-type "int"
+   ;    set default-value 1
+   ;    set max-value 100
+   ;    set min-value 1
+   ; ]
+   ; set arg-list lput max-one-of args [who] arg-list
+   ; set is-observer false
+   ; set is-basic false
+  ;]
+  ; set blocks-list lput max-one-of blocks [who] blocks-list
   
   
   ;;END SECOND CHANGE BLOCK
@@ -1034,7 +1061,8 @@ to create-agent-kind-list
    ; set primitives-list lput "plant-flag" primitives-list
     
     ;;second change & visiblility
-    set primitives-list lput "set" primitives-list
+   ;set primitives-list lput "set" primitives-list
+    set primitives-list lput "set-textbox" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
     

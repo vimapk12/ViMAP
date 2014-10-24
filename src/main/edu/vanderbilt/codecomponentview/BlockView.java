@@ -124,17 +124,18 @@ public final class BlockView extends Box {
         Box rowBox = Box.createHorizontalBox();
         rowBox.setAlignmentX(LEFT_ALIGNMENT);
         this.labels = new HashSet<JLabel>();
-        JLabel nameLabel = new JLabel(aTemplate.getDisplayName().
-             replace("-", " ") + " ");
-        // We decided that we want step size to actually be displayed as 
-        // step-size.  
-        String s = nameLabel.getText();
-        if ( s.contains("step size") )
-        {
-          s = s.replace("step size", "step-size");
-          nameLabel.setText(s);
-        }
-        s = null;
+        
+        JLabel nameLabel = new JLabel(aTemplate.getDisplayName());
+        String a_name = nameLabel.getText();
+        nameLabel.setText(prep_block_display_name(a_name));
+        
+       // old code
+       // if ( s.contains("step size") )
+       // {
+       //   s = s.replace("step size", "step-size");
+       //   nameLabel.setText(s);
+       // }
+        	
         // this.nameLabel = new JLabel(aTemplate.getDisplayName() + " ");
         Font font = nameLabel.getFont();
         // same font but bold
@@ -647,5 +648,23 @@ public final class BlockView extends Box {
     
     public Point getClickOffset() {
         return this.clickOffsetPoint;
+    }
+    
+    // This is a utility method that displays the proper name for each command block.
+    // This class is called BlockView, so I want to keep the "view" logic in this class.
+    // Each commmand block must have a unique string name, but the display names can be 
+    // the same.  
+    private static String prep_block_display_name(String s)
+    {
+      switch(s) {
+      case "set-textbox":
+    	  s = "set";
+    	  break;
+      }
+      s = s.replace("-", " ") + " ";
+      if ( s.contains("step size") ) {
+        return s.replace("step size", "step-size");
+      }
+      return s;
     }
 }
