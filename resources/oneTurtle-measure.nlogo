@@ -1021,7 +1021,8 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
   
-      
+   ask blocks [ ht ]
+   ask args [ ht ]
       
       
   ;;; END OF BLOCK DEFINITIONS ;;;
