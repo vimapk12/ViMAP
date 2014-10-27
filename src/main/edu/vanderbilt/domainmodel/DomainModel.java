@@ -54,6 +54,8 @@ public final class DomainModel {
     
     public static final String MEASURE_CATEGORY_STRING = "Measure";
     
+    public static final String ALL_PURPOSE_CATEGORY_STRING = "All-Purpose";
+    
     /**
      * Name of the "setup" procedure, which is always 
      * present for each agent type.
@@ -274,7 +276,8 @@ public final class DomainModel {
         blockColorOptions.add(userprocedurecolor);
         
         final int sky = 0x2ca5e2;
-        blockColorOptions.add(new Color(sky));
+        final Color allpurposeColor = new Color(sky);
+        blockColorOptions.add(allpurposeColor);
         
         final int pink = 0xbb42c3;
         final Color measureColor = new Color(pink);
@@ -323,6 +326,13 @@ public final class DomainModel {
             measureColor);
           categoriesToMatch.remove(MEASURE_CATEGORY_STRING);
           blockColorOptions.remove(measureColor);
+        }
+        if ( this.categories.contains(ALL_PURPOSE_CATEGORY_STRING) ) {
+          this.categoryToBlockColor.put(
+               ALL_PURPOSE_CATEGORY_STRING, 
+        	   allpurposeColor);
+          categoriesToMatch.remove(ALL_PURPOSE_CATEGORY_STRING);
+          blockColorOptions.remove(allpurposeColor);
         }
         if ( this.categories.contains(SET_CATEGORY_STRING) )
         {

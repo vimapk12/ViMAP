@@ -319,6 +319,7 @@ to create-categories-list
     "Pen"
     "Secret Number"   
     "Measure"
+    "All-Purpose"
   ]
 end
 
@@ -1020,7 +1021,6 @@ to create-blocks-list
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
   
-  ask blocks [ set size 10 ]
       
       
       
@@ -1085,6 +1085,7 @@ to create-agent-kind-list
    ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
+  ask agent-kinds [ ht ]
 end
 
 to create-wabbits-list
