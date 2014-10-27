@@ -1019,6 +1019,8 @@ to create-blocks-list
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  ask blocks [ set size 10 ]
       
       
       
@@ -1102,6 +1104,28 @@ end
 to java-change-shape-to [ shapename ]
   set shape shapename
 end
+
+
+to java-set-textbox [ base-attrib entered-data ]
+  if base-attrib = "heading" [
+    set heading entered-data
+    stop
+  ]
+  if base-attrib = "color" [
+    set color entered-data
+    stop
+  ]
+  if base-attrib = "size" [
+    set size entered-data
+    stop
+  ]
+  if base-attrib = "secret-number" [
+    set secret-number entered-data
+    stop
+  ]
+  set pen-size entered-data
+end
+
 
 ;;second change and visibility.
 to java-set [ base-attrib tvar-name operator-name opvalue ] 
