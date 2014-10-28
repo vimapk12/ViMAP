@@ -485,7 +485,8 @@ to create-blocks-list
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
   create-blocks 1
   [
-    set block-name "change"
+    set block-name "set-op-textbox"
+    set category "All-Purpose"
     set arg-list []
     hatch-args 1
     [
@@ -496,7 +497,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["plus" "minus" "equal to" "random up to"]
+      set enum-list ["plus" "minus" "times" "divided by"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -712,9 +713,6 @@ to create-blocks-list
     set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-    
-   
-   
    
    ;; Original set block that will serve as a template but will soon be replaced.  Jordan D. Nelson
    
@@ -1040,7 +1038,7 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "change" primitives-list  
+ ;   set primitives-list lput "change" primitives-list  
     set primitives-list lput "set-label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
@@ -1065,6 +1063,7 @@ to create-agent-kind-list
     
     ;;second change & visiblility
    ;set primitives-list lput "set" primitives-list
+    set primitives-list lput "set-op-textbox" primitives-list
     set primitives-list lput "set-textbox" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
@@ -1129,47 +1128,130 @@ to java-set-textbox [ base-attrib entered-data ]
 end
 
 
+;to java-set-op-textbox [ variable-name op-name entered-data ]
+   ; to java-change [variable-name operator-name change-value]
+;  let result-string = ""
+;  if variable-name = "step-size" [ 
+;    set result-string "bonus-speed" 
+;  ]
+;  if variable-name = "pen-width" [ 
+;    set result-string "pen-size" 
+;  ]
+;  set result-string variable-name
+;    
+;  if variable-name = "step
+;  if variable-name = "step-size"
+;  [
+;    if operator-name = "plus"
+;    [set bonus-speed bonus-speed + change-value]
+;   if operator-name = "minus"
+;   [set bonus-speed bonus-speed - change-value]
+;   if operator-name = "equal to"
+;    [set bonus-speed change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set bonus-speed random change-value]
+;  ]
+;  if variable-name = "color"
+;  [
+;    if operator-name = "plus"
+;    [set color color + change-value]
+;    if operator-name = "minus"
+;    [set color color - change-value]
+;    if operator-name = "equal to"
+;    [set color change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set color random change-value]
+;  ]
+;  if variable-name = "heading"
+;  [
+;    if operator-name = "plus"
+;    [set heading heading + change-value]
+;    if operator-name = "minus"
+;    [set heading heading - change-value]
+;    if operator-name = "equal to"
+;    [set heading change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set heading  random change-value]
+;  ]
+;  ;;SECRET NUMBER
+;   if variable-name = "secret-number"
+; [
+;    if operator-name = "plus"
+;    [set secret-number secret-number + change-value]
+;    if operator-name = "minus"
+;    [set secret-number secret-number - change-value]
+;    if operator-name = "equal to"
+;    [set secret-number change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set secret-number random change-value]
+;  ]
+;  if variable-name = "pen-width"
+;  [
+;    if operator-name = "plus"
+;    [set pen-size pen-size + change-value]
+;    if operator-name = "minus"
+;    [set pen-size max (list (pen-size - change-value) 0)]
+;    if operator-name = "equal to"
+;    [set pen-size change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set pen-size random change-value]
+; ]
+;  
+;  if variable-name = "repeat-number"
+;  [
+;    if operator-name = "plus"
+;    [set repeat-num repeat-num + change-value]
+;    if operator-name = "minus"
+;    [set repeat-num repeat-num - change-value]
+;    if operator-name = "equal to"
+;    [set repeat-num  change-value]
+;    if operator-name = "random up to" and change-value != 0
+;    [set repeat-num random change-value]
+;  ]
+;end
+
+
 ;;second change and visibility.
-to java-set [ base-attrib tvar-name operator-name opvalue ] 
-  let tvar ""
-  if (tvar-name = "odometer") [ set tvar "odometer" ]
-  if (tvar-name = "step-size" ) [set tvar "bonus-speed" ]
-  if (tvar-name = "chg in stepsize") [set tvar "distfromlast - odistfromlast" ]
+;to java-set [ base-attrib tvar-name operator-name opvalue ] 
+;  let tvar ""
+;  if (tvar-name = "odometer") [ set tvar "odometer" ]
+;  if (tvar-name = "step-size" ) [set tvar "bonus-speed" ]
+;  if (tvar-name = "chg in stepsize") [set tvar "distfromlast - odistfromlast" ]
+;  
+;  let value 0;
+;  if base-attrib = "size"
+;  [
+;    if operator-name = "times"
+;    [set value (  (runresult tvar) * opvalue )]
+;    if operator-name = "divided by"
+;    [set value (  (runresult tvar) / opvalue )]
+;    if value < 0 [ set value 0 ]
+;    set size value
+;    set label-color black
+;  set label value
+;  ]
+;  
+;  if base-attrib = "color"
+;  [
+;    if operator-name = "times"
+;    [set value (  (runresult tvar) * opvalue )]
+;    if operator-name = "divided by"
+;    [set value (  (runresult tvar) / opvalue )]
+;    if value < 0 [ set value 0 ]
+;    set color value
+;  ]
   
-  let value 0;
-  if base-attrib = "size"
-  [
-    if operator-name = "times"
-    [set value (  (runresult tvar) * opvalue )]
-    if operator-name = "divided by"
-    [set value (  (runresult tvar) / opvalue )]
-    if value < 0 [ set value 0 ]
-    set size value
-    set label-color black
-  set label value
-  ]
-  
-  if base-attrib = "color"
-  [
-    if operator-name = "times"
-    [set value (  (runresult tvar) * opvalue )]
-    if operator-name = "divided by"
-    [set value (  (runresult tvar) / opvalue )]
-    if value < 0 [ set value 0 ]
-    set color value
-  ]
-  
-  if base-attrib = "pen-width"
-  [
-    if operator-name = "times"
-    [set value (  (runresult tvar) * opvalue )]
-    if operator-name = "divided by"
-    [set value (  (runresult tvar) / opvalue )]
-    if value < 0 [ set value 0 ]
-    set pen-size value
-  ]
-  
-end
+;  if base-attrib = "pen-width"
+;  [
+;    if operator-name = "times"
+;    [set value (  (runresult tvar) * opvalue )]
+;    if operator-name = "divided by"
+;    [set value (  (runresult tvar) / opvalue )]
+;    if value < 0 [ set value 0 ]
+;    set pen-size value
+;  ]
+; 
+;end
 
 to java-go-visible
   ; set hidden? false
@@ -1200,76 +1282,7 @@ to java-set-label [variable-name]
   [set label ""]
 end
 
-to java-change [variable-name operator-name change-value]
-  if variable-name = "step-size"
-  [
-    if operator-name = "plus"
-    [set bonus-speed bonus-speed + change-value]
-    if operator-name = "minus"
-    [set bonus-speed bonus-speed - change-value]
-    if operator-name = "equal to"
-    [set bonus-speed change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set bonus-speed random change-value]
-  ]
-  if variable-name = "color"
-  [
-    if operator-name = "plus"
-    [set color color + change-value]
-    if operator-name = "minus"
-    [set color color - change-value]
-    if operator-name = "equal to"
-    [set color change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set color random change-value]
-  ]
-  if variable-name = "heading"
-  [
-    if operator-name = "plus"
-    [set heading heading + change-value]
-    if operator-name = "minus"
-    [set heading heading - change-value]
-    if operator-name = "equal to"
-    [set heading change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set heading  random change-value]
-  ]
-  ;;SECRET NUMBER
-   if variable-name = "secret-number"
-  [
-    if operator-name = "plus"
-    [set secret-number secret-number + change-value]
-    if operator-name = "minus"
-    [set secret-number secret-number - change-value]
-    if operator-name = "equal to"
-    [set secret-number change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set secret-number random change-value]
-  ]
-  if variable-name = "pen-width"
-  [
-    if operator-name = "plus"
-    [set pen-size pen-size + change-value]
-    if operator-name = "minus"
-    [set pen-size max (list (pen-size - change-value) 0)]
-    if operator-name = "equal to"
-    [set pen-size change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set pen-size random change-value]
-  ]
-  
-   if variable-name = "repeat-number"
-  [
-    if operator-name = "plus"
-    [set repeat-num repeat-num + change-value]
-    if operator-name = "minus"
-    [set repeat-num repeat-num - change-value]
-    if operator-name = "equal to"
-    [set repeat-num  change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set repeat-num random change-value]
-  ]
-end
+
 
 ;;BEGINSECRET NUMBER
 to java-set-color-to-secret-number
