@@ -654,13 +654,12 @@ public final class BlockView extends Box {
     // This class is called BlockView, so I want to keep the "view" logic in this class.
     // Each commmand block must have a unique string name, but the display names can be 
     // the same.  
-    private static String prep_block_display_name(String s)
-    {
+    private static String prep_block_display_name(String s) {
       switch(s) {
       case "set-textbox":
       case "set-op-textbox":
-    	  s = "set";
-    	  break;
+    	s = "set";
+    	break;
       }
       s = s.replace("-", " ") + " ";
       if ( s.contains("step size") ) {

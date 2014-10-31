@@ -1128,87 +1128,34 @@ to java-set-textbox [ base-attrib entered-data ]
 end
 
 
-;to java-set-op-textbox [ variable-name op-name entered-data ]
-   ; to java-change [variable-name operator-name change-value]
-;  let result-string = ""
-;  if variable-name = "step-size" [ 
-;    set result-string "bonus-speed" 
-;  ]
-;  if variable-name = "pen-width" [ 
-;    set result-string "pen-size" 
-;  ]
-;  set result-string variable-name
-;    
-;  if variable-name = "step
-;  if variable-name = "step-size"
-;  [
-;    if operator-name = "plus"
-;    [set bonus-speed bonus-speed + change-value]
-;   if operator-name = "minus"
-;   [set bonus-speed bonus-speed - change-value]
-;   if operator-name = "equal to"
-;    [set bonus-speed change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set bonus-speed random change-value]
-;  ]
-;  if variable-name = "color"
-;  [
-;    if operator-name = "plus"
-;    [set color color + change-value]
-;    if operator-name = "minus"
-;    [set color color - change-value]
-;    if operator-name = "equal to"
-;    [set color change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set color random change-value]
-;  ]
-;  if variable-name = "heading"
-;  [
-;    if operator-name = "plus"
-;    [set heading heading + change-value]
-;    if operator-name = "minus"
-;    [set heading heading - change-value]
-;    if operator-name = "equal to"
-;    [set heading change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set heading  random change-value]
-;  ]
-;  ;;SECRET NUMBER
-;   if variable-name = "secret-number"
-; [
-;    if operator-name = "plus"
-;    [set secret-number secret-number + change-value]
-;    if operator-name = "minus"
-;    [set secret-number secret-number - change-value]
-;    if operator-name = "equal to"
-;    [set secret-number change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set secret-number random change-value]
-;  ]
-;  if variable-name = "pen-width"
-;  [
-;    if operator-name = "plus"
-;    [set pen-size pen-size + change-value]
-;    if operator-name = "minus"
-;    [set pen-size max (list (pen-size - change-value) 0)]
-;    if operator-name = "equal to"
-;    [set pen-size change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set pen-size random change-value]
-; ]
-;  
-;  if variable-name = "repeat-number"
-;  [
-;    if operator-name = "plus"
-;    [set repeat-num repeat-num + change-value]
-;    if operator-name = "minus"
-;    [set repeat-num repeat-num - change-value]
-;    if operator-name = "equal to"
-;    [set repeat-num  change-value]
-;    if operator-name = "random up to" and change-value != 0
-;    [set repeat-num random change-value]
-;  ]
-;end
+
+to java-set-op-textbox [ variable-name op-name entered-data ]
+  let command-string ""
+  let op-string ""
+  if variable-name = "step-size" [
+    set variable-name "bonus-speed"
+  ]
+  if variable-name = "pen-width" [
+    set variable-name "pen-size"
+  ]
+  
+  if op-name = "plus" [
+    set op-string word variable-name word " + " entered-data
+  ]
+  if op-name = "minus" [
+    set op-string word variable-name word " - " entered-data
+  ]
+  if op-name = "times" [
+    set op-string word variable-name word " * " entered-data
+  ]
+  if op-name = "divided by" [
+    set op-string word "round(" word variable-name word " / " word entered-data ")"
+  ]
+  
+  set command-string word "set " word variable-name word " " op-string
+  run command-string
+end
+
 
 
 ;;second change and visibility.
