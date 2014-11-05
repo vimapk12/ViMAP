@@ -542,7 +542,7 @@ to create-blocks-list
    
   create-blocks 1
   [
-    set block-name "set-label"
+    set block-name "label"
     set category "Measure"
     set arg-list []
     hatch-args 1
@@ -1066,7 +1066,7 @@ to create-agent-kind-list
     
     set primitives-list []
  ;   set primitives-list lput "change" primitives-list  
-    set primitives-list lput "set-label" primitives-list
+    set primitives-list lput "label" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
@@ -1261,7 +1261,8 @@ to java-go-invisible
   set size 0
 end
 
-to java-set-label [variable-name]
+
+to java-label [variable-name]
   set label-color black
   if variable-name = "step-size"
   [set label bonus-speed]
