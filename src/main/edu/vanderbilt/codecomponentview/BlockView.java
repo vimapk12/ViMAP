@@ -658,6 +658,7 @@ public final class BlockView extends Box {
       switch(s) {
       case "set-textbox":
       case "set-op-textbox":
+      case "set-dropdown":
     	s = "set";
     	break;
       }

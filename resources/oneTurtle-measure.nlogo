@@ -513,6 +513,33 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
+ 
+  create-blocks 1
+  [
+    set block-name "set-dropdown"
+    set category "All-Purpose"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" ] ;"repeat-number"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    
+    set label-after-arg " equal to "
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["heading" "color" "secret-number" "pen-width" "step-size"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+   
   create-blocks 1
   [
     set block-name "set-label"
@@ -700,7 +727,7 @@ to create-blocks-list
       set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " to "
+    set label-after-arg " equal to "
     hatch-args 1
     [
       set arg-type "int"
@@ -1065,6 +1092,7 @@ to create-agent-kind-list
    ;set primitives-list lput "set" primitives-list
     set primitives-list lput "set-op-textbox" primitives-list
     set primitives-list lput "set-textbox" primitives-list
+    set primitives-list lput "set-dropdown" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
     
@@ -1156,6 +1184,26 @@ to java-set-op-textbox [ variable-name op-name entered-data ]
   run command-string
 end
 
+
+
+to java-set-dropdown [ first-variable sec-variable ]
+  let command-string ""
+  if first-variable = "step-size" [
+    set first-variable "bonus-speed"
+  ]
+  if sec-variable = "step-size" [
+    set sec-variable "bonus-speed"
+  ]
+  if first-variable = "pen-width" [
+    set first-variable "pen-size"
+  ]
+  if sec-variable = "pen-width" [
+    set sec-variable "pen-size"
+  ]
+  
+  set command-string word "set " word first-variable word " " sec-variable
+  run command-string
+end
 
 
 ;;second change and visibility.
