@@ -129,14 +129,7 @@ public final class BlockView extends Box {
         String a_name = nameLabel.getText();
         nameLabel.setText(prep_block_display_name(a_name));
         
-       // old code
-       // if ( s.contains("step size") )
-       // {
-       //   s = s.replace("step size", "step-size");
-       //   nameLabel.setText(s);
-       // }
-        	
-        // this.nameLabel = new JLabel(aTemplate.getDisplayName() + " ");
+         
         Font font = nameLabel.getFont();
         // same font but bold
         Font boldFont = null;
@@ -181,8 +174,9 @@ public final class BlockView extends Box {
             }
 
             rowBox.add(newComponent);
+            
 
-            if (i == 0 && aTemplate.getLabelAfterFirstArg() != null) {
+            if ( ok_to_add_extra_label(i) && aTemplate.getLabelAfterFirstArg() != null ) {
                 JLabel extraLabel = 
                     new JLabel(aTemplate.getLabelAfterFirstArg());
                 extraLabel.setFont(boldFont);
@@ -650,17 +644,36 @@ public final class BlockView extends Box {
         return this.clickOffsetPoint;
     }
     
+
+
+    // This is a utility method that determines when the label after arg should 
+    // be added in the creation of a block view
+    private boolean ok_to_add_extra_label(int i) {
+      int critical = 0;
+      switch(template.getDisplayName()) {
+        case "set-dropdown-op-secret-number":
+          critical = 1;
+          break;
+        default:
+          break;
+      }
+      return i == critical;
+    }
+
+
     // This is a utility method that displays the proper name for each command block.
     // This class is called BlockView, so I want to keep the "view" logic in this class.
     // Each commmand block must have a unique string name, but the display names can be 
     // the same.  
     private static String prep_block_display_name(String s) {
       switch(s) {
-      case "set-textbox":
-      case "set-op-textbox":
-      case "set-dropdown":
-    	s = "set";
-    	break;
+        case "set-textbox":
+        case "set-op-textbox":
+        case "set-dropdown":
+        case "set-dropdown-secret-number":
+        case "set-dropdown-op-secret-number":
+    	  s = "set";
+    	  break;
       }
       s = s.replace("-", " ") + " ";
       if ( s.contains("step size") ) {

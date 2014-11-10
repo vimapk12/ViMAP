@@ -806,17 +806,163 @@ to create-blocks-list
   
   
   ;;BEGINSECRET NUMBER
+  
   create-blocks 1
   [
-    set block-name "set-color-to-secret-number"
+    set block-name "set-dropdown-secret-number"
+    set category "Secret Number"
+    set arg-list [ ]
+    hatch-args 1 
+    [
+      set arg-type "enum"
+      set enum-list [ "heading" "step-size" "color" "size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to secret number "
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
+  [
+    set block-name "set-dropdown-op-secret-number"
+    set category "Secret Number"
+    set arg-list [ ]
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "heading" "step-size" "color" "size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " secret number "
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "plus" "minus" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+         
+  
+  create-blocks 1
+  [
+    set block-name "turn-right-by-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
+   
+   
+  create-blocks 1
+  [
+    set block-name "turn-left-by-secret-number"
+    set category "Secret Number"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
+      
+  create-blocks 1
+  [
+    set block-name "pick-a-secret-number-less-than"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 37
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Secret Number"
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+    
+  create-blocks 1
+  [
+    set block-name "pick-secret-number-range"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 1
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+        hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 10
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Secret Number"
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+    
+ 
+  create-blocks 1
+  [
+    set block-name "right"
+    set category "Movement"
+    
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 90
+      set max-value 360
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
+  [
+    set block-name "left"
+    set category "Movement"
+    
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 90
+      set max-value 360
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+ 
+ 
   create-blocks 1
   [
     set block-name "set-random-heading"
@@ -847,162 +993,9 @@ to create-blocks-list
     set is-set-update true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  create-blocks 1
-  [
-    set block-name "set-heading-to-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-  create-blocks 1
-  [
-    set block-name "set-step-size-to-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      create-blocks 1
-  [
-    set block-name "step-size-plus-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-     create-blocks 1
-  [
-    set block-name "step-size-minus-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-         
-  ;;
-  
-   create-blocks 1
-  [
-    set block-name "turn-right-by-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-   create-blocks 1
-  [
-    set block-name "turn-left-by-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-    create-blocks 1
-  [
-    set block-name "pick-a-secret-number-less-than"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 37
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Secret Number"
-    set is-basic false
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
-    
-        create-blocks 1
-  [
-    set block-name "pick-secret-number-range"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 10
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Secret Number"
-    set is-basic false
-    ; other variables not applicable
-  ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
  
-        create-blocks 1
-  [
-    set block-name "right"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 90
-      set max-value 360
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      create-blocks 1
-  [
-    set block-name "left"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 90
-      set max-value 360
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+ 
+ 
   create-blocks 1
   [
     set block-name "pen-up"
@@ -1022,9 +1015,10 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
       
-      create-blocks 1
+  create-blocks 1
   [
     set block-name "stamp"
     set category "Pen"
@@ -1033,9 +1027,9 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-        create-blocks 1
+  create-blocks 1
   [
     set block-name "plant-flag"
     set category "Pen"
@@ -1044,12 +1038,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
-   ask blocks [ ht ]
-   ask args [ ht ]
-      
-      
+  ask blocks [ ht ]
+  ask args [ ht ]
+
   ;;; END OF BLOCK DEFINITIONS ;;;
 end
 
@@ -1097,12 +1090,10 @@ to create-agent-kind-list
     set primitives-list lput "go-visible" primitives-list
     
     ;;SECRET NUMBER
-    set primitives-list lput "set-color-to-secret-number" primitives-list
-    set primitives-list lput "set-heading-to-secret-number" primitives-list
     
-    set primitives-list lput "set-step-size-to-secret-number" primitives-list    
-    set primitives-list lput "step-size-plus-secret-number" primitives-list
-    set primitives-list lput "step-size-minus-secret-number" primitives-list
+    set primitives-list lput "set-dropdown-secret-number" primitives-list
+    set primitives-list lput "set-dropdown-op-secret-number" primitives-list
+        
     
     set primitives-list lput "turn-right-by-secret-number" primitives-list
     set primitives-list lput "turn-left-by-secret-number" primitives-list    
@@ -1281,9 +1272,40 @@ end
 
 
 ;;BEGINSECRET NUMBER
-to java-set-color-to-secret-number
-  set color secret-number
+
+to java-set-dropdown-secret-number [ variable-name ]
+  let command-string ""
+  if variable-name = "step-size" [
+    set variable-name "bonus-speed"
+  ]
+  if variable-name = "pen-width" [
+    set variable-name "pen-size"
+  ]
+  set command-string word "set " word variable-name " secret-number"
+  run command-string
 end
+
+
+to java-set-dropdown-op-secret-number [ variable-name operation ]
+  let command-string ""
+  if variable-name = "step-size" [
+    set variable-name "bonus-speed"
+  ]
+  if variable-name = "pen-width" [
+    set variable-name "pen-size"
+  ]
+  
+  if operation = "plus" [ 
+    set operation " + "
+  ]
+  if operation = "minus" [
+    set operation " - " 
+  ]
+  set command-string word "set " word variable-name word " " word variable-name
+                     word " " word operation "secret-number"
+  run command-string
+end
+    
 
 
 to java-set-heading-to-secret-number
@@ -1293,18 +1315,6 @@ end
 to java-set-step-size-to-secret-number
   ifelse ( secret-number > 0 )
   [ set bonus-speed secret-number ]
-  [ set bonus-speed 0 ]
-end
-
-to java-step-size-plus-secret-number
-  set bonus-speed bonus-speed + secret-number
-  if ( bonus-speed < 0 )
-  [ set bonus-speed 0 ]
-end
-
-to java-step-size-minus-secret-number
-  set bonus-speed bonus-speed - secret-number
-  if ( bonus-speed < 0 )
   [ set bonus-speed 0 ]
 end
 
