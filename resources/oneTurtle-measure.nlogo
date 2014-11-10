@@ -1121,123 +1121,13 @@ to create-wabbit-kind-list
   ]
 end
 
+
+;; BEGIN PEN
+
 to java-change-shape-to [ shapename ]
   set shape shapename
 end
 
-
-to java-set-textbox [ base-attrib entered-data ]
-  if base-attrib = "heading" [
-    set heading entered-data
-    stop
-  ]
-  if base-attrib = "color" [
-    set color entered-data
-    stop
-  ]
-  if base-attrib = "size" [
-    set size entered-data
-    stop
-  ]
-  if base-attrib = "secret-number" [
-    set secret-number entered-data
-    stop
-  ]
-  set pen-size entered-data
-end
-
-
-
-to java-set-op-textbox [ variable-name op-name entered-data ]
-  let command-string ""
-  let op-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  
-  if op-name = "plus" [
-    set op-string word variable-name word " + " entered-data
-  ]
-  if op-name = "minus" [
-    set op-string word variable-name word " - " entered-data
-  ]
-  if op-name = "times" [
-    set op-string word variable-name word " * " entered-data
-  ]
-  if op-name = "divided by" [
-    set op-string word "round(" word variable-name word " / " word entered-data ")"
-  ]
-  
-  set command-string word "set " word variable-name word " " op-string
-  run command-string
-end
-
-
-
-to java-set-dropdown [ first-variable sec-variable ]
-  let command-string ""
-  if first-variable = "step-size" [
-    set first-variable "bonus-speed"
-  ]
-  if sec-variable = "step-size" [
-    set sec-variable "bonus-speed"
-  ]
-  if first-variable = "pen-width" [
-    set first-variable "pen-size"
-  ]
-  if sec-variable = "pen-width" [
-    set sec-variable "pen-size"
-  ]
-  
-  set command-string word "set " word first-variable word " " sec-variable
-  run command-string
-end
-
-
-;;second change and visibility.
-;to java-set [ base-attrib tvar-name operator-name opvalue ] 
-;  let tvar ""
-;  if (tvar-name = "odometer") [ set tvar "odometer" ]
-;  if (tvar-name = "step-size" ) [set tvar "bonus-speed" ]
-;  if (tvar-name = "chg in stepsize") [set tvar "distfromlast - odistfromlast" ]
-;  
-;  let value 0;
-;  if base-attrib = "size"
-;  [
-;    if operator-name = "times"
-;    [set value (  (runresult tvar) * opvalue )]
-;    if operator-name = "divided by"
-;    [set value (  (runresult tvar) / opvalue )]
-;    if value < 0 [ set value 0 ]
-;    set size value
-;    set label-color black
-;  set label value
-;  ]
-;  
-;  if base-attrib = "color"
-;  [
-;    if operator-name = "times"
-;    [set value (  (runresult tvar) * opvalue )]
-;    if operator-name = "divided by"
-;    [set value (  (runresult tvar) / opvalue )]
-;    if value < 0 [ set value 0 ]
-;    set color value
-;  ]
-  
-;  if base-attrib = "pen-width"
-;  [
-;    if operator-name = "times"
-;    [set value (  (runresult tvar) * opvalue )]
-;    if operator-name = "divided by"
-;    [set value (  (runresult tvar) / opvalue )]
-;    if value < 0 [ set value 0 ]
-;    set pen-size value
-;  ]
-; 
-;end
 
 to java-go-visible
   ; set hidden? false
@@ -1253,25 +1143,21 @@ to java-go-invisible
 end
 
 
-to java-label [variable-name]
-  set label-color black
-  if variable-name = "step-size"
-  [set label bonus-speed]
-  if variable-name = "color"
-  [set label color]
-  if variable-name = "heading"
-  [set label heading]
-  if variable-name = "secret-number"
-  [set label secret-number]
-  if variable-name = "pen-width"
-  [set label pen-size]
-  if variable-name = "none"
-  [set label ""]
+to java-pen-up
+  pen-up
+end
+
+to java-pen-down
+  pen-down
+end
+
+to java-stamp
+  stamp
 end
 
 
 
-;;BEGINSECRET NUMBER
+;;BEGIN SECRET NUMBER
 
 to java-set-dropdown-secret-number [ variable-name ]
   let command-string ""
@@ -1307,18 +1193,6 @@ to java-set-dropdown-op-secret-number [ variable-name operation ]
 end
     
 
-
-to java-set-heading-to-secret-number
-  set heading secret-number
-end
-
-to java-set-step-size-to-secret-number
-  ifelse ( secret-number > 0 )
-  [ set bonus-speed secret-number ]
-  [ set bonus-speed 0 ]
-end
-
-
 to java-turn-right-by-secret-number
   right secret-number  
 end
@@ -1332,6 +1206,7 @@ end
 to java-pick-a-secret-number-less-than [ amax ]
   set secret-number (random amax)
 end
+
 
 to java-pick-secret-number-range [aleft aright]
   let amin 0
@@ -1347,6 +1222,9 @@ to java-pick-secret-number-range [aleft aright]
   ]
   set secret-number (random (amax - amin + 1)) + amin
 end
+
+
+;; BEGIN MOVEMENT 
 
 
 to java-set-random-heading [angle1 angle2]
@@ -1377,8 +1255,6 @@ to java-set-random-heading [angle1 angle2]
 end
 
       
- 
-  
 to java-set-step-size [ aspeed ]
   set bonus-speed aspeed
   if (aspeed < 0) [ set bonus-speed 0 ]
@@ -1392,6 +1268,7 @@ to java-step-size-minus [amount-number]
   set bonus-speed bonus-speed - amount-number
   if (bonus-speed < 0) [ set bonus-speed 0 ]
 end
+
 
 to java-set-xy [aX aY]
   let myDistance distancexy aX aY
@@ -1458,40 +1335,27 @@ to java-left [amount-number]
   left amount-number
 end
 
-to java-pen-up
-  pen-up
-end
-
-to java-pen-down
-  pen-down
-end
-
-to java-stamp
-  stamp
-end
+;; BEGIN MEASURE
 
 to java-clear-measure-points
-    ask measurepoints [die]
-    ask wabbits
-    [
-      set distfromlast NaN        ;dist since last measure point
-      set odistfromlast NaN      ;last measure points distfromlast (for accel)
-      set odometer 0
-      set flag-counter 1
-    ]
+  ask measurepoints [die]
+  ask wabbits [
+    set distfromlast NaN        ;dist since last measure point
+    set odistfromlast NaN      ;last measure points distfromlast (for accel)
+    set odometer 0
+    set flag-counter 1
+  ]
 end
 
 to java-start-over-measuring
-    ask wabbits
-    [
-      set distfromlast NaN        ;dist since last measure point
-      set odistfromlast NaN      ;last measure points distfromlast (for accel)
-      set odometer 0
-      
+  ask wabbits [
+    set distfromlast NaN        ;dist since last measure point
+    set odistfromlast NaN      ;last measure points distfromlast (for accel)
+    set odometer 0  
     ]
 end
 
-;;NEEDED FOR MEASURE LINKING
+
 to java-place-measure-point
   hatch-measurepoints 1
   [
@@ -1521,6 +1385,98 @@ to java-place-measure-point
   set distfromlast 0
   set flag-counter flag-counter + 1
 end
+
+
+to java-label [variable-name]
+  set label-color black
+  if variable-name = "step-size"
+  [set label bonus-speed]
+  if variable-name = "color"
+  [set label color]
+  if variable-name = "heading"
+  [set label heading]
+  if variable-name = "secret-number"
+  [set label secret-number]
+  if variable-name = "pen-width"
+  [set label pen-size]
+  if variable-name = "none"
+  [set label ""]
+end
+
+
+;; BEGIN ALL-PURPOSE
+
+to java-set-textbox [ base-attrib entered-data ]
+  if base-attrib = "heading" [
+    set heading entered-data
+    stop
+  ]
+  if base-attrib = "color" [
+    set color entered-data
+    stop
+  ]
+  if base-attrib = "size" [
+    set size entered-data
+    stop
+  ]
+  if base-attrib = "secret-number" [
+    set secret-number entered-data
+    stop
+  ]
+  set pen-size entered-data
+end
+
+
+
+to java-set-op-textbox [ variable-name op-name entered-data ]
+  let command-string ""
+  let op-string ""
+  if variable-name = "step-size" [
+    set variable-name "bonus-speed"
+  ]
+  if variable-name = "pen-width" [
+    set variable-name "pen-size"
+  ]
+  
+  if op-name = "plus" [
+    set op-string word variable-name word " + " entered-data
+  ]
+  if op-name = "minus" [
+    set op-string word variable-name word " - " entered-data
+  ]
+  if op-name = "times" [
+    set op-string word variable-name word " * " entered-data
+  ]
+  if op-name = "divided by" [
+    set op-string word "round(" word variable-name word " / " word entered-data ")"
+  ]
+  
+  set command-string word "set " word variable-name word " " op-string
+  run command-string
+end
+
+
+to java-set-dropdown [ first-variable sec-variable ]
+  let command-string ""
+  if first-variable = "step-size" [
+    set first-variable "bonus-speed"
+  ]
+  if sec-variable = "step-size" [
+    set sec-variable "bonus-speed"
+  ]
+  if first-variable = "pen-width" [
+    set first-variable "pen-size"
+  ]
+  if sec-variable = "pen-width" [
+    set sec-variable "pen-size"
+  ]
+  
+  set command-string word "set " word first-variable word " " sec-variable
+  run command-string
+end
+
+
+
 
 to java-plant-flag
   let temp-flag-count 0
