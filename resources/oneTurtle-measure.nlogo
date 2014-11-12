@@ -491,7 +491,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" ] ;"repeat-number"]
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -851,7 +851,7 @@ to create-blocks-list
   
   create-blocks 1
   [
-    set block-name "turn-right-by-secret-number"
+    set block-name "right-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
@@ -863,7 +863,7 @@ to create-blocks-list
    
   create-blocks 1
   [
-    set block-name "turn-left-by-secret-number"
+    set block-name "left-secret-number"
     set category "Secret Number"
     set arg-list []
     set is-observer false
@@ -881,7 +881,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "int"
-      set default-value 37
+      set default-value 100
       set max-value 500
       set min-value 0
     ]
@@ -895,7 +895,7 @@ to create-blocks-list
     
   create-blocks 1
   [
-    set block-name "pick-secret-number-range"
+    set block-name "pick-a-secret-number-range"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -909,7 +909,7 @@ to create-blocks-list
         hatch-args 1
     [
       set arg-type "int"
-      set default-value 10
+      set default-value 100
       set max-value 500
       set min-value 0
     ]
@@ -1095,10 +1095,10 @@ to create-agent-kind-list
     set primitives-list lput "set-dropdown-op-secret-number" primitives-list
         
     
-    set primitives-list lput "turn-right-by-secret-number" primitives-list
-    set primitives-list lput "turn-left-by-secret-number" primitives-list    
+    set primitives-list lput "right-secret-number" primitives-list
+    set primitives-list lput "left-secret-number" primitives-list    
     set primitives-list lput "pick-a-secret-number-less-than" primitives-list
-    set primitives-list lput "pick-secret-number-range" primitives-list
+    set primitives-list lput "pick-a-secret-number-range" primitives-list
     
     set primitives-list lput "set-random-heading" primitives-list ;; set random heading 0 to 360
    ;;ENDSECRET NUMBER
@@ -1193,12 +1193,12 @@ to java-set-dropdown-op-secret-number [ variable-name operation ]
 end
     
 
-to java-turn-right-by-secret-number
+to java-right-secret-number
   right secret-number  
 end
 
 
-to java-turn-left-by-secret-number
+to java-left-secret-number
   left secret-number
 end
 
@@ -1208,7 +1208,7 @@ to java-pick-a-secret-number-less-than [ amax ]
 end
 
 
-to java-pick-secret-number-range [aleft aright]
+to java-pick-a-secret-number-range [aleft aright]
   let amin 0
   let amax 0
   ifelse aleft < aright
