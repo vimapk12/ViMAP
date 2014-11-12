@@ -522,7 +522,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" ] ;"repeat-number"]
+      set enum-list ["step-size" "heading" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     
@@ -530,7 +530,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["heading" "color" "secret-number" "pen-width" "step-size"]
+      set enum-list ["heading" "color" "size" "secret-number" "pen-width" "step-size"]
     ]
     set arg-list lput max-one-of args [who] arg-list
 
