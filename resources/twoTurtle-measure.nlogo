@@ -492,8 +492,7 @@ to create-blocks-list
   set blocks-list []
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
-  create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "change"
     set arg-list []
     hatch-args 1
@@ -521,8 +520,8 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-  create-blocks 1
-  [
+  
+  create-blocks 1 [
     set block-name "set-label"
     set category "Measure"
     set arg-list []
@@ -537,8 +536,8 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-  create-blocks 1
-  [
+  
+  create-blocks 1 [
     set block-name "change-shape-to"
     set category "Pen"
     set arg-list []
@@ -554,8 +553,7 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "set-step-size"
     set is-observer false
     set arg-list []
@@ -573,8 +571,8 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-  create-blocks 1
-  [
+  
+  create-blocks 1 [
     set block-name "go-forward"
     set category "Movement"
     set arg-list []
@@ -582,10 +580,21 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-   set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1 [
+    set block-name "go-backward"
+    set category "Movement"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
    
-   create-blocks 1
-  [
+   
+  create-blocks 1 [
     set block-name "set-xy"
     set category "Movement"
     set arg-list []
@@ -609,10 +618,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-    create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "step-size-plus"
     set is-observer false
     set arg-list []
@@ -628,10 +638,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
     
-    create-blocks 1
-  [
+    
+    
+  create-blocks 1 [
     set block-name "step-size-minus"
     set is-observer false
     set arg-list []
@@ -647,12 +658,13 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
     
 
-    ;;NEEDED FOR MEASURE LINKING
-      create-blocks 1
-  [
+
+  ;; MEASURE
+  
+  create-blocks 1 [
     set block-name "place-measure-point"
     set category "Measure"
     set arg-list []
@@ -660,10 +672,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-                    create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "start-over-measuring"
     set category "Measure"
     set arg-list []
@@ -671,10 +684,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-                  create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "clear-measure-points"
     set category "Measure"
     set arg-list []
@@ -682,12 +696,13 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  ;;BEGINSECRET NUMBER
-  create-blocks 1
-  [
+  
+  ;;BEGIN SECRET NUMBER
+  
+  create-blocks 1 [
     set block-name "set-color-to-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -695,11 +710,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
       
-   create-blocks 1
-  [
+      
+  create-blocks 1 [
     set block-name "set-heading-to-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -707,10 +722,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-      create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "set-step-size-to-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -718,11 +734,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
       
-      create-blocks 1
-  [
+      
+  create-blocks 1 [
     set block-name "step-size-plus-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -730,11 +746,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
       
-     create-blocks 1
-  [
+      
+  create-blocks 1 [
     set block-name "step-size-minus-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -742,12 +758,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
+        
          
-  ;;
   
-   create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "turn-right-by-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -755,11 +770,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
    
    
-   create-blocks 1
-  [
+   
+  create-blocks 1 [
     set block-name "turn-left-by-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -767,10 +782,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
    
-  create-blocks 1
-  [
+   
+   
+  create-blocks 1 [
     set block-name "set-random-heading"
     set category "Movement"
     
@@ -801,8 +817,7 @@ to create-blocks-list
     
       
       
-    create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "pick-a-secret-number-less-than"
     set is-observer false
     set arg-list []
@@ -818,10 +833,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
     
-            create-blocks 1
-  [
+    
+    
+  create-blocks 1 [
     set block-name "pick-secret-number-range"
     set is-observer false
     set arg-list []
@@ -845,10 +861,11 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-    set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
-        create-blocks 1
-  [
+  
+  
+  create-blocks 1 [
     set block-name "right"
     set category "Movement"
     
@@ -865,9 +882,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      create-blocks 1
-  [
+  set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      
+      
+  create-blocks 1 [
     set block-name "left"
     set category "Movement"
     
@@ -884,9 +903,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-  create-blocks 1
-  [
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  create-blocks 1 [
     set block-name "pen-up"
     set category "Pen"
     set arg-list []
@@ -894,9 +915,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      create-blocks 1
-  [
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  create-blocks 1 [
     set block-name "pen-down"
     set category "Pen"
     set arg-list []
@@ -904,10 +927,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-      create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "stamp"
     set category "Pen"
     set arg-list []
@@ -915,10 +939,11 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
-        create-blocks 1
-  [
+      
+      
+  create-blocks 1 [
     set block-name "plant-flag"
     set category "Pen"
     set arg-list []
@@ -926,12 +951,15 @@ to create-blocks-list
     set is-basic true
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  ask blocks [ ht ]
+  ask args [ ht ]
+       
   ;;; END OF BLOCK DEFINITIONS ;;;
 end
+
+
 
 to create-agent-kind-list
   set agent-kind-list [] 
@@ -955,6 +983,7 @@ to create-agent-kind-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
+    set primitives-list lput "go-backward" primitives-list
     set primitives-list lput "set-xy" primitives-list
     set primitives-list lput "step-size-plus" primitives-list
     set primitives-list lput "step-size-minus" primitives-list
@@ -1004,6 +1033,7 @@ to create-agent-kind-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
+    set primitives-list lput "go-backward" primitives-list
     set primitives-list lput "set-xy" primitives-list
     set primitives-list lput "step-size-plus" primitives-list
     set primitives-list lput "step-size-minus" primitives-list
@@ -1031,6 +1061,8 @@ to create-agent-kind-list
    ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
+  
+  ask agent-kinds [ ht ] 
 end
 
 
@@ -1238,6 +1270,7 @@ to java-step-size-minus [amount-number]
   if (bonus-speed < 0) [ set bonus-speed 0 ]
 end
 
+
 to java-go-forward 
   let forward-distance bonus-speed
   if forward-distance < 0
@@ -1259,6 +1292,29 @@ to java-go-forward
     set distfromlast distfromlast + moved
   ]
 end
+
+
+to java-go-backward
+  let backward-distance bonus-speed
+  if backward-distance < 0
+  [set backward-distance 0]
+  
+  let moved 0
+  while [moved < backward-distance and can-move? 1]
+  [
+   jump -1 
+   set moved moved + 1
+  ]
+  ;;turtle variables that will be harvested at meaure points.
+  set odometer odometer + moved
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + moved
+  ]
+end
+
 
 to java-set-xy [aX aY]
   let myDistance distancexy aX aY
