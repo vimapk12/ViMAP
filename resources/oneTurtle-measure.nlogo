@@ -483,6 +483,34 @@ to create-blocks-list
   set blocks-list []
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
+  
+   create-blocks 1
+  [
+    set block-name "set-textbox"
+    set category "All-Purpose"
+    set arg-list [ ]
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ ;"heading" "color" "size" "secret-number" 
+        "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to "
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 2
+      set max-value 360
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
   create-blocks 1
   [
     set block-name "set-op-textbox"
@@ -491,13 +519,13 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
+      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["plus" "minus" "times" "divided by"]
+      set enum-list [ "plus" "minus" "times" "divided by" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -522,7 +550,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     
@@ -530,7 +558,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["heading" "color" "size" "secret-number" "pen-width" "step-size"]
+      set enum-list ["step-size" "heading" "color" "size" "pen-width"]
     ]
     set arg-list lput max-one-of args [who] arg-list
 
@@ -548,7 +576,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
@@ -607,11 +635,10 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "go-backward"
- ;   set display-name "go-forward"
     set category "Movement"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
@@ -716,30 +743,7 @@ to create-blocks-list
   
   ;;SECOND CHANGE BLOCK
   
-  create-blocks 1
-  [
-    set block-name "set-textbox"
-    set category "All-Purpose"
-    set arg-list [ ]
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to "
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 360
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
+ 
    
    ;; Original set block that will serve as a template but will soon be replaced.  Jordan D. Nelson
    
@@ -833,7 +837,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "pen-width" ]
+      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     set label-after-arg " secret number "
