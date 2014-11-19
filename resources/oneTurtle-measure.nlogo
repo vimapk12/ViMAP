@@ -484,8 +484,7 @@ to create-blocks-list
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
   
-   create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "set-textbox"
     set category "All-Purpose"
     set arg-list [ ]
@@ -1286,26 +1285,6 @@ to java-set-xy [aX aY]
   ]
 end
 
-to java-go-backward
-  let backward-distance bonus-speed
-  if backward-distance < 0
-  [set backward-distance 0]
-  
-  let moved 0
-  while [moved < backward-distance and can-move? 1]
-  [
-   jump -1 
-   set moved moved + 1
-  ]
-  ;;turtle variables that will be harvested at meaure points.
-  set odometer odometer + moved
-  if any? measurepoints
-  [
-    if distfromlast = NaN
-    [set distfromlast 0]
-    set distfromlast distfromlast + moved
-  ]
-end
 
 to java-go-forward 
   let forward-distance bonus-speed
@@ -1319,6 +1298,28 @@ to java-go-forward
    set moved moved + 1
   ]
   
+  ;;turtle variables that will be harvested at meaure points.
+  set odometer odometer + moved
+  if any? measurepoints
+  [
+    if distfromlast = NaN
+    [set distfromlast 0]
+    set distfromlast distfromlast + moved
+  ]
+end
+
+
+to java-go-backward
+  let backward-distance bonus-speed
+  if backward-distance < 0
+  [set backward-distance 0]
+  
+  let moved 0
+  while [moved < backward-distance and can-move? 1]
+  [
+   jump -1 
+   set moved moved + 1
+  ]
   ;;turtle variables that will be harvested at meaure points.
   set odometer odometer + moved
   if any? measurepoints

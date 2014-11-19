@@ -328,6 +328,7 @@ to create-categories-list
     "Pen"
     "Secret Number"   ;SECRET NUMBER
     "Measure"
+    "All-Purpose"
   ]
 end
 
@@ -492,19 +493,47 @@ to create-blocks-list
   set blocks-list []
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
+  
   create-blocks 1 [
-    set block-name "change"
+    set block-name "set-textbox" 
+    set category "All-Purpose"
+    set arg-list [ ]
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to "
+    hatch-args 1 
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  create-blocks 1 [
+    set block-name "set-op-textbox"
+    set category "All-Purpose"
     set arg-list []
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width"] ;"repeat-number"]
+      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ] 
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["plus" "minus" "equal to" "random up to"]
+      set enum-list [ "plus" "minus" "times" "divided by" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     hatch-args 1
@@ -519,7 +548,8 @@ to create-blocks-list
     set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-  
+    
+    
   
   create-blocks 1 [
     set block-name "set-label"
@@ -973,7 +1003,6 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "change" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     ;;NEEDED FOR MEASURE LINKING
     set primitives-list lput "place-measure-point" primitives-list
@@ -994,6 +1023,11 @@ to create-agent-kind-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
    ; set primitives-list lput "plant-flag" primitives-list
+   
+    ;; All-Purpose
+    set primitives-list lput "set-textbox" primitives-list
+    set primitives-list lput "set-op-textbox" primitives-list
+    
     
     ;;SECRET NUMBER
     set primitives-list lput "set-color-to-secret-number" primitives-list
@@ -1022,7 +1056,6 @@ to create-agent-kind-list
     set methods-list lput "go" methods-list
     
     set primitives-list []
-    set primitives-list lput "change" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
     
     ;;NEEDED FOR MEASURE LINKING
@@ -1048,6 +1081,12 @@ to create-agent-kind-list
     ;;SECRET NUMBER
     set primitives-list lput "set-color-to-secret-number" primitives-list
     set primitives-list lput "set-heading-to-secret-number" primitives-list
+    
+    
+    ;; ALL-PURPOSE
+    set primitives-list lput "set-textbox" primitives-list
+    set primitives-list lput "set-op-textbox" primitives-list
+    
     
     set primitives-list lput "set-step-size-to-secret-number" primitives-list    
     set primitives-list lput "step-size-plus-secret-number" primitives-list
@@ -1100,76 +1139,6 @@ to java-set-label [variable-name]
   [set label ""]
 end
 
-to java-change [variable-name operator-name change-value]
-  if variable-name = "step-size"
-  [
-    if operator-name = "plus"
-    [set bonus-speed bonus-speed + change-value]
-    if operator-name = "minus"
-    [set bonus-speed bonus-speed - change-value]
-    if operator-name = "equal to"
-    [set bonus-speed change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set bonus-speed random change-value]
-  ]
-  if variable-name = "color"
-  [
-    if operator-name = "plus"
-    [set color color + change-value]
-    if operator-name = "minus"
-    [set color color - change-value]
-    if operator-name = "equal to"
-    [set color change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set color random change-value]
-  ]
-  if variable-name = "heading"
-  [
-    if operator-name = "plus"
-    [set heading heading + change-value]
-    if operator-name = "minus"
-    [set heading heading - change-value]
-    if operator-name = "equal to"
-    [set heading change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set heading  random change-value]
-  ]
-  ;;SECRET NUMBER
-   if variable-name = "secret-number"
-  [
-    if operator-name = "plus"
-    [set secret-number secret-number + change-value]
-    if operator-name = "minus"
-    [set secret-number secret-number - change-value]
-    if operator-name = "equal to"
-    [set secret-number change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set secret-number random change-value]
-  ]
-  if variable-name = "pen-width"
-  [
-    if operator-name = "plus"
-    [set pen-size pen-size + change-value]
-    if operator-name = "minus"
-    [set pen-size max (list (pen-size - change-value) 0)]
-    if operator-name = "equal to"
-    [set pen-size change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set pen-size random change-value]
-  ]
-  
-   if variable-name = "repeat-number"
-  [
-    if operator-name = "plus"
-    [set repeat-num repeat-num + change-value]
-    if operator-name = "minus"
-    [set repeat-num repeat-num - change-value]
-    if operator-name = "equal to"
-    [set repeat-num  change-value]
-    if operator-name = "random up to" and change-value != 0
-    [set repeat-num random change-value]
-  ]
-end
 
 ;;BEGINSECRET NUMBER
 to java-set-color-to-secret-number
@@ -1181,11 +1150,13 @@ to java-set-heading-to-secret-number
   set heading secret-number
 end
 
+
 to java-set-step-size-to-secret-number
   ifelse ( secret-number > 0 )
   [ set bonus-speed secret-number ]
   [ set bonus-speed 0 ]
 end
+
 
 to java-step-size-plus-secret-number
   set bonus-speed bonus-speed + secret-number
@@ -1367,6 +1338,58 @@ to java-clear-measure-points
       set odometer 0
     ]
 end
+
+
+;; BEGIN ALL-PURPOSE
+to java-set-textbox [ base-attrib entered-data ]
+  if base-attrib = "heading" [
+    set heading entered-data
+    stop
+  ]
+  if base-attrib = "color" [
+    set color entered-data
+    stop
+  ]
+  if base-attrib = "size" [
+    set size entered-data
+    stop
+  ]
+  if base-attrib = "secret-number" [
+    set secret-number entered-data
+    stop
+  ]
+  set pen-size entered-data
+end
+
+
+to java-set-op-textbox [ variable-name op-name entered-data ]
+  let command-string ""
+  let op-string ""
+  if variable-name = "step-size" [
+    set variable-name "bonus-speed"
+  ]
+  if variable-name = "pen-width" [
+    set variable-name "pen-size"
+  ]
+  
+  if op-name = "plus" [
+    set op-string word variable-name word " + " entered-data
+  ]
+  if op-name = "minus" [
+    set op-string word variable-name word " - " entered-data
+  ]
+  if op-name = "times" [
+    set op-string word variable-name word " * " entered-data
+  ]
+  if op-name = "divided by" [
+    set op-string word "round(" word variable-name word " / " word entered-data ")"
+  ]
+  
+  set command-string word "set " word variable-name word " " op-string
+  run command-string
+end
+
+
 
 ;; wabbit procedure.
 ;;NEEDED FOR MEASURE LINKING
