@@ -65,6 +65,7 @@ wabbits-own
      initial-y
      previous-x
      previous-y
+     old-size
 ]
 agent-kinds-own 
 [
@@ -592,6 +593,8 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
+  ;; PEN 
+  
   
   create-blocks 1 [
     set block-name "change-shape-to"
@@ -607,6 +610,30 @@ to create-blocks-list
     set is-basic false
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  create-blocks 1 [
+    set block-name "go-invisible"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  create-blocks 1 [
+    set block-name "go-visible"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
   
   
   create-blocks 1 [
@@ -1042,13 +1069,17 @@ to create-agent-kind-list
     set primitives-list lput "set-xy" primitives-list
     set primitives-list lput "step-size-plus" primitives-list
     set primitives-list lput "step-size-minus" primitives-list
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
   
+   ;; PEN 
+   
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
-    set primitives-list lput "right" primitives-list
-    set primitives-list lput "left" primitives-list
-   ; set primitives-list lput "plant-flag" primitives-list
+    set primitives-list lput "go-invisible" primitives-list
+    set primitives-list lput "go-visible" primitives-list
+   
    
     ;; All-Purpose
     set primitives-list lput "set-textbox" primitives-list
@@ -1098,13 +1129,16 @@ to create-agent-kind-list
     set primitives-list lput "set-xy" primitives-list
     set primitives-list lput "step-size-plus" primitives-list
     set primitives-list lput "step-size-minus" primitives-list
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
   
+  ;; PEN
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
-    set primitives-list lput "right" primitives-list
-    set primitives-list lput "left" primitives-list
-   ; set primitives-list lput "plant-flag" primitives-list
+    set primitives-list lput "go-invisible" primitives-list
+    set primitives-list lput "go-visible" primitives-list
+  
     
     ;;SECRET NUMBER
     set primitives-list lput "set-color-to-secret-number" primitives-list
@@ -1339,6 +1373,11 @@ to java-left [amount-number]
   left amount-number
 end
 
+
+
+;; BEGIN PEN 
+
+
 to java-pen-up
   pen-up
 end
@@ -1350,6 +1389,18 @@ end
 to java-stamp
   stamp
 end
+
+to java-go-visible
+  if size = 0
+  [set size old-size]
+end
+
+to java-go-invisible
+  if size != 0
+  [set old-size size]
+  set size 0
+end
+
 
 to java-start-over-measuring
     ask wabbits
