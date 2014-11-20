@@ -395,13 +395,16 @@ end
 
 ; similar to create-predicate-list
 to create-comp-int-list
-  set comp-int-left-vars ["heading" "step-size" "color"]
+  set comp-int-left-vars [ "heading" "step-size" "color" "size" "secret-number" 
+                           "pen-width" ]
 end
 
 ; similar to create-predicate-list
 to create-comp-vars-lists
-  set comp-vars-left-vars ["heading" "step-size" "color"]
-  set comp-vars-right-vars ["heading" "step-size" "color"]
+  set comp-vars-left-vars [ "heading" "step-size" "color" "size" "secret-number"
+                            "pen-width" ]
+ set comp-vars-right-vars [ "color" "heading" "step-size" "size" "secret-number"
+                            "pen-width" ]
 end
 
 
@@ -426,6 +429,31 @@ to-report java-step-size [aWho]
   [set result bonus-speed]
   report result
 end
+
+
+to-report java-size [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result size ]
+  report result
+end
+
+
+to-report java-secret-number [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result secret-number ]
+  report result
+end
+
+
+to-report java-pen-width [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result pen-size ]
+  report result
+end
+
 
 to-report java-northward-heading [aWho]
   let result false

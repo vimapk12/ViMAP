@@ -379,12 +379,15 @@ to cycle-ended
 end
 
 to create-comp-int-list
-  set comp-int-left-vars ["heading" "step-size" "color"]
+  set comp-int-left-vars [ "heading" "step-size" "color" "size" "secret-number" 
+                           "pen-width" ]
 end
 
 to create-comp-vars-lists
-  set comp-vars-left-vars ["heading" "step-size" "color"]
-  set comp-vars-right-vars ["color" "heading" "step-size" ]
+  set comp-vars-left-vars [ "heading" "step-size" "color" "size" "secret-number"
+                            "pen-width" ]
+  set comp-vars-right-vars [ "color" "heading" "step-size" "size" "secret-number"
+                             "pen-width" ]
 end
 
 to create-predicate-list
@@ -411,6 +414,30 @@ to-report java-color [aWho]
   let result 0
   ask turtle aWho
   [ set result color ]
+  report result
+end
+
+
+to-report java-size [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result size ]
+  report result
+end
+
+
+to-report java-secret-number [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result secret-number ]
+  report result
+end
+
+
+to-report java-pen-width [aWho]
+  let result 0
+  ask turtle aWho
+  [ set result pen-size ]
   report result
 end
 
