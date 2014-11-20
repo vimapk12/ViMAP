@@ -491,8 +491,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list [ ;"heading" "color" "size" "secret-number" 
-        "pen-width" ]
+      set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     set label-after-arg " equal to "
@@ -1400,6 +1399,8 @@ to java-label [variable-name]
   [set label color]
   if variable-name = "heading"
   [set label heading]
+  if variable-name = "size"
+  [set label size]
   if variable-name = "secret-number"
   [set label secret-number]
   if variable-name = "pen-width"

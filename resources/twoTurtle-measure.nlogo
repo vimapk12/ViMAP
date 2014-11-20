@@ -548,17 +548,43 @@ to create-blocks-list
     set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
     
+  create-blocks 1 [
+    set block-name "set-dropdown"
+    set category "All-Purpose"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
     
+    set label-after-arg " equal to "
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["step-size" "heading" "color" "size" "pen-width"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
   
   create-blocks 1 [
-    set block-name "set-label"
+    set block-name "label"
     set category "Measure"
     set arg-list []
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "secret-number" "pen-width" "none"]
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
@@ -1008,7 +1034,7 @@ to create-agent-kind-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-over-measuring" primitives-list
-    set primitives-list lput "set-label" primitives-list
+    set primitives-list lput "label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -1027,6 +1053,8 @@ to create-agent-kind-list
     ;; All-Purpose
     set primitives-list lput "set-textbox" primitives-list
     set primitives-list lput "set-op-textbox" primitives-list
+    set primitives-list lput "set-dropdown" primitives-list
+    
     
     
     ;;SECRET NUMBER
@@ -1062,7 +1090,7 @@ to create-agent-kind-list
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-over-measuring" primitives-list
-    set primitives-list lput "set-label" primitives-list
+    set primitives-list lput "label" primitives-list
 
     set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "go-forward" primitives-list
@@ -1086,6 +1114,7 @@ to create-agent-kind-list
     ;; ALL-PURPOSE
     set primitives-list lput "set-textbox" primitives-list
     set primitives-list lput "set-op-textbox" primitives-list
+    set primitives-list lput "set-dropdown" primitives-list
     
     
     set primitives-list lput "set-step-size-to-secret-number" primitives-list    
@@ -1123,7 +1152,7 @@ to java-change-shape-to [ shapename ]
   set shape shapename
 end
 
-to java-set-label [variable-name]
+to java-label [variable-name]
   set label-color black
   if variable-name = "step-size"
   [set label bonus-speed]
@@ -1131,6 +1160,8 @@ to java-set-label [variable-name]
   [set label color]
   if variable-name = "heading"
   [set label heading]
+  if variable-name = "size"
+  [set label size]
   if variable-name = "secret-number"
   [set label secret-number]
   if variable-name = "pen-width"
@@ -1388,6 +1419,28 @@ to java-set-op-textbox [ variable-name op-name entered-data ]
   set command-string word "set " word variable-name word " " op-string
   run command-string
 end
+
+
+
+to java-set-dropdown [ first-variable sec-variable ]
+  let command-string ""
+  if first-variable = "step-size" [
+    set first-variable "bonus-speed"
+  ]
+  if sec-variable = "step-size" [
+    set sec-variable "bonus-speed"
+  ]
+  if first-variable = "pen-width" [
+    set first-variable "pen-size"
+  ]
+  if sec-variable = "pen-width" [
+    set sec-variable "pen-size"
+  ]
+  
+  set command-string word "set " word first-variable word " " sec-variable
+  run command-string
+end
+
 
 
 
