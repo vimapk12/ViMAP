@@ -484,6 +484,9 @@ to create-blocks-list
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
   
+  
+  ;;  ALL-PURPOSE
+  
   create-blocks 1 [
     set block-name "set-textbox"
     set category "All-Purpose"
@@ -565,6 +568,7 @@ to create-blocks-list
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
+   
    
   create-blocks 1
   [
@@ -737,53 +741,10 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  ;;SECOND CHANGE BLOCK
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
  
-   
-   ;; Original set block that will serve as a template but will soon be replaced.  Jordan D. Nelson
-   
-   ; set block-name "set"
-   ; set arg-list []
-   ; hatch-args 1
-   ; [
-   ;   set arg-type "enum"
-   ;   set enum-list ["size" "pen-width" "color" ] ;"repeat-number"]
-   ; ]
-   ; set arg-list lput max-one-of args [who] arg-list
-   ; hatch-args 1
-   ; [
-   ;   set arg-type "enum"
-   ;   set enum-list ["odometer" "step-size" "chg in stepsize"]
-   ; ]
-   ; set arg-list lput max-one-of args [who] arg-list
-   ; hatch-args 1
-   ; [
-   ;   set arg-type "enum"
-   ;   set enum-list ["times" "divided by"]
-   ; ]
-   ; set arg-list lput max-one-of args [who] arg-list
-   ; hatch-args 1
-   ; [
-   ;    set arg-type "int"
-   ;    set default-value 1
-   ;    set max-value 100
-   ;    set min-value 1
-   ; ]
-   ; set arg-list lput max-one-of args [who] arg-list
-   ; set is-observer false
-   ; set is-basic false
-  ;]
-  ; set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  ;;END SECOND CHANGE BLOCK
-  ;;BEGIN INVISIBLE
- 
-  create-blocks 1
-  [
+  create-blocks 1 [
     set block-name "go-invisible"
     set category "Pen"
     set arg-list []
@@ -791,7 +752,7 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
   create-blocks 1
   [
@@ -802,7 +763,7 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
+  set blocks-list lput max-one-of blocks [who] blocks-list
       
   ;;END INVISIBLE
   
@@ -897,7 +858,7 @@ to create-blocks-list
     
   create-blocks 1
   [
-    set block-name "pick-a-secret-number-range"
+    set block-name "pick-a-secret-number-in-range"
     set is-observer false
     set arg-list []
     hatch-args 1
@@ -1100,7 +1061,7 @@ to create-agent-kind-list
     set primitives-list lput "right-secret-number" primitives-list
     set primitives-list lput "left-secret-number" primitives-list    
     set primitives-list lput "pick-a-secret-number-less-than" primitives-list
-    set primitives-list lput "pick-a-secret-number-range" primitives-list
+    set primitives-list lput "pick-a-secret-number-in-range" primitives-list
     
     set primitives-list lput "set-random-heading" primitives-list ;; set random heading 0 to 360
    ;;ENDSECRET NUMBER
@@ -1210,7 +1171,7 @@ to java-pick-a-secret-number-less-than [ amax ]
 end
 
 
-to java-pick-a-secret-number-range [aleft aright]
+to java-pick-a-secret-number-in-range [aleft aright]
   let amin 0
   let amax 0
   ifelse aleft < aright

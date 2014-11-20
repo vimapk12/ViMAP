@@ -302,7 +302,7 @@ public abstract class ViMAP {
          //final String netLogoFile = "/ant-food-grab5.nlogo";
          
         // Two Turtle
-         final String netLogoFile = "/twoTurtle-measure.nlogo";
+        final String netLogoFile = "/twoTurtle-measure.nlogo";
         
         // 1 Turtle, 1 sensor
         // final String netLogoFile = "/oneT-ard-measure2.nlogo";
