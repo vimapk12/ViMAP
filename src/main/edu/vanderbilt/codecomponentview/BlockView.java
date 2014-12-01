@@ -672,6 +672,11 @@ public final class BlockView extends Box {
         case "set-dropdown":
         case "set-dropdown-secret-number":
         case "set-dropdown-op-secret-number":
+        case "set-movement-textbox":
+        case "set-movement-op-textbox":
+        case "set-movement-dropdown":
+        case "set-pen-textbox":
+        case "set-pen-op-textbox":
     	  s = "set";
     	  break;
       }
