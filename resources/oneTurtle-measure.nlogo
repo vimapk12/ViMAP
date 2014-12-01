@@ -707,31 +707,9 @@ to create-blocks-list
    
    
    
+ 
+ 
   ;; BEGIN PEN
-  
-    create-blocks 1  [ 
-    set block-name "set-pen-textbox"
-    set category "Pen"
-    set arg-list [ ] 
-    hatch-args 1 
-    [
-      set arg-type "enum"
-      set enum-list [ "color" "turtle-size" "pen-width" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to " 
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
   create-blocks 1  [
@@ -805,6 +783,31 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
+  create-blocks 1  [ 
+    set block-name "set-pen-textbox"
+    set category "Pen"
+    set arg-list [ ] 
+    hatch-args 1 
+    [
+      set arg-type "enum"
+      set enum-list [ "color" "turtle-size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to " 
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
   create-blocks 1  [
     set block-name "set-pen-op-textbox"
     set category "Pen"
@@ -826,6 +829,31 @@ to create-blocks-list
        set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1 [
+    set block-name "set-pen-dropdown"
+    set category "Pen"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "color" "turtle-size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    
+    set label-after-arg " equal to "
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "step-size" "heading" "color" "turtle-size" "pen-width" "secret-number" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+
     set is-observer false
     set is-basic false
   ]
@@ -1153,14 +1181,16 @@ to create-agent-kind-list
     
     
     ;; BEGIN PEN
-    set primitives-list lput "set-pen-textbox" primitives-list
+  
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
+    set primitives-list lput "set-pen-textbox" primitives-list
     set primitives-list lput "set-pen-op-textbox" primitives-list
+    set primitives-list lput "set-pen-dropdown" primitives-list
     
     
     
@@ -1332,12 +1362,7 @@ end
 
 
 to java-set-movement-dropdown [ attribute1 attribute2 ]
-  let command-string ""
-  set attribute1 translate-vimap-string attribute1
-  set attribute2 translate-vimap-string attribute2
-  
-  set command-string word "set " word attribute1 word " " attribute2
-  run command-string
+  set-attribute-dropdown attribute1 attribute2
 end
 
 
@@ -1347,12 +1372,6 @@ end
 
 
 ;; BEGIN PEN
-
-to java-set-pen-textbox [ attribute value ]
-  set attribute translate-vimap-string attribute
-  run word "set " word attribute word " " value
-end
-
 
 to java-pen-down
   pen-down
@@ -1389,8 +1408,19 @@ to java-change-shape-to [ shapename ]
 end
 
 
+to java-set-pen-textbox [ attribute value ]
+  set attribute translate-vimap-string attribute
+  run word "set " word attribute word " " value
+end
+
+
 to java-set-pen-op-textbox [ attribute operation value ]
   set-attribute-op-textbox attribute operation value
+end
+
+
+to java-set-pen-dropdown [ attribute1 attribute2 ]
+  set-attribute-dropdown attribute1 attribute2
 end
 
 
@@ -2172,6 +2202,17 @@ to set-attribute-op-textbox [ attribute operation value ]
   ]
   
   set command-string word "set " word attribute word " " op-string
+  run command-string
+end
+
+
+
+to set-attribute-dropdown [ attribute1 attribute2 ]
+  let command-string ""
+  set attribute1 translate-vimap-string attribute1
+  set attribute2 translate-vimap-string attribute2
+  
+  set command-string word "set " word attribute1 word " " attribute2
   run command-string
 end
   
