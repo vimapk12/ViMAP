@@ -127,7 +127,9 @@ public final class BlockView extends Box {
         
         JLabel nameLabel = new JLabel(aTemplate.getDisplayName());
         String a_name = nameLabel.getText();
-        nameLabel.setText(prep_block_display_name(a_name));
+        a_name = prep_block_display_name(a_name);
+        a_name = formatting_adjustments(a_name);
+        nameLabel.setText(a_name);
         
          
         Font font = nameLabel.getFont();
@@ -181,10 +183,14 @@ public final class BlockView extends Box {
                     new JLabel(aTemplate.getLabelAfterFirstArg());
                 extraLabel.setFont(boldFont);
                 extraLabel.setForeground(Color.WHITE);
+                String a_label = extraLabel.getText();
+                a_label = formatting_adjustments(a_label);
+                extraLabel.setText(a_label);
                 this.labels.add(extraLabel);
                 rowBox.add(extraLabel);
             }            
         }
+        
         
         // add "then" label after condition, for "If-else" block
       //  if (aTemplate.getPredefinedBlockType() == PredefinedBlockType.IF_ELSE) {
@@ -680,10 +686,21 @@ public final class BlockView extends Box {
         case "set-pen-dropdown":
     	  s = "set";
     	  break;
+        case "set-secret-number-dropdown":
+          s = "set-secret-number-equal-to";
+          break;
       }
       s = s.replace("-", " ") + " ";
+      return s;
+    }
+    
+    
+    private static String formatting_adjustments(String s) {
       if ( s.contains("step size") ) {
-        return s.replace("step size", "step-size");
+        s = s.replace("step size", "step-size");
+      }
+      if ( s.contains("secret number") ) {
+        s = s.replace("secret number", "secret-number");
       }
       return s;
     }
