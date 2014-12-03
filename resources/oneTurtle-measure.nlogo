@@ -1010,24 +1010,72 @@ to create-blocks-list
 
       
 
-      
-  ;;END INVISIBLE
+   
   
   
-  ;;BEGINSECRET NUMBER
+  ;;BEGIN SECRET NUMBER
+  
+  create-blocks 1  [
+    set block-name "pick-a-secret-number-in-range"
+    set is-observer false
+    set arg-list []
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 100
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Secret Number"
+    set label-after-arg " to "
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
   
   create-blocks 1
   [
-    set block-name "set-dropdown-secret-number"
+    set block-name "right-secret-number"
+    set category "Secret Number"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+   
+   
+  create-blocks 1
+  [
+    set block-name "left-secret-number"
+    set category "Secret Number"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
+  [
+    set block-name "set-secret-number-dropdown"
     set category "Secret Number"
     set arg-list [ ]
     hatch-args 1 
     [
       set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "pen-width" ]
+      set enum-list [ "step-size" "heading" "color" "turtle-size" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to secret number "
     set is-observer false
     set is-basic false
   ]
@@ -1058,76 +1106,30 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
          
   
-  create-blocks 1
-  [
-    set block-name "right-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-  create-blocks 1
-  [
-    set block-name "left-secret-number"
-    set category "Secret Number"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
+
   
       
-  create-blocks 1
-  [
-    set block-name "pick-a-secret-number-less-than"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 100
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Secret Number"
-    set is-basic false
+;  create-blocks 1
+;  [
+;    set block-name "pick-a-secret-number-less-than"
+;    set is-observer false
+;    set arg-list []
+;    hatch-args 1
+;    [
+;      set arg-type "int"
+;      set default-value 100
+;      set max-value 500
+;      set min-value 0
+;    ]
+;    set arg-list lput max-one-of args [who] arg-list
+;    set category "Secret Number"
+;    set is-basic false
     ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
+;  ]
+;  set blocks-list lput max-one-of blocks [who] blocks-list
   
     
-  create-blocks 1
-  [
-    set block-name "pick-a-secret-number-in-range"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 100
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Secret Number"
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
+
     
 
   
@@ -1178,10 +1180,7 @@ to create-agent-kind-list
     set primitives-list lput "set-movement-dropdown" primitives-list
     
 
-    
-    
     ;; BEGIN PEN
-  
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
@@ -1194,30 +1193,22 @@ to create-agent-kind-list
     
     
     
-    
-    
- ;   set primitives-list lput "change" primitives-list  
-    set primitives-list lput "label" primitives-list
-    
-    ;;NEEDED FOR MEASURE LINKING
+    ;; MEASURE
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-over-measuring" primitives-list
+    set primitives-list lput "label" primitives-list
 
   
-  
-
-    
-    ;;SECRET NUMBER
-    
-    set primitives-list lput "set-dropdown-secret-number" primitives-list
-    set primitives-list lput "set-dropdown-op-secret-number" primitives-list
-        
-    
-    set primitives-list lput "right-secret-number" primitives-list
-    set primitives-list lput "left-secret-number" primitives-list    
-    set primitives-list lput "pick-a-secret-number-less-than" primitives-list
+    ;; SECRET NUMBER
     set primitives-list lput "pick-a-secret-number-in-range" primitives-list
+    set primitives-list lput "right-secret-number" primitives-list
+    set primitives-list lput "left-secret-number" primitives-list 
+    set primitives-list lput "set-secret-number-dropdown" primitives-list
+    set primitives-list lput "set-dropdown-op-secret-number" primitives-list
+      
+   ; set primitives-list lput "pick-a-secret-number-less-than" primitives-list
+    
     
    ;;ENDSECRET NUMBER
   ]
@@ -1238,10 +1229,6 @@ to create-wabbit-kind-list
     set wabbit-kind-list lput [agent-kind-string] of turtle ? wabbit-kind-list
   ]
 end
-
-
-
-
 
 
 
@@ -1431,19 +1418,46 @@ end
 
 
 
+
+
 ;;BEGIN SECRET NUMBER
 
-to java-set-dropdown-secret-number [ variable-name ]
+
+to java-pick-a-secret-number-in-range [aleft aright]
+  let amin 0
+  let amax 0
+  ifelse aleft < aright
+  [
+    set amin aleft
+    set amax aright
+  ]
+  [
+    set amin aright
+    set amax aleft
+  ]
+  set secret-number (random (amax - amin + 1)) + amin
+end
+
+
+to java-right-secret-number
+  right secret-number  
+end
+
+
+to java-left-secret-number
+  left secret-number
+end
+
+
+to java-set-secret-number-dropdown [ attribute ]
   let command-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  set command-string word "set " word variable-name " secret-number"
+  set attribute translate-vimap-string attribute
+  
+  set command-string word "set secret-number " attribute
   run command-string
 end
+
+
 
 
 to java-set-dropdown-op-secret-number [ variable-name operation ]
@@ -1467,43 +1481,12 @@ to java-set-dropdown-op-secret-number [ variable-name operation ]
 end
     
 
-to java-right-secret-number
-  right secret-number  
-end
-
-
-to java-left-secret-number
-  left secret-number
-end
-
-
-to java-pick-a-secret-number-less-than [ amax ]
-  set secret-number (random amax)
-end
-
-
-to java-pick-a-secret-number-in-range [aleft aright]
-  let amin 0
-  let amax 0
-  ifelse aleft < aright
-  [
-    set amin aleft
-    set amax aright
-  ]
-  [
-    set amin aright
-    set amax aleft
-  ]
-  set secret-number (random (amax - amin + 1)) + amin
-end
 
 
 
-
-
-
-
-
+;to java-pick-a-secret-number-less-than [ amax ]
+;  set secret-number (random amax)
+;end
 
 
 
