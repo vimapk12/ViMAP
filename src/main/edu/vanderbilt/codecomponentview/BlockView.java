@@ -689,6 +689,9 @@ public final class BlockView extends Box {
         case "set-secret-number-dropdown":
           s = "set-secret-number-equal-to";
           break;
+        case "set-secret-number-op-textbox":
+          s = "set-secret-number";
+          break;
       }
       s = s.replace("-", " ") + " ";
       return s;

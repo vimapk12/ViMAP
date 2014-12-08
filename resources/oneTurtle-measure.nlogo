@@ -515,29 +515,49 @@ to create-blocks-list
   
   ;; BEGIN MOVEMENT
   
-  create-blocks 1 [ 
-    set block-name "set-movement-textbox"
-    set category "Movement"
-    set arg-list [ ] 
-    hatch-args 1 
-    [
-      set arg-type "enum"
-      set enum-list [ "step-size" "heading" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to " 
+;  create-blocks 1 [ 
+;   set block-name "set-movement-textbox"
+;    set category "Movement"
+;    set arg-list [ ] 
+;    hatch-args 1 
+;    [
+;      set arg-type "enum"
+;      set enum-list [ "step-size" "heading" ]
+;    ]
+;    set arg-list lput max-one-of args [who] arg-list
+;    set label-after-arg " equal to " 
+;    hatch-args 1
+;    [
+;      set arg-type "int"
+;      set default-value 0
+;      set max-value 360
+;      set min-value 0
+;    ]
+;    set arg-list lput max-one-of args [who] arg-list
+;    set is-observer false
+;    set is-basic true
+;  ]
+;  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+   
+  create-blocks 1  [
+    set block-name "set-step-size"
+    set is-observer false
+    set arg-list []
     hatch-args 1
     [
       set arg-type "int"
       set default-value 0
-      set max-value 360
+      set max-value 400
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
+    set category "Movement"
     set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
+  
   
   
   create-blocks 1  [
@@ -625,6 +645,24 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
    
    
+  create-blocks 1  [
+    set block-name "set-heading"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value -360
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
   create-blocks 1 [
     set block-name "set-random-heading"
     set category "Movement"
@@ -900,26 +938,7 @@ to create-blocks-list
 
   
   
- 
-;  create-blocks 1
-;  [
-;    set block-name "set-step-size"
-;    set is-observer false
-;    set arg-list []
-;    hatch-args 1
-;    [
-;      set arg-type "int"
-;      set default-value 0
-;      set max-value 400
-;      set min-value 0
-;    ]
-;    set arg-list lput max-one-of args [who] arg-list
-;    set category "Movement"
-;    set is-basic true
-;    ; other variables not applicable
-;  ]
-;  set blocks-list lput max-one-of blocks [who] blocks-list
-  
+
   
   
  
@@ -974,8 +993,9 @@ to create-blocks-list
 ;    set blocks-list lput max-one-of blocks [who] blocks-list
     
     
-    ;;NEEDED FOR MEASURE LINKING
-      create-blocks 1
+  ;; MEASURE 
+  
+  create-blocks 1
   [
     set block-name "place-measure-point"
     set category "Measure"
@@ -1082,29 +1102,28 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  create-blocks 1
-  [
-    set block-name "set-dropdown-op-secret-number"
+  create-blocks 1  [
+    set block-name "set-secret-number-op-textbox"
     set category "Secret Number"
     set arg-list [ ]
-    hatch-args 1
-    [
+    hatch-args 1  [
       set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ]
+      set enum-list [ "plus" "minus" "times" "divided by" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " secret number "
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "plus" "minus" ]
+    hatch-args 1  [
+       set arg-type "int"
+       set default-value 0
+       set max-value 500
+       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
     set is-basic false
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-         
+  
+
   
 
   
@@ -1169,12 +1188,14 @@ to create-agent-kind-list
     set primitives-list [ ]
     
     ;; BEGIN MOVEMENT
-    set primitives-list lput "set-movement-textbox" primitives-list
+    ;set primitives-list lput "set-movement-textbox" primitives-list
+    set primitives-list lput "set-step-size" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
     set primitives-list lput "go-forward" primitives-list
     set primitives-list lput "go-backward" primitives-list
     set primitives-list lput "set-xy" primitives-list
+    set primitives-list lput "set-heading" primitives-list
     set primitives-list lput "set-random-heading" primitives-list
     set primitives-list lput "set-movement-op-textbox" primitives-list
     set primitives-list lput "set-movement-dropdown" primitives-list
@@ -1205,8 +1226,8 @@ to create-agent-kind-list
     set primitives-list lput "right-secret-number" primitives-list
     set primitives-list lput "left-secret-number" primitives-list 
     set primitives-list lput "set-secret-number-dropdown" primitives-list
-    set primitives-list lput "set-dropdown-op-secret-number" primitives-list
-      
+    set primitives-list lput "set-secret-number-op-textbox" primitives-list
+
    ; set primitives-list lput "pick-a-secret-number-less-than" primitives-list
     
     
@@ -1236,14 +1257,24 @@ end
 
 ;; BEGIN MOVEMENT
 
-to java-set-movement-textbox [ attribute value ]
-  if attribute = "step-size" [
-    set bonus-speed value
-    stop
-  ]
-  if attribute = "heading" [
-    set heading value
-  ]
+to java-set-step-size [ aspeed ]
+  set bonus-speed aspeed
+  if (aspeed < 0) [ set bonus-speed 0 ]
+end
+
+
+;to java-set-movement-textbox [ attribute value ]
+;  if attribute = "step-size" [
+;    set bonus-speed value
+;    stop
+;  ]
+;  if attribute = "heading" [
+;    set heading value
+;  ]
+;end
+
+to java-set-heading [ value ]
+  set heading value
 end
 
 
@@ -1458,29 +1489,12 @@ to java-set-secret-number-dropdown [ attribute ]
 end
 
 
-
-
-to java-set-dropdown-op-secret-number [ variable-name operation ]
-  let command-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  
-  if operation = "plus" [ 
-    set operation " + "
-  ]
-  if operation = "minus" [
-    set operation " - " 
-  ]
-  set command-string word "set " word variable-name word " " word variable-name
-                     word " " word operation "secret-number"
-  run command-string
+to java-set-secret-number-op-textbox [ operation value ]
+  let attribute "secret-number"
+  set-attribute-op-textbox attribute operation value
 end
-    
 
+  
 
 
 
@@ -1488,11 +1502,6 @@ end
 ;  set secret-number (random amax)
 ;end
 
-
-
-
-  
-  
 
 to java-set-dropdown [ first-variable sec-variable ]
   let command-string ""
@@ -1516,10 +1525,7 @@ end
 
 
       
-to java-set-step-size [ aspeed ]
-  set bonus-speed aspeed
-  if (aspeed < 0) [ set bonus-speed 0 ]
-end
+
 
 to java-step-size-plus [amount-number]
   set bonus-speed bonus-speed + amount-number
