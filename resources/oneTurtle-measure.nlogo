@@ -317,8 +317,8 @@ to create-categories-list
     "Control"
     "Movement"
     "Pen"
-    "Secret Number"   
     "Measure"
+    "Secret Number"   
   ]
 end
 
@@ -743,9 +743,42 @@ to create-blocks-list
    
    
    
+   
+   
+   
+   
+   
+   
+   
+   
+   
  
  
   ;; BEGIN PEN
+  
+  create-blocks 1  [ 
+    set block-name "set-pen-textbox"
+    set category "Pen"
+    set arg-list [ ] 
+    hatch-args 1 
+    [
+      set arg-type "enum"
+      set enum-list [ "color" "turtle-size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to " 
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
   create-blocks 1  [
@@ -819,31 +852,6 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  create-blocks 1  [ 
-    set block-name "set-pen-textbox"
-    set category "Pen"
-    set arg-list [ ] 
-    hatch-args 1 
-    [
-      set arg-type "enum"
-      set enum-list [ "color" "turtle-size" "pen-width" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to " 
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
   create-blocks 1  [
     set block-name "set-pen-op-textbox"
     set category "Pen"
@@ -900,32 +908,7 @@ to create-blocks-list
   
   
   
-   
-   
-   
-   
-  
-  
-  
-  
-  
-  
-  
-  create-blocks 1
-  [
-    set block-name "label"
-    set category "Measure"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
+
   
  
   
@@ -991,6 +974,13 @@ to create-blocks-list
 ;    set blocks-list lput max-one-of blocks [who] blocks-list
     
     
+    
+    
+    
+    
+    
+    
+ 
   ;; MEASURE 
   
   create-blocks 1
@@ -1023,14 +1013,47 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-  
- 
+    
 
-      
-
-   
+create-blocks 1
+  [
+    set block-name "plant-flag"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  ask blocks [ ht ]
+  ask args [ ht ]
   
   
+  create-blocks 1
+  [
+    set block-name "label"
+    set category "Measure"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  
+  
+  
+  
+  
+    
   ;;BEGIN SECRET NUMBER
   
     create-blocks 1  [ 
@@ -1164,30 +1187,12 @@ to create-blocks-list
     ; other variables not applicable
 ;  ]
 ;  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-    
 
-    
 
-  
 
-  
-      
 
-      
-  create-blocks 1
-  [
-    set block-name "plant-flag"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  ask blocks [ ht ]
-  ask args [ ht ]
+
+
 
   ;;; END OF BLOCK DEFINITIONS ;;;
 end
@@ -1220,13 +1225,13 @@ to create-agent-kind-list
     
 
     ;; BEGIN PEN
+    set primitives-list lput "set-pen-textbox" primitives-list
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
-    set primitives-list lput "set-pen-textbox" primitives-list
     set primitives-list lput "set-pen-op-textbox" primitives-list
     set primitives-list lput "set-pen-dropdown" primitives-list
     
@@ -1408,7 +1413,15 @@ end
 
 
 
+
+
 ;; BEGIN PEN
+
+to java-set-pen-textbox [ attribute value ]
+  set attribute translate-vimap-string attribute
+  run word "set " word attribute word " " value
+end
+
 
 to java-pen-down
   pen-down
@@ -1445,12 +1458,6 @@ to java-change-shape-to [ shapename ]
 end
 
 
-to java-set-pen-textbox [ attribute value ]
-  set attribute translate-vimap-string attribute
-  run word "set " word attribute word " " value
-end
-
-
 to java-set-pen-op-textbox [ attribute operation value ]
   set-attribute-op-textbox attribute operation value
 end
@@ -1465,107 +1472,17 @@ end
 
 
 
-
-
-;;BEGIN SECRET NUMBER
-
-to java-set-secret-number-textbox [ value ]
-  set secret-number value
-end
-
-
-to java-pick-a-secret-number-in-range [aleft aright]
-  let amin 0
-  let amax 0
-  ifelse aleft < aright
-  [
-    set amin aleft
-    set amax aright
-  ]
-  [
-    set amin aright
-    set amax aleft
-  ]
-  set secret-number (random (amax - amin + 1)) + amin
-end
-
-
-to java-right-secret-number
-  right secret-number  
-end
-
-
-to java-left-secret-number
-  left secret-number
-end
-
-
-to java-set-secret-number-dropdown [ attribute ]
-  let command-string ""
-  set attribute translate-vimap-string attribute
-  
-  set command-string word "set secret-number " attribute
-  run command-string
-end
-
-
-to java-set-secret-number-op-textbox [ operation value ]
-  let attribute "secret-number"
-  set-attribute-op-textbox attribute operation value
-end
-
-  
-
-
-
-;to java-pick-a-secret-number-less-than [ amax ]
-;  set secret-number (random amax)
-;end
-
-
-to java-set-dropdown [ first-variable sec-variable ]
-  let command-string ""
-  if first-variable = "step-size" [
-    set first-variable "bonus-speed"
-  ]
-  if sec-variable = "step-size" [
-    set sec-variable "bonus-speed"
-  ]
-  if first-variable = "pen-width" [
-    set first-variable "pen-size"
-  ]
-  if sec-variable = "pen-width" [
-    set sec-variable "pen-size"
-  ]
-  
-  set command-string word "set " word first-variable word " " sec-variable
-  run command-string
-end
-
-
-
       
 
 
-to java-step-size-plus [amount-number]
-  set bonus-speed bonus-speed + amount-number
-end
+;to java-step-size-plus [amount-number]
+; set bonus-speed bonus-speed + amount-number
+; end
 
-to java-step-size-minus [amount-number]
-  set bonus-speed bonus-speed - amount-number
-  if (bonus-speed < 0) [ set bonus-speed 0 ]
-end
-
-
-
-
-
-
-
-
-
-
-
+;to java-step-size-minus [amount-number]
+;  set bonus-speed bonus-speed - amount-number
+;  if (bonus-speed < 0) [ set bonus-speed 0 ]
+;end
 
 
 
@@ -1670,6 +1587,83 @@ to java-plant-flag
 
   set flag-counter flag-counter + 1
 end
+
+
+
+
+
+
+
+
+
+
+
+
+;;BEGIN SECRET NUMBER
+
+to java-set-secret-number-textbox [ value ]
+  set secret-number value
+end
+
+
+to java-pick-a-secret-number-in-range [aleft aright]
+  let amin 0
+  let amax 0
+  ifelse aleft < aright
+  [
+    set amin aleft
+    set amax aright
+  ]
+  [
+    set amin aright
+    set amax aleft
+  ]
+  set secret-number (random (amax - amin + 1)) + amin
+end
+
+
+to java-right-secret-number
+  right secret-number  
+end
+
+
+to java-left-secret-number
+  left secret-number
+end
+
+
+to java-set-secret-number-dropdown [ attribute ]
+  let command-string ""
+  set attribute translate-vimap-string attribute
+  
+  set command-string word "set secret-number " attribute
+  run command-string
+end
+
+
+to java-set-secret-number-op-textbox [ operation value ]
+  let attribute "secret-number"
+  set-attribute-op-textbox attribute operation value
+end
+
+  
+;to java-pick-a-secret-number-less-than [ amax ]
+;  set secret-number (random amax)
+;end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 to draw-plus [x y color-to-draw]
   ask patch x y [set pcolor color-to-draw]
