@@ -1035,6 +1035,26 @@ to create-blocks-list
   
   ;;BEGIN SECRET NUMBER
   
+    create-blocks 1  [ 
+    set block-name "set-secret-number-textbox"
+    set category "Secret Number"
+    set label-after-arg "" 
+    set arg-list [ ] 
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
   create-blocks 1  [
     set block-name "pick-a-secret-number-in-range"
     set is-observer false
@@ -1222,6 +1242,7 @@ to create-agent-kind-list
 
   
     ;; SECRET NUMBER
+    set primitives-list lput "set-secret-number-textbox" primitives-list
     set primitives-list lput "pick-a-secret-number-in-range" primitives-list
     set primitives-list lput "right-secret-number" primitives-list
     set primitives-list lput "left-secret-number" primitives-list 
@@ -1448,10 +1469,11 @@ end
 
 
 
-
-
-
 ;;BEGIN SECRET NUMBER
+
+to java-set-secret-number-textbox [ value ]
+  set secret-number value
+end
 
 
 to java-pick-a-secret-number-in-range [aleft aright]

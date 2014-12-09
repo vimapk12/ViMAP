@@ -687,6 +687,7 @@ public final class BlockView extends Box {
     	  s = "set";
     	  break;
         case "set-secret-number-dropdown":
+        case "set-secret-number-textbox":
           s = "set-secret-number-equal-to";
           break;
         case "set-secret-number-op-textbox":
