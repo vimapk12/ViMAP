@@ -319,7 +319,6 @@ to create-categories-list
     "Pen"
     "Secret Number"   
     "Measure"
-    "All-Purpose"
   ]
 end
 
@@ -559,6 +558,23 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
+  create-blocks 1  [
+    set block-name "set-heading"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value -360
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
   
   create-blocks 1  [
     set block-name "right"
@@ -641,24 +657,6 @@ to create-blocks-list
     set is-observer false
     set is-basic true
     ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-  create-blocks 1  [
-    set block-name "set-heading"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic false
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
@@ -1210,12 +1208,12 @@ to create-agent-kind-list
     ;; BEGIN MOVEMENT
     ;set primitives-list lput "set-movement-textbox" primitives-list
     set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "set-heading" primitives-list
     set primitives-list lput "right" primitives-list
     set primitives-list lput "left" primitives-list
     set primitives-list lput "go-forward" primitives-list
     set primitives-list lput "go-backward" primitives-list
     set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "set-heading" primitives-list
     set primitives-list lput "set-random-heading" primitives-list
     set primitives-list lput "set-movement-op-textbox" primitives-list
     set primitives-list lput "set-movement-dropdown" primitives-list
