@@ -766,7 +766,7 @@ to create-blocks-list
     set category "Pen"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list 
@@ -777,7 +777,7 @@ to create-blocks-list
     set category "Pen"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
@@ -841,7 +841,7 @@ to create-blocks-list
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
-    set is-basic false
+    set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
@@ -868,7 +868,7 @@ to create-blocks-list
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
-    set is-basic false
+    set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
