@@ -320,6 +320,13 @@ public abstract class DomainModelImporter {
                 blocks.add(block);
             }
         }
+        takenCategories.add(DomainModel.MEASURE_CATEGORY_STRING);
+        for ( BlockTemplate block : temp ) {
+          if ( block.getCategory() != null && block.getCategory().equals(
+        	   DomainModel.MEASURE_CATEGORY_STRING) ) {
+            blocks.add(block);
+          }
+        }
         takenCategories.add(DomainModel.SECRET_NUMBER_CATEGORY_STRING);
         for (BlockTemplate block: temp) {
             if (block.getCategory() != null && block.getCategory().equals(
