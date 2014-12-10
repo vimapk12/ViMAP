@@ -329,7 +329,6 @@ to create-categories-list
     "Pen"
     "Secret Number"   ;SECRET NUMBER
     "Measure"
-    "All-Purpose"
   ]
 end
 
@@ -519,54 +518,178 @@ to create-sensors-list
 end
 
 to create-blocks-list
-  set blocks-list []
+  set blocks-list [ ]
   
   ;;; PUT BLOCK DEFINITIONS HERE: ;;;
   
-  create-blocks 1 [
-    set block-name "set-textbox" 
-    set category "All-Purpose"
-    set arg-list [ ]
+
+
+   ;; MOVEMENT
+   
+   create-blocks 1  [
+    set block-name "set-step-size"
+    set is-observer false
+    set arg-list []
     hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "heading" "color" "size" "secret-number" "pen-width" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to "
-    hatch-args 1 
     [
       set arg-type "int"
       set default-value 0
+      set max-value 400
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "set-heading"
+    set is-observer false
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value -360
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Movement"
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+
+    
+  create-blocks 1  [
+    set block-name "right"
+    set category "Movement"
+    
+    set arg-list [ ]
+    hatch-args 1 [
+      set arg-type "int"
+      set default-value 90
       set max-value 360
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
     set is-basic true
+    ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  
-  create-blocks 1 [
-    set block-name "set-op-textbox"
-    set category "All-Purpose"
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ] 
+  create-blocks 1  [
+    set block-name "left"
+    set category "Movement"
+    
+    set arg-list [ ]
+    hatch-args 1 [
+      set arg-type "int"
+      set default-value 90
+      set max-value 360
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "go-forward"
+    set category "Movement"
+    set arg-list [ ]
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+      
+      
+  create-blocks 1 [
+    set block-name "go-backward"
+    set category "Movement"
+    set arg-list [ ]
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "set-xy"
+    set category "Movement"
+    set arg-list []
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 0
+      set max-value max-pxcor
+      set min-value min-pxcor
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 0
+      set max-value max-pycor
+      set min-value min-pycor
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+ 
+  create-blocks 1 [
+    set block-name "set-random-heading"
+    set category "Movement"
+    
+    set arg-list[ ]
+    hatch-args 1 [
+      set arg-type "int"
+      set default-value 0
+      set max-value 360
+      set min-value -360
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1 [
+      set arg-type "int"
+      set default-value 360
+      set max-value 360
+      set min-value -360
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    
+    set label-after-arg " to "
+    set is-observer false
+    set is-basic false
+    set is-set-update true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "set-movement-op-textbox"
+    set category "Movement"
+    set arg-list [ ]
+    hatch-args 1  [
+      set arg-type "enum"
+      set enum-list [ "step-size" "heading" ] 
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
       set arg-type "enum"
       set enum-list [ "plus" "minus" "times" "divided by" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
+    hatch-args 1  [
        set arg-type "int"
        set default-value 0
        set max-value 500
@@ -579,15 +702,14 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-    
   create-blocks 1 [
-    set block-name "set-dropdown"
-    set category "All-Purpose"
+    set block-name "set-movement-dropdown"
+    set category "Movement"
     set arg-list []
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" ] ;"repeat-number"]
+      set enum-list [ "step-size" "heading" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
     
@@ -595,7 +717,7 @@ to create-blocks-list
     hatch-args 1
     [
       set arg-type "enum"
-      set enum-list ["step-size" "heading" "color" "size" "pen-width"]
+      set enum-list [ "color" "turtle-size" "pen-width" "secret-number" "step-size" "heading" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
 
@@ -606,25 +728,93 @@ to create-blocks-list
   
   
   
-  create-blocks 1 [
-    set block-name "label"
-    set category "Measure"
-    set arg-list []
-    hatch-args 1
+  
+  
+  
+  
+   ;; PEN
+  
+  create-blocks 1  [ 
+    set block-name "set-pen-textbox"
+    set category "Pen"
+    set arg-list [ ] 
+    hatch-args 1 
     [
       set arg-type "enum"
-      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
+      set enum-list [ "color" "turtle-size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set label-after-arg " equal to " 
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
     set is-observer false
-    set is-basic false
+    set is-basic true
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
-  ;; PEN 
+  
+  create-blocks 1  [
+    set block-name "pen-down"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
-  create-blocks 1 [
+  create-blocks 1  [
+    set block-name "pen-up"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list 
+  
+  
+  create-blocks 1  [
+    set block-name "stamp"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "go-invisible"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "go-visible"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
     set block-name "change-shape-to"
     set category "Pen"
     set arg-list []
@@ -640,11 +830,52 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
+  create-blocks 1  [
+    set block-name "set-pen-op-textbox"
+    set category "Pen"
+    set arg-list [ ]
+    hatch-args 1  [
+      set arg-type "enum"
+      set enum-list [ "color" "turtle-size" "pen-width" ] 
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+      set arg-type "enum"
+      set enum-list [ "plus" "minus" "times" "divided by" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+       set arg-type "int"
+       set default-value 0
+       set max-value 500
+       set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
   
   create-blocks 1 [
-    set block-name "go-invisible"
+    set block-name "set-pen-dropdown"
     set category "Pen"
     set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "color" "turtle-size" "pen-width" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    
+    set label-after-arg " equal to "
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list [ "step-size" "heading" "color" "turtle-size" "pen-width" "secret-number" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+
     set is-observer false
     set is-basic false
   ]
@@ -652,163 +883,18 @@ to create-blocks-list
   
   
   
-  create-blocks 1 [
-    set block-name "go-visible"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
   
-  create-blocks 1 [
-    set block-name "set-step-size"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 400
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  create-blocks 1 [
-    set block-name "go-forward"
-    set category "Movement"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  create-blocks 1 [
-    set block-name "go-backward"
-    set category "Movement"
-    set arg-list []
-    set is-observer false
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-  create-blocks 1 [
-    set block-name "set-xy"
-    set category "Movement"
-    set arg-list []
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value max-pxcor
-      set min-value min-pxcor
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value max-pycor
-      set min-value min-pycor
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
-    set block-name "step-size-plus"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 100
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-    
-    
-    
-  create-blocks 1 [
-    set block-name "step-size-minus"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 100
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
   
   
   
-  create-blocks 1 [
-    set block-name "set-random-heading"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 0
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 360
-      set max-value 360
-      set min-value -360
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    
-    set label-after-arg " to " 
-    set is-observer false
-    set is-basic false
-    set is-set-update true
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-    
-
-
-
-
-  ;; MEASURE
   
-  create-blocks 1 [
+  
+  
+  ;; MEASURE 
+  
+  create-blocks 1  [
     set block-name "place-measure-point"
     set category "Measure"
     set arg-list []
@@ -817,10 +903,9 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
+  
+  
+  create-blocks 1  [
     set block-name "start-over-measuring"
     set category "Measure"
     set arg-list []
@@ -829,10 +914,9 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
+  
+  
+  create-blocks 1  [
     set block-name "clear-measure-points"
     set category "Measure"
     set arg-list []
@@ -843,10 +927,85 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
   
   
+  create-blocks 1  [
+    set block-name "plant-flag"
+    set category "Pen"
+    set arg-list []
+    set is-observer false
+    set is-basic true
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
   
-  ;;BEGIN SECRET NUMBER
-       
-  create-blocks 1 [
+  
+  create-blocks 1  [
+    set block-name "label"
+    set category "Measure"
+    set arg-list []
+    hatch-args 1
+    [
+      set arg-type "enum"
+      set enum-list ["heading" "step-size" "color" "size" "secret-number" "pen-width" "none"]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  
+  
+  
+  
+  ;; BEGIN SECRET NUMBER
+  
+  create-blocks 1  [ 
+    set block-name "set-secret-number-textbox"
+    set category "Secret Number"
+    set label-after-arg "" 
+    set arg-list [ ] 
+    hatch-args 1
+    [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
+    set is-basic false
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
+    set block-name "pick-a-secret-number-in-range"
+    set is-observer false
+    set arg-list []
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 0
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+      set arg-type "int"
+      set default-value 100
+      set max-value 500
+      set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set category "Secret Number"
+    set label-after-arg " to "
+    set is-basic false
+    ; other variables not applicable
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1  [
     set block-name "right-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -855,10 +1014,9 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-   
-  create-blocks 1 [
+  
+  
+  create-blocks 1  [
     set block-name "left-secret-number"
     set category "Secret Number"
     set arg-list []
@@ -867,184 +1025,42 @@ to create-blocks-list
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-   
-  create-blocks 1 [
-    set block-name "set-dropdown-op-secret-number"
-    set category "Secret Number"
-    set arg-list [ ]
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "secret-number" "pen-width" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " secret number "
-    hatch-args 1
-    [
-      set arg-type "enum"
-      set enum-list [ "plus" "minus" ]
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic false
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-   
-   
-      
-  create-blocks 1 [
-    set block-name "pick-a-secret-number-less-than"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 100
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set category "Secret Number"
-    set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-    
-    
   
-  create-blocks 1 [
-    set block-name "set-dropdown-secret-number"  
+  
+  create-blocks 1  [
+    set block-name "set-secret-number-dropdown"
     set category "Secret Number"
     set arg-list [ ]
     hatch-args 1 
     [
       set arg-type "enum"
-      set enum-list [ "heading" "step-size" "color" "size" "pen-width" ]
+      set enum-list [ "step-size" "heading" "color" "turtle-size" "pen-width" ]
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set label-after-arg " equal to secret number "
     set is-observer false
     set is-basic false
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
- 
-      
-  create-blocks 1 [
-    set block-name "pick-a-secret-number-in-range"
-    set is-observer false
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 1
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-        hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 100
-      set max-value 500
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
+  
+  create-blocks 1  [
+    set block-name "set-secret-number-op-textbox"
     set category "Secret Number"
+    set arg-list [ ]
+    hatch-args 1  [
+      set arg-type "enum"
+      set enum-list [ "plus" "minus" "times" "divided by" ]
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    hatch-args 1  [
+       set arg-type "int"
+       set default-value 0
+       set max-value 500
+       set min-value 0
+    ]
+    set arg-list lput max-one-of args [who] arg-list
+    set is-observer false
     set is-basic false
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  
-  create-blocks 1 [
-    set block-name "right"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 90
-      set max-value 360
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
-    set block-name "left"
-    set category "Movement"
-    
-    set arg-list []
-    hatch-args 1
-    [
-      set arg-type "int"
-      set default-value 90
-      set max-value 360
-      set min-value 0
-    ]
-    set arg-list lput max-one-of args [who] arg-list
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  
-  create-blocks 1 [
-    set block-name "pen-up"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  
-  
-  create-blocks 1 [
-    set block-name "pen-down"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
-    set block-name "stamp"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
-  ]
-  set blocks-list lput max-one-of blocks [who] blocks-list
-      
-      
-      
-  create-blocks 1 [
-    set block-name "plant-flag"
-    set category "Pen"
-    set arg-list []
-    set is-observer false
-    set is-basic true
-    ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
   
@@ -1067,105 +1083,105 @@ to create-agent-kind-list
     set methods-list lput "setup" methods-list
     set methods-list lput "go" methods-list
     
-    set primitives-list []
+    set primitives-list [ ]
+    
+    
+    ;; BEGIN MOVEMENT
+    set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "set-heading" primitives-list
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
+    set primitives-list lput "go-forward" primitives-list
+    set primitives-list lput "go-backward" primitives-list
+    set primitives-list lput "set-xy" primitives-list
+    set primitives-list lput "set-random-heading" primitives-list
+    set primitives-list lput "set-movement-op-textbox" primitives-list
+    set primitives-list lput "set-movement-dropdown" primitives-list
+    
+    
+    ;; BEGIN PEN
+    set primitives-list lput "set-pen-textbox" primitives-list
+    set primitives-list lput "pen-down" primitives-list
+    set primitives-list lput "pen-up" primitives-list
+    set primitives-list lput "stamp" primitives-list
+    set primitives-list lput "go-invisible" primitives-list
+    set primitives-list lput "go-visible" primitives-list
     set primitives-list lput "change-shape-to" primitives-list
-    ;;NEEDED FOR MEASURE LINKING
+    set primitives-list lput "set-pen-op-textbox" primitives-list
+    set primitives-list lput "set-pen-dropdown" primitives-list
+    
+    
+    ;; MEASURE 
     set primitives-list lput "place-measure-point" primitives-list
     set primitives-list lput "clear-measure-points" primitives-list
     set primitives-list lput "start-over-measuring" primitives-list
     set primitives-list lput "label" primitives-list
     
     
-    ;; MOVEMENT
-    set primitives-list lput "set-step-size" primitives-list
-    set primitives-list lput "go-forward" primitives-list
-    set primitives-list lput "go-backward" primitives-list
-    set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "step-size-plus" primitives-list
-    set primitives-list lput "step-size-minus" primitives-list
-    set primitives-list lput "right" primitives-list
-    set primitives-list lput "left" primitives-list
-    set primitives-list lput "set-random-heading" primitives-list
-  
-    ;; PEN 
-    set primitives-list lput "pen-down" primitives-list
-    set primitives-list lput "pen-up" primitives-list
-    set primitives-list lput "stamp" primitives-list
-    set primitives-list lput "go-invisible" primitives-list
-    set primitives-list lput "go-visible" primitives-list
-   
-   
-    ;; ALL-PURPOSE
-    set primitives-list lput "set-textbox" primitives-list
-    set primitives-list lput "set-op-textbox" primitives-list
-    set primitives-list lput "set-dropdown" primitives-list
-    
-       
-    ;;SECRET NUMBER
-    set primitives-list lput "set-dropdown-secret-number" primitives-list
-    set primitives-list lput "set-dropdown-op-secret-number" primitives-list 
-    set primitives-list lput "right-secret-number" primitives-list
-    set primitives-list lput "left-secret-number" primitives-list    
-    set primitives-list lput "pick-a-secret-number-less-than" primitives-list
+    ;; SECRET NUMBER
+    set primitives-list lput "set-secret-number-textbox" primitives-list
     set primitives-list lput "pick-a-secret-number-in-range" primitives-list
+    set primitives-list lput "right-secret-number" primitives-list
+    set primitives-list lput "left-secret-number" primitives-list 
+    set primitives-list lput "set-secret-number-dropdown" primitives-list
+    set primitives-list lput "set-secret-number-op-textbox" primitives-list
     
    ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
-   create-agent-kinds 1
-  [
+  create-agent-kinds 1  [
     set name "turtle-two"  ;; formerly wabbit-two, decision to change the display name 
                            ;; to turtle-two.
     
-    set methods-list []
+    set methods-list [ ]
     set methods-list lput "setup" methods-list
     set methods-list lput "go" methods-list
     
-    set primitives-list []
-    set primitives-list lput "change-shape-to" primitives-list
+    set primitives-list [ ]
     
-    ;;NEEDED FOR MEASURE LINKING
-    set primitives-list lput "place-measure-point" primitives-list
-    set primitives-list lput "clear-measure-points" primitives-list
-    set primitives-list lput "start-over-measuring" primitives-list
-    set primitives-list lput "label" primitives-list
-
+    ;; BEGIN MOVEMENT
     set primitives-list lput "set-step-size" primitives-list
+    set primitives-list lput "set-heading" primitives-list
+    set primitives-list lput "right" primitives-list
+    set primitives-list lput "left" primitives-list
     set primitives-list lput "go-forward" primitives-list
     set primitives-list lput "go-backward" primitives-list
     set primitives-list lput "set-xy" primitives-list
-    set primitives-list lput "step-size-plus" primitives-list
-    set primitives-list lput "step-size-minus" primitives-list
-    set primitives-list lput "right" primitives-list
-    set primitives-list lput "left" primitives-list
     set primitives-list lput "set-random-heading" primitives-list
-  
-  ;; PEN
+    set primitives-list lput "set-movement-op-textbox" primitives-list
+    set primitives-list lput "set-movement-dropdown" primitives-list
+    
+    
+    ;; BEGIN PEN
+    set primitives-list lput "set-pen-textbox" primitives-list
     set primitives-list lput "pen-down" primitives-list
     set primitives-list lput "pen-up" primitives-list
     set primitives-list lput "stamp" primitives-list
     set primitives-list lput "go-invisible" primitives-list
     set primitives-list lput "go-visible" primitives-list
-  
-    ;; ALL-PURPOSE
-    set primitives-list lput "set-textbox" primitives-list
-    set primitives-list lput "set-op-textbox" primitives-list
-    set primitives-list lput "set-dropdown" primitives-list
+    set primitives-list lput "change-shape-to" primitives-list
+    set primitives-list lput "set-pen-op-textbox" primitives-list
+    set primitives-list lput "set-pen-dropdown" primitives-list
     
-    ;;SECRET NUMBER
-    set primitives-list lput "set-dropdown-secret-number" primitives-list
-    set primitives-list lput "set-dropdown-op-secret-number" primitives-list 
-    set primitives-list lput "right-secret-number" primitives-list
-    set primitives-list lput "left-secret-number" primitives-list    
-    set primitives-list lput "pick-a-secret-number-less-than" primitives-list
+    
+    ;; MEASURE
+    set primitives-list lput "place-measure-point" primitives-list
+    set primitives-list lput "clear-measure-points" primitives-list
+    set primitives-list lput "start-over-measuring" primitives-list
+    set primitives-list lput "label" primitives-list
+    
+    
+    ;; SECRET NUMBER
+    set primitives-list lput "set-secret-number-textbox" primitives-list
     set primitives-list lput "pick-a-secret-number-in-range" primitives-list
-    
-    
-   ;;ENDSECRET NUMBER
+    set primitives-list lput "right-secret-number" primitives-list
+    set primitives-list lput "left-secret-number" primitives-list 
+    set primitives-list lput "set-secret-number-dropdown" primitives-list
+    set primitives-list lput "set-secret-number-op-textbox" primitives-list
+        
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
-  
   ask agent-kinds [ ht ] 
 end
 
@@ -1184,109 +1200,31 @@ to create-wabbit-kind-list
   ]
 end
 
-to java-change-shape-to [ shapename ]
-  set shape shapename
-end
-
-to java-label [variable-name]
-  set label-color black
-  if variable-name = "step-size"
-  [set label bonus-speed]
-  if variable-name = "color"
-  [set label color]
-  if variable-name = "heading"
-  [set label heading]
-  if variable-name = "size"
-  [set label size]
-  if variable-name = "secret-number"
-  [set label secret-number]
-  if variable-name = "pen-width"
-  [set label pen-size]
-  if variable-name = "none"
-  [set label ""]
-end
-
-
-;;BEGINSECRET NUMBER
-
-to java-right-secret-number
-  right secret-number  
-end
-
-
-to java-left-secret-number
-  left secret-number
-end
-
-
-to java-set-dropdown-secret-number [ variable-name ]
-  let command-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  set command-string word "set " word variable-name " secret-number"
-  run command-string
-end
-
-
-
-to java-set-dropdown-op-secret-number [ variable-name operation ]
-  let command-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  
-  if operation = "plus" [ 
-    set operation " + "
-  ]
-  if operation = "minus" [
-    set operation " - " 
-  ]
-  set command-string word "set " word variable-name word " " word variable-name
-                     word " " word operation "secret-number"
-  run command-string
-end
 
 
 
 
-to java-pick-a-secret-number-less-than [ amax ]
-  set secret-number (random amax)
-end
 
-to java-pick-a-secret-number-in-range [aleft aright]
-  let amin 0
-  let amax 0
-  ifelse aleft < aright
-  [
-    set amin aleft
-    set amax aright
-  ]
-  [
-    set amin aright
-    set amax aleft
-  ]
-  set secret-number (random (amax - amin + 1)) + amin
-end
+;; MOVEMENT
 
 to java-set-step-size [ aspeed ]
   set bonus-speed aspeed
   if (aspeed < 0) [ set bonus-speed 0 ]
 end
 
-to java-step-size-plus [amount-number]
-  set bonus-speed bonus-speed + amount-number
+
+to java-set-heading [ value ]
+  set heading value
 end
 
-to java-step-size-minus [amount-number]
-  set bonus-speed bonus-speed - amount-number
-  if (bonus-speed < 0) [ set bonus-speed 0 ]
+
+to java-right [amount-number]
+  right amount-number
+end
+
+
+to java-left [amount-number]
+  left amount-number
 end
 
 
@@ -1348,15 +1286,6 @@ to java-set-xy [aX aY]
 end
 
 
-to java-right [amount-number]
-  right amount-number
-end
-
-to java-left [amount-number]
-  left amount-number
-end
-
-
 to java-set-random-heading [angle1 angle2]
   let fin_angle 0
   ifelse (angle2 - angle1) >= 360 or (angle2 - angle1) <= -360 ; if user enters angle greater than 360
@@ -1385,42 +1314,102 @@ to java-set-random-heading [angle1 angle2]
 end
 
 
+to java-set-movement-op-textbox [ attribute operation value ]
+  set-attribute-op-textbox attribute operation value
+end
 
-;; BEGIN PEN 
+
+to java-set-movement-dropdown [ attribute1 attribute2 ]
+  set-attribute-dropdown attribute1 attribute2
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; PEN
+
+to java-set-pen-textbox [ attribute value ]
+  set attribute translate-vimap-string attribute
+  run word "set " word attribute word " " value
+end
+
+
+to java-pen-down
+  pen-down
+end
 
 
 to java-pen-up
   pen-up
 end
 
-to java-pen-down
-  pen-down
-end
 
 to java-stamp
   stamp
 end
 
-to java-go-visible
-  if size = 0
-  [set size old-size]
-end
 
 to java-go-invisible
+  ; set hidden? true
   if size != 0
   [set old-size size]
   set size 0
 end
 
 
-to java-start-over-measuring
-    ask wabbits
-    [
-      set distfromlast NaN        ;dist since last measure point
-      set odistfromlast NaN      ;last measure points distfromlast (for accel)
-      set odometer 0
-    ]
+to java-go-visible
+  ; set hidden? false
+  if size = 0
+  [set size old-size]
 end
+
+
+to java-change-shape-to [ shapename ]
+  set shape shapename
+end
+
+
+to java-set-pen-op-textbox [ attribute operation value ]
+  set-attribute-op-textbox attribute operation value
+end
+
+
+to java-set-pen-dropdown [ attribute1 attribute2 ]
+  set-attribute-dropdown attribute1 attribute2
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; MEASURE
 
 to java-clear-measure-points
     ask measurepoints [die]
@@ -1433,79 +1422,16 @@ to java-clear-measure-points
 end
 
 
-;; BEGIN ALL-PURPOSE
-to java-set-textbox [ base-attrib entered-data ]
-  if base-attrib = "heading" [
-    set heading entered-data
-    stop
-  ]
-  if base-attrib = "color" [
-    set color entered-data
-    stop
-  ]
-  if base-attrib = "size" [
-    set size entered-data
-    stop
-  ]
-  if base-attrib = "secret-number" [
-    set secret-number entered-data
-    stop
-  ]
-  set pen-size entered-data
+to java-start-over-measuring
+    ask wabbits
+    [
+      set distfromlast NaN        ;dist since last measure point
+      set odistfromlast NaN      ;last measure points distfromlast (for accel)
+      set odometer 0
+    ]
 end
 
 
-to java-set-op-textbox [ variable-name op-name entered-data ]
-  let command-string ""
-  let op-string ""
-  if variable-name = "step-size" [
-    set variable-name "bonus-speed"
-  ]
-  if variable-name = "pen-width" [
-    set variable-name "pen-size"
-  ]
-  
-  if op-name = "plus" [
-    set op-string word variable-name word " + " entered-data
-  ]
-  if op-name = "minus" [
-    set op-string word variable-name word " - " entered-data
-  ]
-  if op-name = "times" [
-    set op-string word variable-name word " * " entered-data
-  ]
-  if op-name = "divided by" [
-    set op-string word "round(" word variable-name word " / " word entered-data ")"
-  ]
-  
-  set command-string word "set " word variable-name word " " op-string
-  run command-string
-end
-
-
-
-to java-set-dropdown [ first-variable sec-variable ]
-  let command-string ""
-  if first-variable = "step-size" [
-    set first-variable "bonus-speed"
-  ]
-  if sec-variable = "step-size" [
-    set sec-variable "bonus-speed"
-  ]
-  if first-variable = "pen-width" [
-    set first-variable "pen-size"
-  ]
-  if sec-variable = "pen-width" [
-    set sec-variable "pen-size"
-  ]
-  
-  set command-string word "set " word first-variable word " " sec-variable
-  run command-string
-end
-
-
-;; wabbit procedure.
-;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
   hatch-measurepoints 1
   [
@@ -1537,8 +1463,92 @@ to java-place-measure-point
   set odistfromlast distfromlast
   set distfromlast 0
   set flag-counter flag-counter + 1
-
 end
+
+
+to java-label [variable-name]
+  set label-color black
+  if variable-name = "step-size"
+  [set label bonus-speed]
+  if variable-name = "color"
+  [set label color]
+  if variable-name = "heading"
+  [set label heading]
+  if variable-name = "size"
+  [set label size]
+  if variable-name = "secret-number"
+  [set label secret-number]
+  if variable-name = "pen-width"
+  [set label pen-size]
+  if variable-name = "none"
+  [set label ""]
+end
+
+
+
+
+
+
+
+
+
+
+
+
+;;SECRET NUMBER
+
+to java-set-secret-number-textbox [ value ]
+  set secret-number value
+end
+
+
+to java-pick-a-secret-number-in-range [aleft aright]
+  let amin 0
+  let amax 0
+  ifelse aleft < aright
+  [
+    set amin aleft
+    set amax aright
+  ]
+  [
+    set amin aright
+    set amax aleft
+  ]
+  set secret-number (random (amax - amin + 1)) + amin
+end
+
+
+to java-right-secret-number
+  right secret-number  
+end
+
+
+to java-left-secret-number
+  left secret-number
+end
+
+
+to java-set-secret-number-dropdown [ attribute ]
+  let command-string ""
+  set attribute translate-vimap-string attribute
+  
+  set command-string word "set secret-number " attribute
+  run command-string
+end
+
+
+to java-set-secret-number-op-textbox [ operation value ]
+  let attribute "secret-number"
+  set-attribute-op-textbox attribute operation value
+end
+
+
+
+
+
+
+
+
 
 to java-plant-flag
   let temp-flag-count 0
@@ -2070,9 +2080,59 @@ to-report get-agent-kinds-as-csv
   report butlast retn
 end
 
+
 to-report java-is-repeat-var
   report false
 end
+
+
+to-report translate-vimap-string [ a_string ]
+  if a_string = "step-size" [
+    report "bonus-speed"
+  ]
+  if a_string = "pen-width" [
+    report "pen-size"
+  ]
+  if a_string = "turtle-size" [
+    report "size"
+  ]
+  report a_string
+end
+
+
+to set-attribute-op-textbox [ attribute operation value ]
+  let command-string ""
+  let op-string ""
+  
+  set attribute translate-vimap-string attribute
+  
+  if operation = "plus" [
+    set op-string word attribute word " + " value
+  ]
+  if operation = "minus" [
+    set op-string word attribute word " - " value
+  ]
+  if operation = "times" [
+    set op-string word attribute word " * " value
+  ]
+  if operation = "divided by" [
+    set op-string word "round(" word attribute word " / " word value ")"
+  ]
+  
+  set command-string word "set " word attribute word " " op-string
+  run command-string
+end
+
+
+to set-attribute-dropdown [ attribute1 attribute2 ]
+  let command-string ""
+  set attribute1 translate-vimap-string attribute1
+  set attribute2 translate-vimap-string attribute2
+  
+  set command-string word "set " word attribute1 word " " attribute2
+  run command-string
+end
+  
 @#$#@#$#@
 GRAPHICS-WINDOW
 10

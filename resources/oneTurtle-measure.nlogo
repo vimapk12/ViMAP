@@ -1255,7 +1255,6 @@ to create-agent-kind-list
    ; set primitives-list lput "pick-a-secret-number-less-than" primitives-list
     
     
-   ;;ENDSECRET NUMBER
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   ask agent-kinds [ ht ]
