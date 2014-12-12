@@ -992,8 +992,10 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-            create-blocks 1
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
   [
     set block-name "start-over-measuring"
     set category "Measure"
@@ -1002,8 +1004,10 @@ to create-blocks-list
     set is-basic false
     ; other variables not applicable
   ]
-      set blocks-list lput max-one-of blocks [who] blocks-list
-            create-blocks 1
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
   [
     set block-name "clear-measure-points"
     set category "Measure"
@@ -1015,7 +1019,7 @@ to create-blocks-list
   set blocks-list lput max-one-of blocks [who] blocks-list
     
 
-create-blocks 1
+  create-blocks 1
   [
     set block-name "plant-flag"
     set category "Pen"
@@ -1025,9 +1029,7 @@ create-blocks 1
     ; other variables not applicable
   ]
   set blocks-list lput max-one-of blocks [who] blocks-list
-  
-  ask blocks [ ht ]
-  ask args [ ht ]
+
   
   
   create-blocks 1
@@ -1168,7 +1170,6 @@ create-blocks 1
   
 
   
-      
 ;  create-blocks 1
 ;  [
 ;    set block-name "pick-a-secret-number-less-than"
@@ -1189,9 +1190,8 @@ create-blocks 1
 ;  set blocks-list lput max-one-of blocks [who] blocks-list
 
 
-
-
-
+  ask blocks [ ht ]
+  ask args [ ht ]
 
 
   ;;; END OF BLOCK DEFINITIONS ;;;
@@ -1273,8 +1273,6 @@ to create-wabbit-kind-list
     set wabbit-kind-list lput [agent-kind-string] of turtle ? wabbit-kind-list
   ]
 end
-
-
 
 
 
