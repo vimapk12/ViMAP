@@ -33,6 +33,7 @@ measurepoints-own [
  tagentkind
  tpenwidth
  tpencolor
+ tagentsize
  measurepoint-creator
 ]
  
@@ -190,6 +191,7 @@ to create-var-name-list
     "change in distance covered"
     "pen width"
     "pen color"
+    "the turtle's size"
   ]
 end
 
@@ -224,6 +226,10 @@ to create-measure-option-string-lists
   set tlist []
   set tlist lput "Heading" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
+  
+  set tlist [ ] 
+  set tlist lput "Agent Size" tlist
+  set measure-option-string-lists lput tlist measure-option-string-lists
 end
 
 to create-measure-option-command-list
@@ -234,6 +240,7 @@ to create-measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 9 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 10 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 4 graph" measure-option-command-list
+  set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 11 graph" measure-option-command-list
 end
 
 to-report get-list-as-csv [list-name]
@@ -1528,6 +1535,7 @@ to java-place-measure-point
    set tcolor [ color ] of myself
    set tpenwidth [ pen-size ] of myself
    set tpencolor [ color ] of myself
+   set tagentsize [ size ] of myself
    set measurepoint-creator [agent-kind-string] of myself
    
    set label-color black
@@ -2106,7 +2114,7 @@ to-report get-measures
       if (is-string? tdistfromlast) 
       [ set tdistfromlast 0 ]
     
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize) 
       set result lput datarep result 
     ]
   ]
@@ -2124,7 +2132,7 @@ to-report get-measures-for [an-agent-kind]
       if (is-string? tdistfromlast) 
       [ set tdistfromlast 0 ]
       
-      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize) 
       set result lput datarep result 
     ]
   ]
@@ -2143,7 +2151,7 @@ to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
       [ set tdistfromlast 0 ]
       
       ;; (length result + 1)
-      let datarep (list who tcolor (word "\"" tagentkind "\"") (length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who tcolor (word "\"" tagentkind "\"") (length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize) 
       set result lput datarep result 
     ]
   ]
