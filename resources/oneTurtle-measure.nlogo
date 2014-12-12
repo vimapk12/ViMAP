@@ -193,7 +193,7 @@ to create-var-name-list
     "pen width"
     "pen color"
     "the turtle's size"
-    "the secret number variable"
+    "the secret-number variable"
   ]
 end
 
