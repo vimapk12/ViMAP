@@ -69,11 +69,15 @@ public final class SpeedSliderPanel extends JPanel implements ChangeListener {
         assert aRunController != null;
         this.runController = aRunController;
         
+        // Set the slider so that it starts set all the way to fast!
+        // This is for Kit's model ant-37.nlogo
+        // Previous value was the constant MIDDLE_NUMBER
+        
         this.slider = new JSlider(
             SwingConstants.HORIZONTAL,
             MIN_NUMBER, 
             MAX_NUMBER, 
-            MIDDLE_NUMBER
+            MAX_NUMBER
        );
         this.slider.setToolTipText("Adjust speed of model");
         
