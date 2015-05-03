@@ -149,7 +149,7 @@ public final class RunButtonPanel extends JPanel implements ActionListener {
             return;
         }
         
-        final int initial = 1;
+        final int initial = maxSliderNumber;
         this.runCountSlider = new JSlider(
                 SwingConstants.HORIZONTAL,
                 minSliderNumber, 
