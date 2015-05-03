@@ -121,7 +121,7 @@ public final class RunButtonPanel extends JPanel implements ActionListener {
         
         this.highlightBox = addCheckbox(HIGHLIGHT_STRING);
         this.highlightBox.setToolTipText("Highlight code as it runs");
-        this.highlightBox.setSelected(true);
+        this.highlightBox.setSelected(false); // For Kit's ant model ant-37.nlogo
         addWidthSpacer(this.buttonPanel);
         
         // this.resetButton = addButton(RESET_STRING);
