@@ -283,10 +283,10 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ethnocentrism-measure.nlogo";
         
         // Ants
-         final String netLogoFile = "/ant-37.nlogo"; 
+         //final String netLogoFile = "/ant-40.nlogo"; 
         
         // Bird-Butterfly
-      //  final String netLogoFile = "/bird-butterfly2.nlogo";
+       final String netLogoFile = "/bird-butterfly2.nlogo";
         
         // Image Computation
          //final String netLogoFile = "/imageCompData.nlogo";
@@ -298,7 +298,7 @@ public abstract class ViMAP {
          // final String netLogoFile = "/oneTurtle-measure.nlogo";
         
         // Kit's Ant Models
-    	// final String netLogoFile = "/ant-food-grab2.nlogo";
+    	// final String netLogoFile = "/ant-food-grab2.nlogo";http://anthopper.smugmug.com/NashvilleMusic/Bobbys-Idylle-Hour/i-BzpFS4L
         // final String netLogoFile = "/ant-food-grab5.nlogo";
          
         // Two Turtle

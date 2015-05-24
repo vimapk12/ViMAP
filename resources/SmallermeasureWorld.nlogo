@@ -604,7 +604,7 @@ to graph-horizontal-lineup-height-moving-avg
   
   let ind-name item ind-var-index var-name-list
   ask patch 35 19 
-  [set plabel (word "LINED UP by " ind-name ",")]
+  [];set plabel (word "LINED UP by " ind-name ",")]
   
   let dep-name item dep-var-index var-name-list
   ask patch 35 17 
@@ -874,17 +874,21 @@ to graph-horizontal-lineup-height
       set i i + 1
     ]
   ]
+
+;; The commented code below can be used 
+;; to add labels within the NetLogo worlds in each of the grapher windows. 
+;; Pratim and Kit took these lables out.
   
-  let ind-name item ind-var-index var-name-list
-  ask patch 35 19 
-  [set plabel (word "LINED UP by " ind-name ",")]
-  
-  let dep-name item dep-var-index var-name-list
-  ask patch 35 17 
-  [set plabel (word "HEIGHT by " dep-name)]
-  
-  ask patch 35 -19
-  [set plabel ""]
+;  let ind-name item ind-var-index var-name-list
+;  ask patch 35 19 
+;  [set plabel (word "LINED UP by " ind-name ",")]
+;  
+;  let dep-name item dep-var-index var-name-list
+;  ask patch 35 17 
+;  [set plabel (word "HEIGHT by " dep-name)]
+;  
+;  ask patch 35 -19
+;  [set plabel "TRY ME"]
 end
 
 

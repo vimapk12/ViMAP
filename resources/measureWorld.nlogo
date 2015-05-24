@@ -163,8 +163,8 @@ to arrange-by-location2d-render-by-size [ loc2drule sizerule ]
     [ set label (word cycles " ") ]
     [ set label "" ]
    ]
-   ask patch 35 18 [ set plabel ("ARRANGED by the turtle's location,") ]
-   ask patch 35 16 [ set plabel (word "SIZE determined by " replace-text sizerule) ]
+;   ask patch 35 18 [ set plabel ("testtttttt") ];("ARRANGED by the turtle's location,") ]
+;   ask patch 35 16 [ set plabel (word "SIZE determined by " replace-text sizerule) ]
 end
 
 
@@ -231,8 +231,8 @@ to arrange-by-horizontal-lineup-render-by-size [ lineuprule sizerule ]
     ]
   ]
   
-  ask patch 35 18 [ set plabel (word "LINED UP by " replace-text lineuprule ",") ]
-  ask patch 35 16 [ set plabel (word "SIZE determined by " replace-text sizerule) ]
+;  ask patch 35 18 [ set plabel (word "LINED UP by " replace-text lineuprule ",") ]
+;  ask patch 35 16 [ set plabel (word "SIZE determined by " replace-text sizerule) ]
   
 end
 

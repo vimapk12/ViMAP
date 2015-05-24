@@ -343,8 +343,10 @@ to cycle-ended
   tick
 end
 
-to create-predicate-list
-  set predicate-list ["I-am-holding-food" "at-ant-nest" "at-flying-ant-nest" "There-is-food-here" "I-have-50-energy" "I-have-0-energy" "the-chance-is-50-out-of-100" "the-chance-is-10-out-of-100" "the-chance-is-1-out-of-100"  ]
+to create-predicate-list ;the list of reporters that the program checks against for if/otherwise block
+  set predicate-list ["There-is-food-here" "I-am-holding-food" "at-ant-nest" "at-flying-ant-nest"  
+    "I-have-50-energy" "I-have-0-energy" "the-chance-is-50-out-of-100" "the-chance-is-10-out-of-100" "the-chance-is-1-out-of-100" 
+    "at-ant" "at-flying-ant" "at-pollinator" "at-spider" "at-frog" "at-snake" "at-bird" "at-unicorn"   ]
 end
 
 to create-comp-int-list
@@ -478,11 +480,104 @@ end
 
 to-report java-I-have-0-energy [aWho]
   let result false
+  if turtle aWho != nobody [
   ask turtle aWho[
     if  energy <= 0 = true [set result true]
   ]
+  ]
   report result
 end
+
+to-report java-at-ant [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+   ; if [agent-kind-string] of turtle aWho = "ant" or [agent-kind-string] of turtle aWho = "flying-ant" [
+   ; set fradius 8]
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "ant"]
+  ]]
+  report result
+end
+
+to-report java-at-flying-ant [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "flying-ant"]
+  ]]
+  report result
+end
+
+to-report java-at-pollinator [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "pollinator"]
+  ]]
+  report result
+end
+
+to-report java-at-spider [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "spider"]
+  ]]
+  report result
+end
+
+to-report java-at-frog [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "frog"]
+  ]]
+  report result
+end
+
+to-report java-at-snake [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "snake"]
+  ]]
+  report result
+end
+
+to-report java-at-bird [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "bird"]
+  ]]
+  report result
+end
+
+to-report java-at-unicorn [aWho]
+  let fradius 2
+  let result false
+  if turtle aWho != nobody [
+  ask turtle aWho
+  [
+  set result any? wabbits in-radius fradius with [agent-kind-string = "unicorn"]
+  ]]
+  report result
+end
+
 
 
 to reset
@@ -573,8 +668,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic false
     ; other variables not applicable
     ht
   ]
@@ -583,10 +678,10 @@ to create-blocks-list
   create-blocks 1
   [
     set block-name "make-other-stuff"
-    set category "Movement"
+    set category "Control"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
@@ -594,10 +689,10 @@ to create-blocks-list
      create-blocks 1
   [
     set block-name "make-queen-ant"
-    set category "Movement"
+    set category "Control"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
@@ -605,10 +700,10 @@ to create-blocks-list
         create-blocks 1
   [
     set block-name "make-flying-queen-ant"
-    set category "Movement"
+    set category "Control"
     set arg-list []
     set is-observer false
-    set is-basic true
+    set is-basic false
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
@@ -626,8 +721,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic false
     ; other variables not applicable
     ht
   ]
@@ -646,8 +741,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic false
     ; other variables not applicable
     ht
   ]
@@ -666,8 +761,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic false
     ; other variables not applicable
     ht
   ]
@@ -686,8 +781,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic false
     ; other variables not applicable
     ht
   ]
@@ -706,8 +801,8 @@ to create-blocks-list
       set min-value 0
     ]
     set arg-list lput max-one-of args [who] arg-list
-    set category "Movement"
-    set is-basic true
+    set category "Control"
+    set is-basic False
     ; other variables not applicable
     ht
   ]
@@ -1341,7 +1436,7 @@ to create-agent-kind-list
     set primitives-list lput "place-pheromone" primitives-list
     
     ;set primitives-list lput "create-food" primitives-list
-    set primitives-list lput "eat-grass" primitives-list
+    ;set primitives-list lput "eat-grass" primitives-list
     ;set primitives-list lput "patch-color" primitives-list
     ;set primitives-list lput "patch-matches-preference" primitives-list
     ;set primitives-list lput "teach" primitives-list
@@ -1355,7 +1450,7 @@ to create-agent-kind-list
      set primitives-list lput "show-energy-counter" primitives-list
      set primitives-list lput "agent-die" primitives-list
      ;set primitives-list lput "set-food-preference-to-here" primitives-list
-     set primitives-list lput "eat-enemy" primitives-list
+     ;set primitives-list lput "eat-enemy" primitives-list
    
      set primitives-list lput "face-friend" primitives-list
   ]
@@ -1413,7 +1508,7 @@ to create-agent-kind-list
     set primitives-list lput "place-pheromone" primitives-list
     
     ;set primitives-list lput "create-food" primitives-list
-    set primitives-list lput "eat-grass" primitives-list
+    ;set primitives-list lput "eat-grass" primitives-list
     ;set primitives-list lput "patch-color" primitives-list
     ;set primitives-list lput "patch-matches-preference" primitives-list
     ;set primitives-list lput "teach" primitives-list
@@ -1429,7 +1524,7 @@ to create-agent-kind-list
      ;set primitives-list lput "set-food-preference-to-here" primitives-list
    
      set primitives-list lput "face-friend" primitives-list
-     set primitives-list lput "eat-enemy" primitives-list
+   ;  set primitives-list lput "eat-enemy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
    create-agent-kinds 1
@@ -1460,7 +1555,7 @@ set primitives-list lput "go-forward" primitives-list
    ; set primitives-list lput "grow" primitives-list
     set primitives-list lput "create-food" primitives-list
     ;set primitives-list lput "pollinate" primitives-list
-    set primitives-list lput "eat-grass" primitives-list
+    ;set primitives-list lput "eat-grass" primitives-list
     set primitives-list lput "dropoff-food-here" primitives-list
    ; set primitives-list lput "patch-color" primitives-list
    ; set primitives-list lput "set-paintcolor" primitives-list
@@ -1557,7 +1652,7 @@ set primitives-list lput "reproduce-flying-ant" primitives-list
      set primitives-list lput "hide-energy-counter" primitives-list
      set primitives-list lput "show-energy-counter" primitives-list
       set primitives-list lput "agent-die" primitives-list
-      set primitives-list lput "eat-enemy" primitives-list
+    ;  set primitives-list lput "eat-enemy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
 
@@ -1608,7 +1703,7 @@ create-agent-kinds 1
      set primitives-list lput "eat-ant" primitives-list
       set primitives-list lput "eat-flying-ant" primitives-list
        set primitives-list lput "reproduce-spider" primitives-list
-       set primitives-list lput "eat-enemy" primitives-list
+     ;  set primitives-list lput "eat-enemy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
@@ -1660,7 +1755,7 @@ create-agent-kinds 1
       set primitives-list lput "eat-flying-ant" primitives-list
        set primitives-list lput "eat-spider" primitives-list
         set primitives-list lput "reproduce-frog" primitives-list
-        set primitives-list lput "eat-enemy" primitives-list
+    ;    set primitives-list lput "eat-enemy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
@@ -1711,7 +1806,7 @@ create-agent-kinds 1
      set primitives-list lput "eat-spider" primitives-list
       set primitives-list lput "eat-frog" primitives-list
        set primitives-list lput "reproduce-snake" primitives-list
-       set primitives-list lput "eat-enemy" primitives-list
+    ;   set primitives-list lput "eat-enemy" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
@@ -1760,9 +1855,9 @@ create-agent-kinds 1
      
      set primitives-list lput "face-friend" primitives-list
      set primitives-list lput "eat-frog" primitives-list
-          set primitives-list lput "eat-snake" primitives-list
-               set primitives-list lput "reproduce-bird" primitives-list
-               set primitives-list lput "eat-enemy" primitives-list
+     set primitives-list lput "eat-snake" primitives-list
+     set primitives-list lput "reproduce-bird" primitives-list
+        ;       set primitives-list lput "eat-enemy" primitives-list
           
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
@@ -1818,7 +1913,17 @@ create-agent-kinds 1
      set primitives-list lput "eat-snake" primitives-list
      set primitives-list lput "eat-bird" primitives-list
      set primitives-list lput "reproduce-unicorn" primitives-list
-     set primitives-list lput "eat-enemy" primitives-list
+     ; set primitives-list lput "make-other-stuff" primitives-list
+;     set primitives-list lput "make-pollinators" primitives-list
+;     set primitives-list lput "make-ants" primitives-list
+;     set primitives-list lput "make-flying-ants" primitives-list
+;     set primitives-list lput "make-queen-ant" primitives-list
+;     set primitives-list lput "make-flying-queen-ant" primitives-list
+;     set primitives-list lput "make-spider" primitives-list
+;     set primitives-list lput "make-frog" primitives-list
+;     set primitives-list lput "make-bird" primitives-list
+;     set primitives-list lput "make-snake" primitives-list
+;     set primitives-list lput "make-unicorn" primitives-list
      
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
@@ -1832,13 +1937,13 @@ to java-place-pheromone
 end
 
 
-
+;created by Ashlyn!!
 to java-face-friend
   let fradius 2
-  if any? wabbits in-radius fradius with [agent-kind-string = "ant"]
+  if any? wabbits in-radius fradius with [agent-kind-string = [agent-kind-string] of myself]
   [
     ;ask one-of wabbits in-radius fradius with [agent-kind-string = "ant"]
-  let friend one-of wabbits in-radius fradius with [agent-kind-string = "ant"]
+  let friend one-of wabbits in-radius fradius with [agent-kind-string = [agent-kind-string] of myself ]
   if friend != nobody [
   let friend-x [xcor] of friend
   let friend-y [ycor] of friend
@@ -2121,7 +2226,7 @@ to java-reproduce-spider
   hatch 1 [
     setxy [xcor] of myself [ycor] of myself
       set heading random 360
-       set color red
+      set color grey
        set shape "spider"
        set size 6
        set energy ([energy] of myself * 0.5)
@@ -2131,6 +2236,7 @@ to java-reproduce-spider
       ]
   
 end
+
 to java-reproduce-frog 
   hatch 1 [
     setxy [xcor] of myself [ycor] of myself
@@ -2145,6 +2251,7 @@ to java-reproduce-frog
       ]
   
 end
+
 to java-reproduce-snake 
   hatch 1 [
     setxy [xcor] of myself [ycor] of myself
@@ -2159,6 +2266,7 @@ to java-reproduce-snake
       ]
   
 end
+
 to java-reproduce-bird 
   hatch 1 [
     setxy [xcor] of myself [ycor] of myself
@@ -2187,34 +2295,7 @@ to java-reproduce-unicorn
       ]
   
 end
-;to java-patch-color [new_color]
- ; ask [neighbors] of patch-here  
-  ;[
-   ; set ppaint-color new_color  
-    ;set pcolor new_color
-    ;set is-food true
-    ;set is-depleted false
-  ;]
-;end
 
-;to java-set-paintcolor [arg-paint]
- ; set paint-color arg-paint
-;end
-
-
-;to java-set-food-preference-to-here
- ; set paint-color [ ppaint-color ] of patch-here 
-;end
-
-
-;to java-tandum-running
- ; let student one-of wabbits-here
-  ;if student != nobody [
-   ; if [shape] of student = "bug" [
- ; ask student [set paint-color [paint-color] of myself ]
-  ;  ]
- ; ] 
-;end
   
 to java-add-energy [addedEnergy]
   set energy energy + addedEnergy
@@ -2231,14 +2312,6 @@ to java-dropoff-food-here [afoodprob]
    ]
 end
 
-;; Come back and fix later
-;to java-pollinate
- ; if pcolor = brown = false  
-  ;[if pcolor = green = false 
-   ; [  
-    ;if random 100 > 50 
-    ;[ set paint-color ppaint-color]]]
-;end 
 
 to java-agent-die
   die
@@ -2250,7 +2323,8 @@ to java-eat-enemy
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string != [agent-kind-string] of myself and agent-kind-string != "queen-ant" and agent-kind-string != "queen-flying-ant" ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2262,7 +2336,8 @@ to java-eat-ant
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "ant"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2274,7 +2349,8 @@ to java-eat-flying-ant
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "flying-ant"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2287,7 +2363,8 @@ to java-eat-spider
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "spider"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2299,7 +2376,8 @@ to java-eat-frog
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "frog"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
     
@@ -2310,7 +2388,8 @@ to java-eat-snake
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "snake"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2321,7 +2400,8 @@ to java-eat-bird
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "bird"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
     
@@ -2332,7 +2412,8 @@ to java-eat-pollinator
   [let prey one-of wabbits in-radius food-radius with [agent-kind-string = "pollinator"  ]
     
     if prey != nobody
-    [set energy energy + [energy] of prey
+    [if [energy] of prey > 0 
+      [set energy energy + [energy] of prey]
       ask prey [die]    ]
   ]
    
@@ -2341,12 +2422,10 @@ end
 to java-eat-grass
   if not is-depleted and not is-ant-nest and not is-flying-ant-nest
   [ 
-    set paint-color ppaint-color
     set is-food false
     set is-depleted true
-    let a_color (random 6) + 32  ;; a_color gets a random shade of brown
-    set pcolor a_color
-    set ppaint-color a_color
+    ask patch-here [set pcolor  (random 6) + 32]  ;; patch a random shade of brown
+    set energy energy + 1
   ]
 end
 
@@ -2643,7 +2722,7 @@ end
 ;       ]
 ;end
 to make-observer
-  create-wabbits 1
+  create-wabbits 10
         [setxy random-xcor random-ycor
         set heading random 360
         set color red
@@ -2655,10 +2734,10 @@ to make-observer
         set odistfromlast NaN
         show-turtle
        ]
-  create-wabbits 1
+  create-wabbits 10
         [setxy random-xcor random-ycor
         set heading random 360
-        set color red
+        set color blue
         set shape "flying-ant1"
         set size 3
         set energy 100
@@ -2670,7 +2749,7 @@ to make-observer
        create-wabbits 1
         [setxy 25 25
         set heading 90
-        set color yellow
+        set color blue
         set paint-color color
         set size 4
         set shape "bug"
@@ -2683,7 +2762,7 @@ to make-observer
      create-wabbits 1
         [setxy -25 -25
         set heading 90
-        set color yellow
+        set color blue
         set paint-color color
         set size 4
         set shape "bug"
@@ -2699,7 +2778,7 @@ to make-observer
         set color yellow
         set size 4
         set paint-color color
-        set shape "bug"
+        set shape "squirrel"
         set agent-kind-string "pollinator"
         set distfromlast NaN
         set odistfromlast NaN
