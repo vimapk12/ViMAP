@@ -12,6 +12,8 @@ measurepoints-own [
  tcolor
  tcycles
  tpopulation
+ T-ENERGY-AVG
+ tfood-preference
  
  theading
  todometer
@@ -55,7 +57,7 @@ wabbits-own
      previous-y
      
      has-food
-     paint-color
+     paint-color   ;; food-preference
      energy
      age
      of-preference
@@ -115,6 +117,7 @@ globals
     
     ;;NEEDED FOR MEASURE LINKING
     measure-points
+    measurepoint-count
     
     wabbits-list
     wabbit-kind-list
@@ -168,6 +171,7 @@ to setup
   ;ask patches [set ppaint-color green]
    ;ask wabbits [set paint-color yellow]
   set-defaults
+  set measure-points [ ]
   color-background-patches
   make-other-stuff
   create-blocks-list  
@@ -184,7 +188,6 @@ to setup
   create-chart-data-name-list
   create-categories-list
   ;;NEEDED FOR MEASURE LINKING
-  set measure-points []
   create-measure-option-string-lists
   create-measure-option-command-list
   create-var-name-list
@@ -257,9 +260,8 @@ to create-measure-option-string-lists
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
-  set tlist lput "Average" tlist 
-  set tlist lput "Proboscis" tlist
-  set tlist lput "Length" tlist
+  set tlist lput "Food" tlist 
+  set tlist lput "Preferences" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
   
   set tlist []
@@ -356,7 +358,8 @@ to cycle-ended
 end
 
 to create-predicate-list
-  set predicate-list ["has-food" "at-nest" "food-here" "patch-matches-preference" "random-50%" "random-10%" "random-1%" "has-50-energy" "has-0-energy" "at-friend"]
+  set predicate-list ["has-food" "at-nest" "food-here" "patch-matches-preference" "random-50%"
+     "random-10%" "random-1%" "has-50-energy" "has-0-energy" "at-friend"]
 end
 
 to create-comp-int-list
@@ -368,40 +371,75 @@ to create-comp-vars-lists
   set comp-vars-right-vars ["heading" "step-size"]
 end
 
+;to-report java-food-here [aWho]
+ ; let food-radius 2
+;  let result true
+;  ask turtle aWho
+  ;[
+  ;  set result [is-food] of patch-here
+ ; set result any? patches in-radius food-radius with [is-food]
+ ; ]
+ ; report result
+;end
+
 to-report java-food-here [aWho]
   let result false
   let food-radius 2
-  ask turtle aWho
+  if any? turtles with [who = aWho]
+  
+  [ask turtle aWho
   [
     set result any? patches in-radius food-radius with [is-food = true]
+  ]
   ]
   report result
 end
 
 to-report java-at-nest [aWho]
-  let result false
+  let result true
+  if any? turtles with [who = aWho] [
   ask turtle aWho
   [
     set result [is-nest] of patch-here
+  ]
   ]
   report result
 end
 
 to-report java-at-friend [aWho]
   let result false
+  if any? turtles with [who = aWho] [
   ask turtle aWho
   [
      set result any? other wabbits in-radius 2 with [skin-hydrocarbon = [skin-hydrocarbon] of myself]
   ]
+  ]
   report result
 end
+    
+  
+
+;to-report java-has-food [aWho]
+  
+ ;   let result false
+  
+ ; ask turtle aWho
+ ; [
+ ;   if has-food = true [set result true]
+ ; ]
+  
+ ; report result
+;end
 
 to-report java-has-food [aWho]
+  
   let result false
-  ask turtle aWho
+  if any? turtles with [who = aWho]
+   [ask turtle aWho
   [
     set result has-food
   ]
+   ]
   report result
 end
  
@@ -425,18 +463,20 @@ end
 
 to-report java-patch-matches-preference [aWho]
   let result false
-  ask turtle aWho[
+  if any? turtles with [who = aWho]
+  [ask turtle aWho[
     if shade-of? paint-color [ppaint-color] of patch-here = true [set result true]
-  ]
+  ]]
   report result
 end
 
 to-report java-random-50% [aWho]
   let result false
+  if any? turtles with [who = aWho][
   if aWho != nobody [
   ask turtle aWho[
     if random 100 <= 50 = true [set result true]
-  ]]
+  ]]]
   report result
 end
 
@@ -446,9 +486,11 @@ end
 
 to-report java-random-10% [aWho]
   let result false
+  if any? turtles with [who = aWho] [
   if aWho != nobody [
   ask turtle aWho[
     if random 100 <= 10 = true [set result true]
+  ]
   ]
   ]
   report result
@@ -456,9 +498,11 @@ end
 
 to-report java-random-1% [aWho]
   let result false
-  if aWho != nobody [
+  if any? turtles with [who = aWho]
+  [if aWho != nobody [
   ask turtle aWho[
     if random 100 <= 1 = true [set result true]
+  ]
   ]
   ]
   report result
@@ -466,9 +510,11 @@ end
 
 to-report java-has-50-energy [aWho]
   let result false
-  if aWho != nobody [
+  if any? turtles with [who = aWho]
+  [if aWho != nobody [
   ask turtle aWho[
     if energy > 50 = true [set result true]
+  ]
   ]
   ]
   report result
@@ -476,8 +522,10 @@ end
 
 to-report java-has-0-energy [aWho]
   let result false
+  if any? turtles with [who = aWho] [
   ask turtle aWho[
     if  energy <= 0 = true [set result true]
+  ]
   ]
   report result
 end
@@ -628,6 +676,8 @@ create-blocks 1
     ; other variables not applicable
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
       
           create-blocks 1
   [
@@ -686,16 +736,16 @@ create-blocks 1
   ]
       set blocks-list lput max-one-of blocks [who] blocks-list
        
- ;                      create-blocks 1
-  ;[
-  ;;  set block-name "at-friend"
-  ;  set category "Control"
-  ;  set arg-list []
-  ;  set is-observer false
-  ;  set is-basic true
+                       create-blocks 1
+  [
+    set block-name "at-friend"
+    set category "Control"
+    set arg-list []
+    set is-observer false
+    set is-basic true
     ; other variables not applicable
- ; ]
-  ;    set blocks-list lput max-one-of blocks [who] blocks-list
+  ]
+      set blocks-list lput max-one-of blocks [who] blocks-list
          
   create-blocks 1
   [
@@ -1101,7 +1151,7 @@ to create-agent-kind-list
     set primitives-list lput "teach" primitives-list
     set primitives-list lput "set-paintcolor" primitives-list
      set primitives-list lput "tandum-running" primitives-list
-     set primitives-list lput "reproduce" primitives-list
+    ; set primitives-list lput "reproduce" primitives-list
      set primitives-list lput "add-food" primitives-list
      set primitives-list lput "add-energy" primitives-list
      set primitives-list lput "lose-energy" primitives-list
@@ -1147,7 +1197,7 @@ to create-agent-kind-list
     set primitives-list lput "add-food" primitives-list
     set primitives-list lput "patch-color" primitives-list
     set primitives-list lput "set-paintcolor" primitives-list
-   set primitives-list lput "reproduce" primitives-list
+   ;set primitives-list lput "reproduce" primitives-list
     set primitives-list lput "add-energy" primitives-list
      set primitives-list lput "lose-energy" primitives-list
       set primitives-list lput "agent-die" primitives-list
@@ -1230,7 +1280,7 @@ create-agent-kinds 1
     set primitives-list lput "teach" primitives-list
     set primitives-list lput "set-paintcolor" primitives-list
      set primitives-list lput "tandum-running" primitives-list
-     set primitives-list lput "reproduce" primitives-list
+    ; set primitives-list lput "reproduce" primitives-list
      set primitives-list lput "add-food" primitives-list
      set primitives-list lput "add-energy" primitives-list
      set primitives-list lput "lose-energy" primitives-list
@@ -1306,7 +1356,7 @@ end
 
 to java-set-step-size [ aspeed ]
   set bonus-speed aspeed
-  if (aspeed < 0)  [ set bonus-speed 0 ]
+  if (aspeed < 0) [ set bonus-speed 0 ]
 end
 
 to-report java-heading [aWho]
@@ -1399,50 +1449,64 @@ end
 
 ;;NEEDED FOR MEASURE LINKING
 to java-place-measure-point
-  hatch-measurepoints 1
-  [
-   set measure-points lput self measure-points
-   set size 15
-   set shape "flag"
-   set color black 
-   
-   set tagentkind [agent-kind-string] of myself
-   set tcycles count measurepoints - 1
-   set theading [heading] of myself
-   set todometer [ odometer ] of myself
-   ifelse [distfromlast] of myself = NaN or [odistfromlast] of myself = NaN 
-   [set taccel NaN]
-   [set taccel [ distfromlast - odistfromlast ] of myself]
-   set tdistfromlast [ distfromlast ] of myself
-   set tspeed [bonus-speed] of myself
-   set tcolor [ color ] of myself
-   set tpenwidth [ pen-size ] of myself
-   set tpencolor [ color ] of myself
-   
-   set label-color black
-   set label tcycles
-   ht
-  ]
-  set odistfromlast distfromlast
-  set distfromlast 0
 end
 
+to-report mean-ant-energy
+  let result 0
+  set result mean [energy] of wabbits with [agent-kind-string = "ant"]
+  ;ask wabbits with [agent-kind-string = "ant"]
+  ;[set result result + energy]
+  report result; / count wabbits with [agent-kind-string = "ant"]
+end
 
+to-report mean-food-preference
+  let result 0
+  set result mean [paint-color] of wabbits with [agent-kind-string = "ant"]
+  ;ask wabbits with [agent-kind-string = "ant"]
+  ;[set result result + energy]
+  report result; / count wabbits with [agent-kind-string = "ant"]
+end
+
+to-report modes-food-preference
+  let result 0
+  set result modes [paint-color] of wabbits with [agent-kind-string = "ant"]
+  ;ask wabbits with [agent-kind-string = "ant"]
+  ;[set result result + energy]
+  report result; / count wabbits with [agent-kind-string = "ant"]
+end
+
+;;NEEDED FOR GRAPHING
 to place-measure-point
+  set measurepoint-count measurepoint-count + 1
   create-measurepoints 1
   [
     set measure-points lput self measure-points
-    set tagentkind "ant"
-    set tcycles count measurepoints - 1
-    set tpopulation (count wabbits with [agent-kind-string = "ant"])
-    set measurepoint-creator "ant"
     ht
+    set tcolor mean-food-preference
+    set tagentkind "ant"
+    set tcycles measurepoint-count
+    
+    set tpopulation (count wabbits with [agent-kind-string = "ant"])
+    set T-ENERGY-AVG mean-ant-energy
+    set measurepoint-creator "ant"
   ]
+  ask measurepoints with [tagentkind = "food-preference"]
+  [
+    set tfood-preference set-food-preference-and-color ([tcycles] of self) 
+  ]                                                            ;; "food-preference" measurepoints will
+                                                               ;;  have a tcycle from 1 - 14
+                                                               ;;  there are only 14 of them.
 end
 
+;; measurepoint procedure
+to-report set-food-preference-and-color [i]
+  let shade ((i * 10) - 5)
+  set tcolor shade
+  report count wabbits with [agent-kind-string = "ant" and shade-of? paint-color shade]
+end
 
-
-
+    
+  
 to java-grow-to [asize]
    if size < 12 [set size size + asize]
 end
@@ -1462,9 +1526,11 @@ to java-randomize-patch-color [acolorplaceprob]
   ]
 end
 
-
 to java-reproduce 
-  hatch-wabbits 1 
+  let ants count wabbits with [agent-kind-string = "ant"]
+    ;if ants < 40[
+    ;set color yellow
+    hatch-wabbits 1 
   [
     setxy [xcor] of myself [ycor] of myself
     set heading random 360
@@ -1476,15 +1542,17 @@ to java-reproduce
     set distfromlast NaN
     set odistfromlast NaN
   ]
+  set color red
+   ; ]
 end
 
 to java-patch-color [new_color]
   ask [neighbors] of patch-here  
   [
     set ppaint-color new_color  
-    set pcolor new_color
     set is-food true
-    set is-depleted false
+    set pcolor new_color
+    
   ]
 end
 
@@ -1540,12 +1608,15 @@ end
 to java-eat-agent
   ;let food-radius 2
   let prey one-of other wabbits-here
-  if prey != nobody [
+  ifelse prey != nobody [
     ask prey 
     [
+      set bonus-speed 0
+      set has-food false
       die
-    ]
-  ]
+    ]]
+    [print "2"]
+  
 end
 
 to java-eat-grass
@@ -1683,6 +1754,7 @@ to make-other-stuff
         set color red
         set shape "ant"
         set size 3
+        set skin-hydrocarbon 0
         set energy 100
         set agent-kind-string "ant"
         set distfromlast NaN
@@ -1768,6 +1840,25 @@ to make-other-stuff
         set previous-y ""
         ;if agent-kind-string != "queen-ant" or agent-kind-string != "pollinator" [set size 3]
        ]
+       
+  let j 1
+  create-measurepoints 14
+  [
+   ht
+   set measure-points lput self measure-points
+   
+   set tagentkind "food-preference"
+   
+   set tcycles j
+   set j (j + 1)
+ ; set label-color black
+ ; set label tcycles
+  ]
+  
+ ; let a_shade 0
+ ;count wabbits with [shade-of? paint-color a_shade] and with [agent-kind-string = "ant"]
+ ; set a_shade (a_shade + 10)
+  
 end
      
 
@@ -1777,7 +1868,7 @@ to-report get-measures
   [
     ask ? 
     [
-      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -1785,14 +1876,14 @@ to-report get-measures
 end
 
 to-report get-measures-for [an-agent-kind]
-  let result []
+  let result obtain-histogram-list
   let relevant-measures measurepoints with [ tagentkind = an-agent-kind ]
   let relevant-list sort relevant-measures
   foreach relevant-list 
   [
     ask ? 
     [ 
-      let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
+      let datarep (list who mean-food-preference (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tfood-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
       set result lput datarep result 
     ]
   ]
@@ -1802,6 +1893,18 @@ end
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   report get-measures-for an-agent-kind
 end
+
+
+to-report obtain-histogram-list
+  let result [ ] 
+  ask measurepoints with [tagentkind = "food-preference"]
+  [
+    let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles tpopulation T-ENERGY-AVG tfood-preference theading tdistfromlast tspeed taccel tpenwidth tpencolor)
+    set result lput datarep result
+  ]
+  report result
+end
+
 
 to-report get-agent-kinds-as-csv
   let retn ""

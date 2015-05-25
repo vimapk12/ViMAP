@@ -124,18 +124,14 @@ public final class BlockView extends Box {
         Box rowBox = Box.createHorizontalBox();
         rowBox.setAlignmentX(LEFT_ALIGNMENT);
         this.labels = new HashSet<JLabel>();
-        JLabel nameLabel = new JLabel(aTemplate.getDisplayName().
-             replace("-", " ") + " ");
-        // We decided that we want step size to actually be displayed as 
-        // step-size.  
-        String s = nameLabel.getText();
-        if ( s.contains("step size") )
-        {
-          s = s.replace("step size", "step-size");
-          nameLabel.setText(s);
-        }
-        s = null;
-        // this.nameLabel = new JLabel(aTemplate.getDisplayName() + " ");
+        
+        JLabel nameLabel = new JLabel(aTemplate.getDisplayName());
+        String a_name = nameLabel.getText();
+        a_name = prep_block_display_name(a_name);
+        a_name = formatting_adjustments(a_name);
+        nameLabel.setText(a_name);
+        
+         
         Font font = nameLabel.getFont();
         // same font but bold
         Font boldFont = null;
@@ -180,16 +176,21 @@ public final class BlockView extends Box {
             }
 
             rowBox.add(newComponent);
+            
 
-            if (i == 0 && aTemplate.getLabelAfterFirstArg() != null) {
+            if ( ok_to_add_extra_label(i) && aTemplate.getLabelAfterFirstArg() != null ) {
                 JLabel extraLabel = 
                     new JLabel(aTemplate.getLabelAfterFirstArg());
                 extraLabel.setFont(boldFont);
                 extraLabel.setForeground(Color.WHITE);
+                String a_label = extraLabel.getText();
+                a_label = formatting_adjustments(a_label);
+                extraLabel.setText(a_label);
                 this.labels.add(extraLabel);
                 rowBox.add(extraLabel);
             }            
         }
+        
         
         // add "then" label after condition, for "If-else" block
       //  if (aTemplate.getPredefinedBlockType() == PredefinedBlockType.IF_ELSE) {
@@ -647,5 +648,64 @@ public final class BlockView extends Box {
     
     public Point getClickOffset() {
         return this.clickOffsetPoint;
+    }
+    
+
+
+    // This is a utility method that determines when the label after arg should 
+    // be added in the creation of a block view
+    private boolean ok_to_add_extra_label(int i) {
+      int critical = 0;
+      switch(template.getDisplayName()) {
+        case "set-dropdown-op-secret-number":
+          critical = 1;
+          break;
+        default:
+          break;
+      }
+      return i == critical;
+    }
+
+
+    // This is a utility method that displays the proper name for each command block.
+    // This class is called BlockView, so I want to keep the "view" logic in this class.
+    // Each commmand block must have a unique string name, but the display names can be 
+    // the same.  
+    private static String prep_block_display_name(String s) {
+      switch(s) {
+        case "set-textbox":
+        case "set-op-textbox":
+        case "set-dropdown":
+        case "set-dropdown-secret-number":
+        case "set-dropdown-op-secret-number":
+        case "set-movement-textbox":
+        case "set-movement-op-textbox":
+        case "set-movement-dropdown":
+        case "set-pen-textbox":
+        case "set-pen-op-textbox":
+        case "set-pen-dropdown":
+    	  s = "set";
+    	  break;
+        case "set-secret-number-dropdown":
+        case "set-secret-number-textbox":
+          s = "set-secret-number-equal-to";
+          break;
+        case "set-secret-number-op-textbox":
+          s = "set-secret-number";
+          break;
+      }
+      s = s.replace("-", " ") + " ";
+      return s;
+    }
+    
+    
+    private static String formatting_adjustments(String s) {
+      if ( s.contains("step size") ) {
+        s = s.replace("step size", "step-size");
+      }
+      if ( s.contains("secret number") ) {
+        s = s.replace("secret number", "secret-number");
+      }
+      return s;
     }
 }
