@@ -1,3 +1,4 @@
+extensions [ pc ]
 ;;--;;--;;--;;--;;--;;--;;
 ;  
 ;   Copyright 2014  
@@ -21,6 +22,7 @@ breed [args arg]
 breed [flowers flower]
 breed [birds bird]
 breed [measurepoints measurepoint]
+breed [snapshots snapshot]
 breed [deads dead]
 
 measurepoints-own 
@@ -33,6 +35,11 @@ measurepoints-own
   t-proboscis-avg
   t-watched-energy
   measurepoint-creator
+]
+
+snapshots-own 
+[
+  cases 
 ]
 
 flowers-own
@@ -186,7 +193,6 @@ to setup ;; sets up the screen
   create-var-name-list
   
   highlight-animation
-  
   reset-ticks    ;; creates ticks and initializes them to 0
 end
 
@@ -1223,6 +1229,27 @@ to place-measure-point
     set measurepoint-creator "butterflies"
     ht
   ]
+  let caselist (list (list min-pxcor min-pycor max-pxcor max-pycor))
+  ask patches [
+    let ehere relevant-energy-here wabbits
+    if ehere > 0
+    [
+      set caselist lput (list pxcor pycor ehere) caselist 
+    ]
+  ]
+  create-snapshots 1 
+  [
+   ;ask wabbits
+   ;[
+   ;   set caselist lput (list xcor ycor energy) caselist
+   ;]
+   set cases caselist
+   ht
+  ]
+end
+
+to-report relevant-energy-here [ abreed ]
+  report sum [energy] of turtles-here with [ breed = abreed ]
 end
 
 to-report turtle-property [who-number property]
@@ -1376,6 +1403,14 @@ to-report get-measures
       set result lput datarep result
     ]
   ]
+  if any? snapshots
+  [
+    let shot last sort snapshots
+    ask shot
+    [
+      set result lput (sentence "\"SNAPSHOT\"" cases) result
+    ]
+  ]
   report result
 end
 
@@ -1389,6 +1424,14 @@ to-report get-measures-for [my-agent-kind]
     [ 
       let datarep (list who red "\"butterflies\"" tcycles t-energy-avg t-population t-proboscis-avg t-watched-energy) 
       set result lput datarep result 
+    ]
+  ]
+  if any? snapshots
+  [
+    let shot last sort snapshots
+    ask shot
+    [
+      set result lput (sentence "\"SNAPSHOT\"" cases) result
     ]
   ]
   report result
@@ -1405,6 +1448,14 @@ to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
     [ 
       let datarep (list who red "\"butterflies\"" (length result + 1) t-energy-avg t-population t-proboscis-avg t-watched-energy) 
       set result lput datarep result 
+    ]
+  ]
+  if any? snapshots
+  [
+    let shot last sort snapshots
+    ask shot
+    [
+      set result lput (sentence "\"SNAPSHOT\"" cases) result
     ]
   ]
   report result

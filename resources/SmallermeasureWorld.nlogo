@@ -12,12 +12,12 @@
 ;   
 ;;--;;--;;--;;--;;--;;--;; 
 
-
 breed [measurepoints measurepoint] ; used only to store data
 breed [plotters plotter] ; used only for drawing
 breed [shadows shadow] ; used as a label for each bar
 breed [bars bar] ; used only for visualization
-
+breed [dots dot]
+patches-own [ heatvar ]
 measurepoints-own 
 [
   ; properties to display in graph
@@ -31,6 +31,12 @@ measurepoints-own
 
 globals 
 [
+  distribution-data
+  ew-minpx
+  ew-minpy
+  ew-width
+  ew-height
+  
   graph-type
   ind-var-index
   dep-var-index
@@ -116,20 +122,23 @@ to update-measures [measure-data-list]
   
   foreach measure-data-list
   [
-    let measure-data-row ?    
-    if not any? measurepoints with [item 0 value-list = item 0 measure-data-row] ; item 0 is twho
+    let measure-data-row ?  
+    ifelse item 0 measure-data-row = "SNAPSHOT" [ set graph-type "distribution"  set distribution-data butfirst measure-data-row  ]  
     [
-      create-measurepoints 1
+      if not any? measurepoints with [item 0 value-list = item 0 measure-data-row] ; item 0 is twho
       [
-        let index 0
-        set value-list []
-        while [index < length measure-data-row]
+        create-measurepoints 1
         [
-          set value-list lput (item index measure-data-row) value-list
-          set index index + 1
+          let index 0
+          set value-list []
+          while [index < length measure-data-row]
+          [
+            set value-list lput (item index measure-data-row) value-list
+            set index index + 1
+          ]
+          
+          ht
         ]
-        
-        ht
       ]
     ]
   ]
@@ -155,7 +164,47 @@ to graph
   
   if graph-type = "multi-line"
   [graph-multi-line]
+  
+  if graph-type = "distribution"
+  [graph-distribution]
 end
+
+to graph-distribution
+  
+  ask patches [ set pcolor black ]
+  
+  let limits first distribution-data
+  set ew-minpx item 0 limits
+  set ew-minpy item 1 limits
+  set ew-width (item 2 limits) - ew-minpx
+  set ew-height (item 3 limits) - ew-minpy
+  
+  set distribution-data butfirst distribution-data
+  
+  ;ask dots [ die ]
+  ask patches [ set heatvar 0 ]
+  foreach distribution-data
+  [
+   let sx scale-x item 0 ? 
+   let sy scale-y item 1 ?
+   
+   ask patch sx sy [ set heatvar 3 * (item 2 ?) ]
+   ;create-dots 1 [ set shape "circle" set size 2 setxy sx sy  set color scale-color blue (item 2 ?) 0 30 ] 
+  ]
+  diffuse heatvar .667 
+  ask patches [ set pcolor scale-color blue heatvar 0 30 ]
+end
+
+to-report scale-x [ xv ]
+  let perc (xv - ew-minpx ) / ( ew-width + 1)
+  report min-pxcor + perc * (max-pxcor - min-pxcor)
+end
+
+to-report scale-y [ yv ]
+  let perc (yv - ew-minpy) / (ew-height + 1)
+  report min-pycor + perc * (max-pycor - min-pycor)
+end
+
 
 to-report should-adjust-x-axis-ycor [ymin ymax]
   let result false
@@ -1270,7 +1319,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 5.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
