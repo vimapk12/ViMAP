@@ -559,7 +559,8 @@ public abstract class DomainModelImporter {
         }
     }
     
-    private static BlockTemplate getSetIfElseTemplate() {
+    @SuppressWarnings("unused")
+	private static BlockTemplate getSetIfElseTemplate() {
         List<String> setPredicateList = getSetPredicateList();
         if (setPredicateList.size() == 0) {
             return null;

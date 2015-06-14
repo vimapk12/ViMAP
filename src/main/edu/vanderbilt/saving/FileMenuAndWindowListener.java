@@ -23,7 +23,6 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.channels.*;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
