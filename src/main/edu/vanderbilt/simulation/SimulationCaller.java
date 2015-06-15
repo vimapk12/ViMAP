@@ -987,7 +987,7 @@ public abstract class SimulationCaller {
             for (MeasureWorld measureWorld: measureWorlds) {
                 String agent = measureWorld.getSettings().getAgent();
                 try {
-                	final int nextIndex = measureWorld.getNextDataPointIndex();
+                    final int nextIndex = measureWorld.getNextDataPointIndex();
                     Object report = null;
                     if (measureWorld.getSettings().isShowAllMeasurePoints()) {
                         report = 
@@ -995,8 +995,8 @@ public abstract class SimulationCaller {
                     } else {
                         report = 
                             comp.report(
-                        		"get-measures-for-filtered-starting-with \"" 
-                				+ agent + "\" \"" + agent + "\" " + nextIndex
+                                "get-measures-for-filtered-starting-with \"" 
+                                + agent + "\" \"" + agent + "\" " + nextIndex
                             );
                     }
                     if (
@@ -1011,8 +1011,8 @@ public abstract class SimulationCaller {
                         //String altLDump = org.nlogo.api.Dump.list(measureList, false, true);
                         //String altLDmp2 = org.nlogo.api.Dump.list(measureList, true, false); 
                         measureWorld.appendNewMeasureData(
-                    		MeasureWorld.stripOuterSquareBrackets(listDump)
-                		);
+                            MeasureWorld.stripOuterSquareBrackets(listDump)
+                        );
                         String command = "update-measures [" + measureWorld.getOldMeasureData() + "]";
                         command = command.replace(',', ' ');
                         measureWorld.runMeasureCommand(command);
@@ -1040,7 +1040,7 @@ public abstract class SimulationCaller {
             MeasureWorld world = measureWorlds.get(index - 1);
             String agent = world.getSettings().getAgent();
             try {
-            	final int nextIndex = world.getNextDataPointIndex();
+                final int nextIndex = world.getNextDataPointIndex();
                 Object report = null;
                 if (world.getSettings().isShowAllMeasurePoints()) {
                     report = comp.report("get-measures-for-starting-with \"" + agent + "\" " + nextIndex);
@@ -1057,20 +1057,20 @@ public abstract class SimulationCaller {
                 ) {
                     LogoList logoList = (LogoList) report;
                     world.appendNewMeasureData(
-                		MeasureWorld.stripOuterSquareBrackets(
-            				logoList.toString().replace(',', ' ')
-        				)
-            		);
+                        MeasureWorld.stripOuterSquareBrackets(
+                            logoList.toString().replace(',', ' ')
+                        )
+                    );
                     
                     String command = 
-                		"update-measures [" + world.getOldMeasureData() + "]";
+                        "update-measures [" + world.getOldMeasureData() + "]";
                     command = command.replace(',', ' ');
                     
                     world.runMeasureCommand(command);
                     world.repaint();
                 } else {
                     // no measure points placed yet
-                	world.resetOldMeasureData();
+                    world.resetOldMeasureData();
                     world.runMeasureCommand("clear-measures");
                     world.repaint();
                 }
