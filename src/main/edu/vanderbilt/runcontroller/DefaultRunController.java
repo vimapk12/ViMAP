@@ -440,7 +440,6 @@ public final class DefaultRunController implements RunController {
                 Util.printIfDebugging("will schedule timer");
                 highlightIfNeeded();
                 this.isWaiting = true;
-                // new TimerScheduler();
                 this.timerScheduler.scheduleNewContinue();
                 return;
             }
@@ -530,7 +529,6 @@ public final class DefaultRunController implements RunController {
             highlightIfNeeded();
             this.previousBlockForHighlight = block;
             this.isWaiting = true;
-            // new TimerScheduler();
             this.timerScheduler.scheduleNewContinue();
             return;
         }
@@ -1173,8 +1171,8 @@ public final class DefaultRunController implements RunController {
     }
     
     private class TimerScheduler {
-    	
-    	private final Timer timer;
+        
+        private final Timer timer;
         /**
          * Constructor.
          */
@@ -1183,7 +1181,7 @@ public final class DefaultRunController implements RunController {
         }
         
         public void scheduleNewContinue() {
-        	timer.schedule(
+            timer.schedule(
                 new TimerJob(), 
                 getGlobalEnvironment().getDelayInMillis()
             );
