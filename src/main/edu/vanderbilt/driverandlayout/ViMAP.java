@@ -286,13 +286,13 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ant-45.nlogo"; 
         
         // Bird-Butterfly
-       final String netLogoFile = "/bird-butterfly4.1.nlogo";
+        // final String netLogoFile = "/bird-butterfly4.1.nlogo";
        
-       // Bird-Butterfly
-       // final String netLogoFile = "/ant-bird-butterfly3.nlogo";
+        // Bird-Butterfly
+        // final String netLogoFile = "/ant-bird-butterfly3.nlogo";
         
         // Image Computation
-         //final String netLogoFile = "/imageCompData.nlogo";
+        // final String netLogoFile = "/imageCompData.nlogo";
         
         // Image Computation with Sensing
         // final String netLogoFile = "/imageCompDataArd.nlogo";
@@ -305,10 +305,10 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ant-food-grab5.nlogo";
          
         // Two Turtle
-        // final String netLogoFile = "/twoTurtle-measure.nlogo";
+        final String netLogoFile = "/twoTurtle-measure.nlogo";
         
         // 1 Turtle, 1 sensor
-         //final String netLogoFile = "/oneT-ard-measure2.nlogo";
+        //final String netLogoFile = "/oneT-ard-measure2.nlogo";
         
         // 2 Turtle, 1 sensor
         // final String netLogoFile = "/twoTurtle-arduino.nlogo";
