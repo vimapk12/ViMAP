@@ -286,7 +286,7 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ant-45.nlogo"; 
         
         // Bird-Butterfly
-       //final String netLogoFile = "/bird-butterfly4.1.nlogo";
+       final String netLogoFile = "/bird-butterfly4.1.nlogo";
        
        // Bird-Butterfly
        // final String netLogoFile = "/ant-bird-butterfly3.nlogo";
@@ -298,7 +298,7 @@ public abstract class ViMAP {
         // final String netLogoFile = "/imageCompDataArd.nlogo";
         
         // 1 Turtle
-         final String netLogoFile = "/oneTurtle-measure.nlogo";
+        // final String netLogoFile = "/oneTurtle-measure.nlogo";
         
         // Kit's Ant Models
         // final String netLogoFile = "/ant-food-grab2.nlogo";http://anthopper.smugmug.com/NashvilleMusic/Bobbys-Idylle-Hour/i-BzpFS4L
