@@ -163,6 +163,7 @@ public abstract class SimulationCaller {
         
         try {
             for (MeasureWorld measureWorld: measureWorlds) {
+                measureWorld.resetOldMeasureData();
                 measureWorld.runMeasureCommandLater(RESET_COMMAND);
             }
         } catch (CompilerException e) {
@@ -986,14 +987,16 @@ public abstract class SimulationCaller {
             for (MeasureWorld measureWorld: measureWorlds) {
                 String agent = measureWorld.getSettings().getAgent();
                 try {
+                	final int nextIndex = measureWorld.getNextDataPointIndex();
                     Object report = null;
                     if (measureWorld.getSettings().isShowAllMeasurePoints()) {
                         report = 
-                            comp.report("get-measures-for \"" + agent + "\"");
+                            comp.report("get-measures-for-starting-with \"" + agent + "\" " + nextIndex);
                     } else {
                         report = 
                             comp.report(
-                "get-measures-for-filtered \"" + agent + "\" \"" + agent + "\""
+                        		"get-measures-for-filtered-starting-with \"" 
+                				+ agent + "\" \"" + agent + "\" " + nextIndex
                             );
                     }
                     if (
@@ -1007,13 +1010,16 @@ public abstract class SimulationCaller {
                         String listDump = org.nlogo.api.Dump.list(measureList, false, false); 
                         //String altLDump = org.nlogo.api.Dump.list(measureList, false, true);
                         //String altLDmp2 = org.nlogo.api.Dump.list(measureList, true, false); 
-                        String command = 
-                            "update-measures " + listDump; //measureList.toString();
+                        measureWorld.appendNewMeasureData(
+                    		MeasureWorld.stripOuterSquareBrackets(listDump)
+                		);
+                        String command = "update-measures [" + measureWorld.getOldMeasureData() + "]";
                         command = command.replace(',', ' ');
                         measureWorld.runMeasureCommand(command);
                         measureWorld.repaint();
                     } else {
                         // no measure points placed yet
+                        measureWorld.resetOldMeasureData();
                         measureWorld.runMeasureCommand("clear-measures");
                         measureWorld.repaint();
                     }
@@ -1034,14 +1040,15 @@ public abstract class SimulationCaller {
             MeasureWorld world = measureWorlds.get(index - 1);
             String agent = world.getSettings().getAgent();
             try {
+            	final int nextIndex = world.getNextDataPointIndex();
                 Object report = null;
                 if (world.getSettings().isShowAllMeasurePoints()) {
-                    report = comp.report("get-measures-for \"" + agent + "\"");
+                    report = comp.report("get-measures-for-starting-with \"" + agent + "\" " + nextIndex);
                 } else {
                     report = 
                         comp.report(
-                            "get-measures-for-filtered \"" 
-                            + agent + "\" \"" + agent + "\""
+                            "get-measures-for-filtered-starting-with \"" 
+                            + agent + "\" \"" + agent + "\" " + nextIndex
                         );
                 }
                 if (
@@ -1049,15 +1056,21 @@ public abstract class SimulationCaller {
                     && ((LogoList) report).size() > 0
                 ) {
                     LogoList logoList = (LogoList) report;
-                    final String command = 
-                        "update-measures " 
-                        + logoList.toString().replace(',', ' '
-                    );
+                    world.appendNewMeasureData(
+                		MeasureWorld.stripOuterSquareBrackets(
+            				logoList.toString().replace(',', ' ')
+        				)
+            		);
+                    
+                    String command = 
+                		"update-measures [" + world.getOldMeasureData() + "]";
+                    command = command.replace(',', ' ');
                     
                     world.runMeasureCommand(command);
                     world.repaint();
                 } else {
                     // no measure points placed yet
+                	world.resetOldMeasureData();
                     world.runMeasureCommand("clear-measures");
                     world.repaint();
                 }
