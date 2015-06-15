@@ -216,6 +216,29 @@ to-report get-measures
   report result
 end
 
+to-report get-measures-for-starting-with [an-agent-kind start-index]
+  let result []
+  let relevant-measures measurepoints
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        let datarep (list who green "\"followers\"" tcycles tcc tcd tdc tdd) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
+to-report get-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index]
+  report get-measures-for-starting-with an-agent-kind start-index
+end
+
+
 to-report get-measures-for [an-agent-kind]
   report get-measures
 end

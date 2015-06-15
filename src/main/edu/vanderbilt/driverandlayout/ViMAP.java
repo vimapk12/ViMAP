@@ -269,18 +269,10 @@ public abstract class ViMAP {
         // final String netLogoFile = "/fox.nlogo";
         // final String netLogoFile = "/wolf-sheep.nlogo";
         // final String netLogoFile = "/running.nlogo";
-        // final String netLogoFile = "/electricity-vimap.nlogo";
-        // final String netLogoFile = "/ants.nlogo";
-        // final String netLogoFile = "/oneTurtle-measure-surge.nlogo";
-        // final String netLogoFile = "/imageComp.nlogo";               
-        // final String netLogoFile = "/oneTurtle-measure-surge.nlogo";
         // final String netLogoFile = "/imageComp.nlogo";
-        // final String netLogoFile = "/ramps-measure.nlogo";
         // final String netLogoFile = "/oneT-ard-2sensor.nlogo";
         // final String netLogoFile = "/oneT-ard-2sensor-v2.nlogo";
         // final String netLogoFile = "/oneT-ard-2sensor-v2.nlogo";
-        // final String netLogoFile = "/ethnocentrism.nlogo";
-        // final String netLogoFile = "/ethnocentrism-measure.nlogo";
         
         // Ants
         // final String netLogoFile = "/ant-45.nlogo"; 
@@ -298,14 +290,14 @@ public abstract class ViMAP {
         // final String netLogoFile = "/imageCompDataArd.nlogo";
         
         // 1 Turtle
-        // final String netLogoFile = "/oneTurtle-measure.nlogo";
+        final String netLogoFile = "/oneTurtle-measure.nlogo";
         
         // Kit's Ant Models
         // final String netLogoFile = "/ant-food-grab2.nlogo";http://anthopper.smugmug.com/NashvilleMusic/Bobbys-Idylle-Hour/i-BzpFS4L
         // final String netLogoFile = "/ant-food-grab5.nlogo";
          
         // Two Turtle
-        final String netLogoFile = "/twoTurtle-measure.nlogo";
+        // final String netLogoFile = "/twoTurtle-measure.nlogo";
         
         // 1 Turtle, 1 sensor
         //final String netLogoFile = "/oneT-ard-measure2.nlogo";
