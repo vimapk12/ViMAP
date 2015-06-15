@@ -552,7 +552,7 @@ public final class MeasureWorld extends JPanel {
     }
     
     public int getNextDataPointIndex() {
-    	if (this.oldMeasureData == null | this.oldMeasureData.length() == 0) {
+    	if (this.oldMeasureData == null || this.oldMeasureData.length() == 0) {
     		return 0;
     	}
     	
