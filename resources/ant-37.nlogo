@@ -3258,6 +3258,24 @@ to-report get-measures-for [an-agent-kind]
   report result
 end
 
+to-report get-measures-for-starting-with [an-agent-kind start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        let datarep (list who red (word "\"" tagentkind "\"") tcycles tpopulation theading tdistfromlast tspeed taccel tpenwidth tpencolor) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   report get-measures-for an-agent-kind
 end
@@ -3269,6 +3287,10 @@ to-report get-agent-kinds-as-csv
    set retn (word retn ([name] of ?) "," )
   ]
   report butlast retn
+end
+
+to-report get-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index]
+ report get-measures-for-starting-with an-agent-kind start-index
 end
 
 to-report java-is-repeat-var
