@@ -286,7 +286,8 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ant-37.nlogo"; 
         
         // Bird-Butterfly
-        // final String netLogoFile = "/bird-butterfly2.nlogo";
+        //final String netLogoFile = "/bird-butterfly2.nlogo";
+    	final String netLogoFile = "/bird-butterfly2a.nlogo";
         
         // Image Computation
         // final String netLogoFile = "/imageCompData.nlogo";
@@ -295,7 +296,7 @@ public abstract class ViMAP {
         // final String netLogoFile = "/imageCompDataArd.nlogo";
         
         // 1 Turtle
-        final String netLogoFile = "/oneTurtle-measure.nlogo";
+        //final String netLogoFile = "/oneTurtle-measure.nlogo";
         
         // Kit's Ant Models
     	// final String netLogoFile = "/ant-food-grab2.nlogo";

@@ -543,6 +543,7 @@ public final class MeasureWorld extends JPanel {
     
     // newData should have already had its outer square brackets removed.
     public void appendNewMeasureData(final String newData) {
+    	this.oldMeasureData = stripSnapshotsFrom(this.oldMeasureData);
         this.oldMeasureData = this.oldMeasureData + " " + newData;
     }
     
@@ -556,7 +557,13 @@ public final class MeasureWorld extends JPanel {
             return 0;
         }
         
-        return countMatchingSquareBrackets(this.oldMeasureData);
+        int count = countMatchingSquareBrackets(this.oldMeasureData);
+        int snaps = countSnapshots(this.oldMeasureData);
+        if (count >= snaps) {
+        	return count - snaps;
+        } else {
+        	return count;
+        }
     }
     
     public static String stripOuterSquareBrackets(final String input) {
@@ -566,6 +573,29 @@ public final class MeasureWorld extends JPanel {
         final char closeBracket = ']';
         final String withoutEither = withoutFirst.substring(0, withoutFirst.lastIndexOf(closeBracket));
         return withoutEither;
+    }
+    
+    private  String stripSnapshotsFrom(  String input ) {
+    	String startOfSnapshot = "[\"SNAPSHOT\"";
+    	int snapshotStartIndex = input.lastIndexOf(startOfSnapshot);
+    	if (snapshotStartIndex < 0) { return input; }
+    	String head = input.substring(0,snapshotStartIndex);
+    	String rest = input.substring(snapshotStartIndex) + " ";
+    	int snapshotDoneIndex = rest.indexOf(']');
+    	if (snapshotDoneIndex < 0 ) { return input; }
+    	String tail = rest.substring(snapshotDoneIndex + 1);
+    	return head + tail;
+    }
+    
+    private static int countSnapshots(final String input) {
+        Pattern pattern = Pattern.compile("SNAPSHOT");
+        Matcher  matcher = pattern.matcher(input);
+
+        int result = 0;
+        while (matcher.find()) {
+            result++;
+        }
+        return result;
     }
     
     private static int countMatchingSquareBrackets(final String input) {

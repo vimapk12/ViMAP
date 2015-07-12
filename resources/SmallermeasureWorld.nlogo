@@ -91,6 +91,7 @@ to setup
   
   set window-size 3
   set x-axis-ycor min-pycor + 2
+  set distribution-data [] 
   reset-ticks
 end
 
@@ -123,7 +124,10 @@ to update-measures [measure-data-list]
   foreach measure-data-list
   [
     let measure-data-row ?  
-    ifelse item 0 measure-data-row = "SNAPSHOT" [ set graph-type "distribution"  set distribution-data butfirst measure-data-row  ]  
+    ifelse item 0 measure-data-row = "SNAPSHOT" [ 
+      ;set graph-type "distribution"  
+      set distribution-data butfirst measure-data-row 
+     ]  
     [
       if not any? measurepoints with [item 0 value-list = item 0 measure-data-row] ; item 0 is twho
       [
@@ -140,6 +144,7 @@ to update-measures [measure-data-list]
           ht
         ]
       ]
+      
     ]
   ]
   
@@ -172,18 +177,31 @@ end
 to graph-distribution
   
   ask patches [ set pcolor black ]
+  if (length distribution-data > 0) [
+  ;let limits first distribution-data
+;  set ew-minpx item 0 limits
+;  set ew-minpy item 1 limits
+;  set ew-width (item 2 limits) - ew-minpx
+;  set ew-height (item 3 limits) - ew-minpy
   
-  let limits first distribution-data
-  set ew-minpx item 0 limits
-  set ew-minpy item 1 limits
-  set ew-width (item 2 limits) - ew-minpx
-  set ew-height (item 3 limits) - ew-minpy
+  set ew-minpx item 0 distribution-data
+  set ew-minpy item 1 distribution-data
+  set ew-width (item 2 distribution-data) - ew-minpx
+  set ew-height (item 3 distribution-data) - ew-minpy
   
-  set distribution-data butfirst distribution-data
+  set distribution-data sublist distribution-data 4 (length distribution-data) 
+  let processed-ddata []
+  let i 0
+  while [ i < length distribution-data - 3 ]
+  [
+   let newitem (list (item i distribution-data) (item (i + 1) distribution-data) (item (i + 2) distribution-data) )
+   set processed-ddata lput newitem processed-ddata
+   set i i + 3
+  ]
   
   ;ask dots [ die ]
   ask patches [ set heatvar 0 ]
-  foreach distribution-data
+  foreach processed-ddata
   [
    let sx scale-x item 0 ? 
    let sy scale-y item 1 ?
@@ -193,6 +211,7 @@ to graph-distribution
   ]
   diffuse heatvar .667 
   ask patches [ set pcolor scale-color blue heatvar 0 30 ]
+  ]
 end
 
 to-report scale-x [ xv ]
@@ -714,9 +733,20 @@ to graph-horizontal-lineup-height
   ask bars
   [die]
   clear-drawing
-  
+
   if any? measurepoints
   [
+;    ask one-of measurepoints [ 
+;      ask patch 36 8 [ set plabel length [value-list] of myself ]
+;      ask patch 36 4 [ set plabel item 0 [value-list] of myself ]
+;      ask patch 36 0 [ set plabel item 1 [value-list] of myself ] 
+;      ask patch 36 -4 [ set plabel item 2 [value-list] of myself ]
+;      ask patch 36 -8 [ set plabel item 3 [value-list] of myself ]
+;      ask patch 36 -12 [ set plabel item 4 [value-list] of myself ]
+;
+;
+;      ask patch 36 -16 [ set plabel  [value-list] of myself ] 
+;    ]
     ; assumes x axis is an integral time series starting at 0
     let data-xmax max [item ind-var-index value-list] of measurepoints
     if data-xmax = 0
@@ -1319,7 +1349,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.2.0
+NetLogo 5.2-RC3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

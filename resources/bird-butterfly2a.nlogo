@@ -1,4 +1,4 @@
-extensions [ pc ]
+extensions [ pc events]
 ;;--;;--;;--;;--;;--;;--;;
 ;  
 ;   Copyright 2014  
@@ -14,6 +14,9 @@ extensions [ pc ]
 ;;--;;--;;--;;--;;--;;--;; 
 
 
+;;events:mouse-event "blah" "ca ask patches [ set pcolor blue ]"
+  
+
 breed [wabbits wabbit]
 breed [blocks block]
 breed [sensors sensor]
@@ -24,6 +27,8 @@ breed [birds bird]
 breed [measurepoints measurepoint]
 breed [snapshots snapshot]
 breed [deads dead]
+breed [ dividers divider ]
+
 
 measurepoints-own 
 [ 
@@ -193,6 +198,7 @@ to setup ;; sets up the screen
   create-var-name-list
   
   highlight-animation
+  
   reset-ticks    ;; creates ticks and initializes them to 0
 end
 
@@ -466,6 +472,16 @@ to create-blocks-list
   
   create-blocks 1
   [
+    set block-name "create-sections"
+    set arg-list []
+    set is-observer true
+    set is-basic true
+  ]
+  set blocks-list lput max-one-of blocks [who] blocks-list
+  
+  
+  create-blocks 1
+  [
     set block-name "change-energy"
     set arg-list []
     hatch-args 1
@@ -710,6 +726,12 @@ to create-measure-option-string-lists
   set tlist lput "of Watched" tlist
   set tlist lput "Butterfly" tlist
   set measure-option-string-lists lput tlist measure-option-string-lists
+  
+  set tlist []
+  set tlist lput "Heatmap" tlist
+  set tlist lput "of Butterflies" tlist
+  set measure-option-string-lists lput tlist measure-option-string-lists
+  
 end
 
 to create-measure-option-command-list
@@ -718,6 +740,8 @@ to create-measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 5 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 6 graph" measure-option-command-list
   set measure-option-command-list lput "set graph-type \"horizontal-lineup-height\" set ind-var-index 3 set dep-var-index 7 graph" measure-option-command-list
+  set measure-option-command-list lput "set graph-type \"distribution\" set ind-var-index 3 set dep-var-index 7 graph" measure-option-command-list
+
 end
 
 ; graph-index is the index of the graph in measure-option-command-list and other lists
@@ -1073,6 +1097,23 @@ if any? wabbits with [agent-kind-string = "butterflies"]
 
 end
 
+
+to java-create-sections
+  create-dividers 1 [
+   set heading 0
+   set size world-height 
+   set shape "line"
+   set color red
+  ]
+  create-dividers 2 [
+   set heading 90
+   set size world-height 
+   set shape "line"
+   set color red
+  ]
+end
+
+
 ; butterfly primitive
 to java-make-similar-color-baby
   if random 100 < reproduction-rate
@@ -1153,6 +1194,7 @@ to create-agent-kind-list
     set primitives-list lput "set-proboscis" primitives-list 
     set primitives-list lput "set-butterfly-color" primitives-list 
     set primitives-list lput "watch-random-butterfly" primitives-list
+    set primitives-list lput "create-sections" primitives-list
   ]
   set agent-kind-list lput max-one-of agent-kinds [who] agent-kind-list
   
@@ -1229,12 +1271,12 @@ to place-measure-point
     set measurepoint-creator "butterflies"
     ht
   ]
-  let caselist (list (list min-pxcor min-pycor max-pxcor max-pycor))
+  let caselist (list  min-pxcor min-pycor max-pxcor max-pycor)
   ask patches [
     let ehere relevant-energy-here wabbits
     if ehere > 0
     [
-      set caselist lput (list pxcor pycor ehere) caselist 
+      set caselist (sentence caselist (list pxcor pycor ehere) ) 
     ]
   ]
   create-snapshots 1 
@@ -1460,6 +1502,85 @@ to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   ]
   report result
 end
+
+to-report get-measures-for-starting-with [an-agent-kind start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        let datarep (list who red "\"butterflies\"" tcycles t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
+
+to-report get-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind and measurepoint-creator = a-measurepoint-creator ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        ;; (length result + 1)
+        let datarep (list who red "\"butterflies\"" (start-index + length result + 1) t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  
+  if any? snapshots
+  [
+    let shot last sort snapshots
+    ask shot
+    [
+      let newdata sentence "\"SNAPSHOT\"" cases
+      set result lput newdata result
+    ]
+  ]
+  
+  report result
+end
+
+
+to-report PPget-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index ]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind ];and measurepoint-creator = a-measurepoint-creator ]
+  let relevant-list sort relevant-measures
+  if (not empty? relevant-list) and (start-index < length relevant-list)
+  [
+    foreach (sublist relevant-list start-index (length relevant-list))
+    [
+      ask ? 
+      [ 
+        let datarep (list who red "\"butterflies\"" tcycles t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        ;let datarep (list who red "\"butterflies\"" (start-index + length result + 1) t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  if any? snapshots
+  [
+    let shot last sort snapshots
+    ask shot
+    [
+      set result lput (sentence "\"SNAPSHOT\"" cases) result
+    ]
+  ]
+  report result
+end
+
+
 
 ; a-color an rgb color, with each value from 0-255
 ; reports a list (x y z)

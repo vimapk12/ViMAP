@@ -1015,6 +1015,7 @@ public abstract class SimulationCaller {
                         );
                         String command = "update-measures [" + measureWorld.getOldMeasureData() + "]";
                         command = command.replace(',', ' ');
+                        //System.err.println(command);
                         measureWorld.runMeasureCommand(command);
                         measureWorld.repaint();
                     } else {
@@ -1065,7 +1066,7 @@ public abstract class SimulationCaller {
                     String command = 
                         "update-measures [" + world.getOldMeasureData() + "]";
                     command = command.replace(',', ' ');
-                    
+                    //System.err.println(command);
                     world.runMeasureCommand(command);
                     world.repaint();
                 } else {
