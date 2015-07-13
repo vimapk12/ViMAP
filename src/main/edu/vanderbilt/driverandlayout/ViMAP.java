@@ -283,11 +283,12 @@ public abstract class ViMAP {
         // final String netLogoFile = "/ethnocentrism-measure.nlogo";
         
         // Ants
-        // final String netLogoFile = "/ant-37.nlogo"; 
+         final String netLogoFile = "/ant-42.nlogo"; 
         
         // Bird-Butterfly
         //final String netLogoFile = "/bird-butterfly2.nlogo";
-    	final String netLogoFile = "/bird-butterfly2a.nlogo";
+    	
+    	//final String netLogoFile = "/bird-butterfly2a.nlogo";
         
         // Image Computation
         // final String netLogoFile = "/imageCompData.nlogo";
