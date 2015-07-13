@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -65,6 +67,8 @@ public final class MeasureWorld extends JPanel {
     private GraphComboBox graphComboBox;
     private int selectedGraphIndex;
     private JLabel agentLabel;    
+    
+    private String oldMeasureData;
     
     public MeasureWorld(
         final JFrame aContainingFrame,
@@ -530,6 +534,50 @@ public final class MeasureWorld extends JPanel {
             }
         });
         this.graphSelectionButtonGroup.add(result);
+        return result;
+    }
+    
+    public String getOldMeasureData() {
+        return this.oldMeasureData;
+    }
+    
+    // newData should have already had its outer square brackets removed.
+    public void appendNewMeasureData(final String newData) {
+        this.oldMeasureData = this.oldMeasureData + " " + newData;
+    }
+    
+    public void resetOldMeasureData() {
+        final String emptyString = "";
+        this.oldMeasureData = emptyString;
+    }
+    
+    public int getNextDataPointIndex() {
+        if (this.oldMeasureData == null || this.oldMeasureData.length() == 0) {
+            return 0;
+        }
+        
+        return countMatchingSquareBrackets(this.oldMeasureData);
+    }
+    
+    public static String stripOuterSquareBrackets(final String input) {
+        final char openBracket = '[';
+        // recall: substring(a, b) includes index a, but excludes index b.
+        final String withoutFirst = input.substring(input.indexOf(openBracket) + 1);
+        final char closeBracket = ']';
+        final String withoutEither = withoutFirst.substring(0, withoutFirst.lastIndexOf(closeBracket));
+        return withoutEither;
+    }
+    
+    private static int countMatchingSquareBrackets(final String input) {
+        // count all matches, in order, of an open square bracket, some characters,
+        // and a closing square bracket.
+        Pattern pattern = Pattern.compile("\\[.*?\\]");
+        Matcher  matcher = pattern.matcher(input);
+
+        int result = 0;
+        while (matcher.find()) {
+            result++;
+        }
         return result;
     }
 }

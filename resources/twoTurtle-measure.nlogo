@@ -2069,6 +2069,27 @@ to-report get-measures-for [an-agent-kind]
   report result
 end
 
+to-report get-measures-for-starting-with [an-agent-kind start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        if (is-string? tdistfromlast) 
+        [ set tdistfromlast 0 ]
+      
+        let datarep (list who tcolor (word "\"" tagentkind "\"") tcycles theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize tsecretnumber) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   let result []
   let relevant-measures measurepoints with [ tagentkind = an-agent-kind and measurepoint-creator = a-measurepoint-creator ]
@@ -2082,6 +2103,28 @@ to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
       
       let datarep (list who tcolor (word "\"" tagentkind "\"") (length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize tsecretnumber) 
       set result lput datarep result 
+    ]
+  ]
+  report result
+end
+
+to-report get-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind and measurepoint-creator = a-measurepoint-creator ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        if (is-string? tdistfromlast) 
+        [ set tdistfromlast 0 ]
+        
+        ;; (length result + 1)
+        let datarep (list who tcolor (word "\"" tagentkind "\"") (start-index + length result + 1) theading todometer tdistfromlast tspeed taccel tpenwidth tpencolor tagentsize tsecretnumber) 
+        set result lput datarep result 
+      ]
     ]
   ]
   report result

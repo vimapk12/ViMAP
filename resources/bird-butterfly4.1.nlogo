@@ -1705,6 +1705,24 @@ to-report get-measures
   report result
 end
 
+to-report get-measures-for-starting-with [an-agent-kind start-index]
+    let result []
+  let relevant-measures measurepoints
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ?
+      [ 
+        let datarep (list who red "\"butterflies\"" tcycles t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
 to-report get-measures-for [my-agent-kind]
   let result []
   let relevant-measures measurepoints
@@ -1719,6 +1737,26 @@ to-report get-measures-for [my-agent-kind]
   ]
   report result
 end
+
+to-report get-measures-for-filtered-starting-with [an-agent-kind a-measurepoint-creator start-index]
+  let result []
+  let relevant-measures measurepoints with [ tagentkind = an-agent-kind and measurepoint-creator = a-measurepoint-creator ]
+  let relevant-list sort relevant-measures
+  if not empty? relevant-list
+  [
+    foreach (sublist relevant-list start-index ((length relevant-list) - 1))
+    [
+      ask ? 
+      [ 
+        ;; (length result + 1)
+        let datarep (list who red "\"butterflies\"" (start-index + length result + 1) t-energy-avg t-population t-proboscis-avg t-watched-energy) 
+        set result lput datarep result 
+      ]
+    ]
+  ]
+  report result
+end
+
 
 to-report get-measures-for-filtered [an-agent-kind a-measurepoint-creator]
   let result []
